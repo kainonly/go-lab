@@ -26,7 +26,7 @@ export class DashboardsComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.getMenuLists();
-    this.storage.autoBreadcrumb(this.router);
+    this.storage.setup(this.router);
     this.events.on('locale').subscribe(locale => {
       this.bit.locale = locale;
     });
@@ -38,7 +38,7 @@ export class DashboardsComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.events.off('locale');
     this.events.off('refresh-menu');
-    this.storage.destoryBreadcrumb();
+    this.storage.destory();
   }
 
   /**
@@ -59,7 +59,7 @@ export class DashboardsComponent implements OnInit, OnDestroy {
       this.bit.breadcrumb = [];
       this.bit.navActive = [];
       this.storage.clear();
-      this.storage.destoryBreadcrumb();
+      this.storage.destory();
       this.router.navigateByUrl('/login');
       this.notification.success(this.bit.l.logout, this.bit.l.logoutSuccess);
     });

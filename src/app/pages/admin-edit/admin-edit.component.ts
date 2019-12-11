@@ -59,7 +59,7 @@ export class AdminEditComponent implements OnInit {
         SwalService.native.fire({
           title: this.bit.l.operateInfo,
           text: this.bit.l.selfTips,
-          type: 'info',
+          icon: 'info',
           showCancelButton: true,
           confirmButtonText: this.bit.l.goProfile,
           cancelButtonText: this.bit.l.operateBack
