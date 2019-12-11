@@ -1,0 +1,3 @@
+[submodule "projects/ngx-bit"]
+	path = projects/ngx-bit
+	url = git@github.com:kainonly/ngx-bit.git

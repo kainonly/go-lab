@@ -1,0 +1,21 @@
+export default {
+  username: ['用户名称', 'Username'],
+  usernamePlaceholder: ['请输入用户名称', 'Please Enter Username'],
+  usernameRequire: ['当前用户名称不能为空', 'Current user name cannot be empty'],
+  usernameCorrectly: ['请输入正确的用户名称', 'Please enter the correct username'],
+  usernameDuplicated: ['当前用户名称已存在', 'Current user name already exists'],
+  role: ['权限组', 'Role Group'],
+  rolePlaceholder: ['请选择权限组', 'Please Enter Role Group'],
+  password: ['用户密码', 'Password'],
+  passwordPlaceholder: ['请输入用户密码', 'Please Enter Password'],
+  passwordRequire: ['请输入用户密码', 'Please Enter Password!'],
+  passwordCorrectly: ['请输入正确的用户密码', 'Please enter the correct user password'],
+  call: ['称呼', 'Call Name'],
+  callPlaceholder: ['请输入称呼', 'Please Enter Call Name'],
+  email: ['电子邮件', 'Email'],
+  emailPlaceholder: ['请输入电子邮件', 'Please Enter Email'],
+  emailCorrectly: ['请输入正确的电子邮件', 'Please enter the correct email'],
+  phone: ['联系电话', 'Phone'],
+  phonePlaceholder: ['请输入手机号码', 'Please Enter Phone'],
+  avatar: ['头像', 'Avatar']
+};
