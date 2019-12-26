@@ -3,8 +3,8 @@ import {en_US, zh_CN} from 'ng-zorro-antd';
 export const environment = {
   production: true,
   bit: {
-    originUrl: 'http://localhost:8000',
-    staticUrl: 'http://localhost:8000/static/',
+    originUrl: 'https://api.kainonly.com',
+    staticUrl: 'https://cdn.kainonly.com/static/',
     iconUrl: 'https://cdn.kainonly.com/',
     namespace: '/system',
     uploadsUrl: false,

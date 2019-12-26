@@ -1,10 +1,9 @@
 {
-  "name": "van-console",
-  "version": "1.0.0",
+  "name": "angularx-utils",
   "scripts": {
     "start": "ng serve",
     "serve:open": "ng serve --host 0.0.0.0 --disableHostCheck",
-    "build": "ng build --prod --buildOptimizer",
+    "build": "ng build --prod",
     "docs": "docsify serve ./projects/ngx-bit/docs",
     "build:ngx-bit": "ng build ngx-bit",
     "release:ngx-bit": "cd dist/ngx-bit && npm publish"

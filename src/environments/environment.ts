@@ -4,7 +4,7 @@ export const environment = {
   production: false,
   bit: {
     originUrl: 'http://localhost:8000',
-    staticUrl: 'http://localhost:8000/static/',
+    staticUrl: 'https://cdn.kainonly.com/static/',
     iconUrl: 'https://cdn.kainonly.com/',
     namespace: '/system',
     uploadsUrl: false,
