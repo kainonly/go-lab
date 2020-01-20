@@ -3,7 +3,7 @@ import {en_US, zh_CN} from 'ng-zorro-antd';
 export const environment = {
   production: false,
   bit: {
-    originUrl: 'http://localhost:8000',
+    originUrl: 'http://localhost:9501',
     staticUrl: 'https://cdn.kainonly.com/static/',
     iconUrl: 'https://cdn.kainonly.com/',
     namespace: '/system',
