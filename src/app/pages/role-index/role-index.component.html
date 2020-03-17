@@ -76,6 +76,8 @@
         <td>{{data.key}}</td>
         <td>
           <nz-switch [(ngModel)]="data.status"
+                     [nzCheckedChildren]="bit.l['on']"
+                     [nzUnCheckedChildren]="bit.l['off']"
                      [bitStatusChange]="roleService.status(data)">
           </nz-switch>
         </td>

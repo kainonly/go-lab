@@ -79,6 +79,8 @@
       <td>{{data.read}}</td>
       <td>
         <nz-switch [(ngModel)]="data.status"
+                   [nzCheckedChildren]="bit.l['on']"
+                   [nzUnCheckedChildren]="bit.l['off']"
                    [bitStatusChange]="aclService.status(data)">
         </nz-switch>
       </td>
