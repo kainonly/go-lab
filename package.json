@@ -20,6 +20,7 @@
     "@angular/router": "~8.2.14",
     "@angular/service-worker": "~8.2.14",
     "@ngx-pwa/local-storage": "^8.2.3",
+    "ajv": "^6.12.0",
     "ng-zorro-antd": "^8.5.2",
     "ngx-bit": "^8.2.11",
     "rxjs": "~6.5.3",
