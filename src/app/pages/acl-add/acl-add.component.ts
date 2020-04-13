@@ -3,8 +3,7 @@ import {AbstractControl, AsyncValidatorFn, FormBuilder, FormGroup, Validators} f
 import {SwalService, BitService, asyncValidator} from 'ngx-bit';
 import {NzNotificationService} from 'ng-zorro-antd';
 import {AclService} from '@common/acl.service';
-import {switchMap} from 'rxjs/operators';
-import {of} from 'rxjs';
+import {map, switchMap} from 'rxjs/operators';
 import packer from './language';
 
 @Component({
@@ -13,7 +12,6 @@ import packer from './language';
 })
 export class AclAddComponent implements OnInit {
   form: FormGroup;
-  validatorValue: Map<any, any> = new Map<any, any>();
   defaultWriteLists: any[] = [
     {label: 'add', value: 'add'},
     {label: 'edit', value: 'edit'},
@@ -59,11 +57,14 @@ export class AclAddComponent implements OnInit {
   }
 
   existsName: AsyncValidatorFn = (control: AbstractControl) => {
-    if (this.validatorValue.get('name') === control.value) {
-      return of(null);
-    }
-    this.validatorValue.set('name', control.value);
-    return asyncValidator(this.aclService.validedName(control.value));
+    return asyncValidator(this.aclService.validedName(control.value)).pipe(
+      map(result => {
+        if (control.touched) {
+          control.setErrors(result);
+        }
+        return result;
+      })
+    );
   };
 
   existsKey = (control: AbstractControl) => {

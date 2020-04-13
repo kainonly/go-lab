@@ -2,11 +2,11 @@ import {Component, OnInit} from '@angular/core';
 import {SwalService, BitService, asyncValidator} from 'ngx-bit';
 import {AbstractControl, AsyncValidatorFn, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {NzNotificationService} from 'ng-zorro-antd';
-import {switchMap} from 'rxjs/operators';
+import {map, switchMap} from 'rxjs/operators';
 import {AclService} from '@common/acl.service';
 import packer from './language';
 import {ActivatedRoute} from '@angular/router';
-import {AsyncSubject, of} from 'rxjs';
+import {AsyncSubject} from 'rxjs';
 
 @Component({
   selector: 'app-acl-edit',
@@ -17,7 +17,6 @@ export class AclEditComponent implements OnInit {
   private nameAsync: AsyncSubject<string> = new AsyncSubject<string>();
   private keyAsync: AsyncSubject<string> = new AsyncSubject();
   form: FormGroup;
-  validatorValue: Map<any, any> = new Map<any, any>();
   defaultWriteLists: any[] = [
     {label: 'add', value: 'add'},
     {label: 'edit', value: 'edit'},
@@ -67,11 +66,14 @@ export class AclEditComponent implements OnInit {
   }
 
   existsName: AsyncValidatorFn = (control: AbstractControl) => {
-    if (this.validatorValue.get('name') === control.value) {
-      return of(null);
-    }
-    this.validatorValue.set('name', control.value);
-    return asyncValidator(this.aclService.validedName(control.value, this.nameAsync));
+    return asyncValidator(this.aclService.validedName(control.value, this.nameAsync)).pipe(
+      map(result => {
+        if (control.touched) {
+          control.setErrors(result);
+        }
+        return result;
+      })
+    );
   };
 
   existsKey = (control: AbstractControl) => {
