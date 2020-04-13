@@ -1,12 +1,12 @@
 import {Component, OnInit} from '@angular/core';
 import {SwalService, BitService, asyncValidator} from 'ngx-bit';
-import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {AbstractControl, AsyncValidatorFn, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {NzNotificationService} from 'ng-zorro-antd';
 import {switchMap} from 'rxjs/operators';
 import {AclService} from '@common/acl.service';
 import packer from './language';
 import {ActivatedRoute} from '@angular/router';
-import {AsyncSubject} from 'rxjs';
+import {AsyncSubject, of} from 'rxjs';
 
 @Component({
   selector: 'app-acl-edit',
@@ -14,8 +14,10 @@ import {AsyncSubject} from 'rxjs';
 })
 export class AclEditComponent implements OnInit {
   private id: number;
+  private nameAsync: AsyncSubject<string> = new AsyncSubject<string>();
   private keyAsync: AsyncSubject<string> = new AsyncSubject();
   form: FormGroup;
+  validatorValue: Map<any, any> = new Map<any, any>();
   defaultWriteLists: any[] = [
     {label: 'add', value: 'add'},
     {label: 'edit', value: 'edit'},
@@ -50,6 +52,9 @@ export class AclEditComponent implements OnInit {
         validate: {
           zh_cn: [Validators.required],
           en_us: []
+        },
+        asyncValidate: {
+          zh_cn: [this.existsName]
         }
       })),
       key: [null, [Validators.required], [this.existsKey]],
@@ -61,6 +66,14 @@ export class AclEditComponent implements OnInit {
     });
   }
 
+  existsName: AsyncValidatorFn = (control: AbstractControl) => {
+    if (this.validatorValue.get('name') === control.value) {
+      return of(null);
+    }
+    this.validatorValue.set('name', control.value);
+    return asyncValidator(this.aclService.validedName(control.value, this.nameAsync));
+  };
+
   existsKey = (control: AbstractControl) => {
     return asyncValidator(this.aclService.validedKey(control.value, this.keyAsync));
   };
@@ -70,6 +83,9 @@ export class AclEditComponent implements OnInit {
       if (!data) {
         return;
       }
+      const name = this.bit.i18nParse(data.name);
+      this.nameAsync.next(name.zh_cn);
+      this.nameAsync.complete();
       this.keyAsync.next(data.key);
       this.keyAsync.complete();
       if (data.write) {
@@ -97,7 +113,7 @@ export class AclEditComponent implements OnInit {
         });
       }
       this.form.setValue({
-        name: JSON.parse(data.name),
+        name,
         key: data.key,
         status: data.status
       });

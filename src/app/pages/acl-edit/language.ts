@@ -4,6 +4,7 @@ export default {
   name_en_us: ['英文为空', 'English empty'],
   namePlaceholder: ['请输入访问控制名称', 'Please Enter Acl Name'],
   nameRequire: ['当前访问控制名称不能为空', 'Current Acl Name cannot be empty'],
+  nameDuplicated: ['当前访问控制名称已存在', 'Current acl name already exists'],
   key: ['访问控制键', 'Acl Key'],
   keyHelp: ['访问控制键即代表唯一标识也作用于基础策略路径', 'The acl key means that the unique identifier also acts on the underlying policy path'],
   keyPlaceholder: ['请输入访问控制键', 'Please Enter Acl Key'],

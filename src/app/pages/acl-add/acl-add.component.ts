@@ -1,10 +1,11 @@
 import {Component, OnInit} from '@angular/core';
-import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {AbstractControl, AsyncValidatorFn, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {SwalService, BitService, asyncValidator} from 'ngx-bit';
 import {NzNotificationService} from 'ng-zorro-antd';
 import {AclService} from '@common/acl.service';
-import packer from './language';
 import {switchMap} from 'rxjs/operators';
+import {of} from 'rxjs';
+import packer from './language';
 
 @Component({
   selector: 'app-acl-add',
@@ -12,6 +13,7 @@ import {switchMap} from 'rxjs/operators';
 })
 export class AclAddComponent implements OnInit {
   form: FormGroup;
+  validatorValue: Map<any, any> = new Map<any, any>();
   defaultWriteLists: any[] = [
     {label: 'add', value: 'add'},
     {label: 'edit', value: 'edit'},
@@ -45,12 +47,24 @@ export class AclAddComponent implements OnInit {
         validate: {
           zh_cn: [Validators.required],
           en_us: []
+        },
+        asyncValidate: {
+          zh_cn: [this.existsName],
+          en_us: []
         }
       })),
       key: [null, [Validators.required], [this.existsKey]],
       status: [true, [Validators.required]]
     });
   }
+
+  existsName: AsyncValidatorFn = (control: AbstractControl) => {
+    if (this.validatorValue.get('name') === control.value) {
+      return of(null);
+    }
+    this.validatorValue.set('name', control.value);
+    return asyncValidator(this.aclService.validedName(control.value));
+  };
 
   existsKey = (control: AbstractControl) => {
     return asyncValidator(this.aclService.validedKey(control.value));

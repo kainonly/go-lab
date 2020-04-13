@@ -43,6 +43,21 @@ export class AclService {
   /**
    * Validate Acl Key
    */
+  validedName(name: string, edit: Observable<string> = of(null)) {
+    return edit.pipe(
+      switchMap(nameKey => (name === nameKey ? of({
+          error: 0,
+          data: false
+        }) : this.http.req(this.model + '/validedName', {
+          name
+        })
+      ))
+    );
+  }
+
+  /**
+   * Validate Acl Key
+   */
   validedKey(key: string, edit: Observable<string> = of(null)) {
     return edit.pipe(
       switchMap(editKey => (key === editKey ? of({
