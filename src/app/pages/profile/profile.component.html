@@ -3,18 +3,18 @@
 <nz-card [nzBordered]="false">
   <form nz-form [formGroup]="form" (bitFormSubmit)="submit($event)">
     <nz-form-item>
-      <nz-form-label bitFormLabelCol>
+      <nz-form-label bitCol="label">
         {{bit.l['call']}}
       </nz-form-label>
-      <nz-form-control bitFormControlCol nzHasFeedback>
+      <nz-form-control bitCol="control" nzHasFeedback>
         <input nz-input formControlName="call" [placeholder]="bit.l['callPlaceholder']"/>
       </nz-form-control>
     </nz-form-item>
     <nz-form-item>
-      <nz-form-label bitFormLabelCol>
+      <nz-form-label bitCol="label">
         {{bit.l['email']}}
       </nz-form-label>
-      <nz-form-control bitFormControlCol
+      <nz-form-control bitCol="control"
                        nzHasFeedback
                        [nzErrorTip]="email.ref">
         <input nz-input formControlName="email" [placeholder]="bit.l['emailPlaceholder']"/>
@@ -24,18 +24,18 @@
       </nz-form-control>
     </nz-form-item>
     <nz-form-item>
-      <nz-form-label bitFormLabelCol>
+      <nz-form-label bitCol="label">
         {{bit.l['phone']}}
       </nz-form-label>
-      <nz-form-control bitFormControlCol nzHasFeedback>
+      <nz-form-control bitCol="control" nzHasFeedback>
         <input nz-input formControlName="phone" [placeholder]="bit.l['phonePlaceholder']"/>
       </nz-form-control>
     </nz-form-item>
     <nz-form-item>
-      <nz-form-label bitFormLabelCol>
+      <nz-form-label bitCol="label">
         {{bit.l['avatar']}}
       </nz-form-label>
-      <nz-form-control bitFormControlCol>
+      <nz-form-control bitCol="control">
         <p>{{bit.l['avatarTips']}}</p>
         <nz-upload nzName="image"
                    bitUpload
@@ -50,10 +50,10 @@
       </nz-form-control>
     </nz-form-item>
     <nz-form-item>
-      <nz-form-label bitFormLabelCol>
+      <nz-form-label bitCol="label">
         {{bit.l['editPassword']}}
       </nz-form-label>
-      <nz-form-control bitFormControlCol>
+      <nz-form-control bitCol="control">
         <nz-switch [(ngModel)]="editPassword"
                    (ngModelChange)="editPasswordChange($event)"
                    [ngModelOptions]="{standalone: true}"></nz-switch>
@@ -62,10 +62,10 @@
 
     <ng-template [ngIf]="editPassword">
       <nz-form-item>
-        <nz-form-label bitFormLabelCol>
+        <nz-form-label bitCol="label">
           {{bit.l['oldPassword']}}
         </nz-form-label>
-        <nz-form-control bitFormControlCol
+        <nz-form-control bitCol="control"
                          nzHasFeedback
                          [nzErrorTip]="old_password.ref">
           <input nz-input formControlName="old_password" type="password"
@@ -78,10 +78,10 @@
       </nz-form-item>
 
       <nz-form-item>
-        <nz-form-label bitFormLabelCol>
+        <nz-form-label bitCol="label">
           {{bit.l['newPassword']}}
         </nz-form-label>
-        <nz-form-control bitFormControlCol
+        <nz-form-control bitCol="control"
                          nzHasFeedback
                          [nzErrorTip]="new_password.ref">
           <input nz-input formControlName="new_password" type="password"
@@ -97,10 +97,14 @@
     <nz-divider></nz-divider>
 
     <nz-form-item>
-      <nz-form-control bitFormControlCol="submit">
-        <button nz-button nzType="primary" [disabled]="!form.valid">
-          {{bit.l['submit']}}
-        </button>
+      <nz-form-control bitCol="submit">
+        <nz-space>
+          <nz-space-item>
+            <button nz-button nzType="primary" [disabled]="!form.valid">
+              <i nz-icon nzType="check"></i> {{bit.l['submit']}}
+            </button>
+          </nz-space-item>
+        </nz-space>
       </nz-form-control>
     </nz-form-item>
   </form>

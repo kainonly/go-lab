@@ -13,8 +13,15 @@ export const environment = {
     httpInterceptor: true,
     pageLimit: 10,
     breadcrumbTop: 0,
-    formControlCol: {
-      common: {
+    col: {
+      label: {
+        nzXXl: 4,
+        nzXl: 5,
+        nzLg: 6,
+        nzMd: 7,
+        nzSm: 24
+      },
+      control: {
         nzXXl: 8,
         nzXl: 9,
         nzLg: 10,
@@ -28,15 +35,6 @@ export const environment = {
         nzMd: {span: 14, offset: 6},
         nzSm: {span: 24, offset: 0}
       }
-    },
-    formLabelCol: {
-      common: {
-        nzXXl: 4,
-        nzXl: 5,
-        nzLg: 6,
-        nzMd: 7,
-        nzSm: 24
-      },
     },
     localDefault: 'zh_cn',
     localeBind: new Map([

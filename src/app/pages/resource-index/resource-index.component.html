@@ -1,16 +1,15 @@
 <nz-page-header [nzTitle]="bit.title|Locale:bit.locale">
   <nz-page-header-extra>
-    <button nz-button nzType="primary" nzSize="small" [bitOpen]="['resource-add']">
+    <button nz-button nzType="primary" [bitOpen]="['resource-add']">
       <span>{{bit.l['add']}}</span>
     </button>
   </nz-page-header-extra>
 </nz-page-header>
 
 <nz-card>
-  <div nz-row [nzGutter]="8" class="control-panel">
-    <div nz-col [nzSpan]="12">
-      <nz-input-group
-        [nzSuffix]="suffixIcon">
+  <nz-space>
+    <nz-space-item>
+      <nz-input-group [nzSuffix]="suffixIcon" style="width: 320px">
         <input type="text"
                nz-input
                [placeholder]="bit.l['search']"
@@ -19,33 +18,42 @@
       <ng-template #suffixIcon>
         <i nz-icon nzType="search"></i>
       </ng-template>
-    </div>
-    <div nz-col [nzSpan]="12">
+    </nz-space-item>
+    <nz-space-item>
       <button nz-button (click)="allExpand()">
         {{bit.l['expand']}}
       </button>
+    </nz-space-item>
+    <nz-space-item>
       <button nz-button (click)="allClose()">
         {{bit.l['close']}}
       </button>
-      <ng-container *ngIf="!sort">
-        <button nz-button (click)="startSort()">
-          {{bit.l['sort']}}
-        </button>
-      </ng-container>
-      <ng-container *ngIf="sort">
+    </nz-space-item>
+    <nz-space-item *ngIf="!sort">
+      <button nz-button (click)="startSort()">
+        {{bit.l['sort']}}
+      </button>
+    </nz-space-item>
+    <ng-container *ngIf="sort">
+      <nz-space-item>
         <button nz-button (click)="submitSort()">
           {{bit.l['sortYes']}}
         </button>
+      </nz-space-item>
+      <nz-space-item>
         <button nz-button (click)="cancelSort()">
           {{bit.l['sortCancel']}}
         </button>
-      </ng-container>
-    </div>
-  </div>
+      </nz-space-item>
+    </ng-container>
+  </nz-space>
+
+  <nz-divider [nzDashed]="true"></nz-divider>
 
   <nz-alert nzType="info"
             nzBanner
             [nzMessage]="nzMessage"></nz-alert>
+
   <ng-template #nzMessage>
     <div class="info-tags">
       <span><i nz-icon nzType="tags"></i> {{bit.l['tag']}}</span>

@@ -1,12 +1,10 @@
 <div class="container-login">
   <div class="login-wrapper">
+    <h1>AngularX</h1>
     <form [formGroup]="form" (bitFormSubmit)="submit($event)">
-      <h2 nz-title nzContent="Angularx Utils"></h2>
       <nz-form-item>
-        <nz-form-label>{{bit.l['username']}}</nz-form-label>
         <nz-form-control [nzErrorTip]="username.ref">
-          <nz-input-group nzSize="large"
-                          [nzSuffix]="usernameSuffix"
+          <nz-input-group [nzSuffix]="usernameSuffix"
                           [nzPrefix]="userPrefix">
             <input type="text" nz-input
                    formControlName="username"
@@ -36,10 +34,8 @@
       </nz-form-item>
 
       <nz-form-item>
-        <nz-form-label>{{bit.l['password']}}</nz-form-label>
         <nz-form-control [nzErrorTip]="password.ref">
-          <nz-input-group nzSize="large"
-                          [nzSuffix]="passwordSuffix"
+          <nz-input-group [nzSuffix]="passwordSuffix"
                           [nzPrefix]="passwordPrefix">
             <input type="password" nz-input
                    formControlName="password"
@@ -73,7 +69,7 @@
 
       <nz-form-item>
         <nz-form-control>
-          <button nz-button nzSize="large" nzType="primary" [nzBlock]="true">
+          <button nz-button nzType="primary" [nzBlock]="true">
             {{bit.l['login']}}
           </button>
         </nz-form-control>

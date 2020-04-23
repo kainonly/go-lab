@@ -21,6 +21,8 @@ import {ResourceService} from '@common/resource.service';
 import {PolicyService} from '@common/policy.service';
 import {ServiceWorkerModule} from '@angular/service-worker';
 import {UpdateService} from '@common/update.service';
+import {StorageModule} from '@ngx-pwa/local-storage';
+import {AppExtModule} from "@ext";
 
 const routes: Routes = [
   {
@@ -42,10 +44,11 @@ const routes: Routes = [
     BrowserModule,
     BrowserAnimationsModule,
     HttpClientModule,
-    NgZorroAntdModule,
+    AppExtModule,
     NgxBitModule.forRoot(environment.bit),
     RouterModule.forRoot(routes, {useHash: true}),
     ServiceWorkerModule.register('ngsw-worker.js', {enabled: environment.production}),
+    StorageModule.forRoot({IDBNoWrap: false}),
   ],
   providers: [
     UpdateService,

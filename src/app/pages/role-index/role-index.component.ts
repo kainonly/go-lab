@@ -11,7 +11,7 @@ import {ResourceService} from '@common/resource.service';
 })
 export class RoleIndexComponent implements OnInit, AfterViewInit {
   @ViewChild('nzDrawer', {static: true}) nzDrawer: NzDrawerComponent;
-  @ViewChild('nzTree', {static: false}) nzTree: NzTreeComponent;
+  @ViewChild('nzTree') nzTree: NzTreeComponent;
   lists = [];
   policyVisable = false;
   activeData: any;

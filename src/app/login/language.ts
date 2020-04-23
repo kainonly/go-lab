@@ -1,5 +1,5 @@
 export default {
-  username: ['管理账户', 'Username'],
+  username: ['账户', 'Username'],
   usernameRequire: ['请输入管理账户', 'Please Enter Username'],
   usernameCorrectly: ['请输入正确的管理账户', 'Please Enter Correctly Username'],
   password: ['口令', 'Password'],

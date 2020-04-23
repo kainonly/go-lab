@@ -13,7 +13,7 @@ const routes: Routes = [
 @NgModule({
   imports: [
     AppExtModule,
-    RouterModule.forChild(routes)
+    RouterModule.forChild(routes),
   ],
   declarations: [AdminAddComponent]
 })

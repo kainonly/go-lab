@@ -1,58 +1,74 @@
 <nz-page-header [nzTitle]="bit.title|Locale:bit.locale">
   <nz-page-header-extra>
-    <button nz-button nzType="primary" nzSize="small" [bitOpen]="['admin-add']">
+    <button nz-button nzType="primary" [bitOpen]="['admin-add']">
       <span>{{bit.l['add']}}</span>
     </button>
   </nz-page-header-extra>
 </nz-page-header>
 
 <nz-card>
-  <div nz-row [nzGutter]="8" class="control-panel">
-    <div nz-col [nzSpan]="10" *ngIf="bit.hasSearch('username')">
-      <nz-input-group nzSearch [nzAddOnAfter]="nzAddOnAfter">
-        <input nz-input
-               bitSearchStart="admin-index"
-               [placeholder]="bit.l['search']"
-               [(ngModel)]="bit.search['username'].value"
-               (after)="getLists(true)">
+  <nz-space>
+    <nz-space-item *ngIf="bit.hasSearch('username')">
+      <nz-input-group nzSearch [nzAddOnAfter]="nzAddOnAfter" style="width: 320px">
+        <input
+          nz-input
+          bitSearchStart="admin-index"
+          [placeholder]="bit.l['search']"
+          [(ngModel)]="bit.search['username'].value"
+          (after)="getLists(true)"
+        >
       </nz-input-group>
       <ng-template #nzAddOnAfter>
-        <button nz-button nzType="primary" nzSearch
-                bitSearchStart="admin-index"
-                (after)="getLists(true)">
+        <button
+          nzSearch
+          nz-button nzType="primary"
+          bitSearchStart="admin-index"
+          (after)="getLists(true)"
+        >
           <i nz-icon nzType="search"></i>
         </button>
       </ng-template>
-    </div>
-    <div nz-col [nzSpan]="14">
-      <button nz-button (click)="getLists(true)">
-        <i nz-icon nzType="sync"></i>
+    </nz-space-item>
+    <nz-space-item>
+      <button nz-button nzType="default" (click)="getLists(true)">
+        <i nz-icon nzType="sync"></i> {{bit.l['refreshLists']}}
       </button>
-      <button nz-button
-              bitSearchClear="admin-index"
-              (after)="getLists(true)">
-        {{bit.l['clearSearch']}}
+    </nz-space-item>
+    <nz-space-item>
+      <button
+        nz-button
+        nzType="default"
+        bitSearchClear="admin-index"
+        (after)="getLists(true)"
+      >
+        <i nz-icon nzType="clear"></i> {{bit.l['clearSearch']}}
       </button>
-      <button nz-button [disabled]="bit.listsDisabledAction" nzType="primary" (click)="deleteCheckData()">
-        {{bit.l['checksDelete']}}
+    </nz-space-item>
+    <nz-space-item>
+      <button
+        nz-button
+        nzType="danger"
+        [disabled]="bit.listsDisabledAction"
+        (click)="deleteCheckData()"
+      >
+        <i nz-icon nzType="rest"></i> {{bit.l['bulkDelete']}}
       </button>
-      <span *ngIf="bit.listsCheckedNumber">
-        {{bit.l['selected']}}&nbsp;
-        {{bit.listsCheckedNumber}}&nbsp;
-        {{bit.l['items']}}
-      </span>
-    </div>
-  </div>
+    </nz-space-item>
+  </nz-space>
 
-  <nz-table #table
-            [nzData]="lists"
-            [nzLoading]="bit.listsLoading"
-            [nzTotal]="bit.listsTotals"
-            [nzPageSize]="bit.pageLimit"
-            [nzFrontPagination]="false"
-            [(nzPageIndex)]="bit.listsPageIndex"
-            (nzPageIndexChange)="getLists()"
-            nzSize="middle">
+  <nz-divider [nzDashed]="true"></nz-divider>
+
+  <nz-table
+    #table
+    [nzData]="lists"
+    [nzLoading]="bit.listsLoading"
+    [nzTotal]="bit.listsTotals"
+    [nzPageSize]="bit.pageLimit"
+    [nzFrontPagination]="false"
+    [(nzPageIndex)]="bit.listsPageIndex"
+    (nzPageIndexChange)="getLists()"
+    nzSize="middle"
+  >
     <thead>
     <tr>
       <th nzShowCheckbox nzWidth="65px"

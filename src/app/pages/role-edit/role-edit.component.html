@@ -7,13 +7,13 @@
 <nz-card>
   <form nz-form [formGroup]="form" (bitFormSubmit)="submit($event)">
     <nz-form-item formGroupName="name">
-      <nz-form-label bitFormLabelCol nzRequired>
+      <nz-form-label bitCol="label" nzRequired>
         {{bit.l['name']}}
       </nz-form-label>
       <ng-container *ngFor="let x of bit.i18nContain">
         <nz-form-control *ngIf="bit.equalI18n(x)"
                          nzHasFeedback
-                         bitFormControlCol
+                         bitCol="control"
                          [nzErrorTip]="name.ref">
           <input nz-input
                  bitI18nUpdate
@@ -29,10 +29,10 @@
     </nz-form-item>
 
     <nz-form-item>
-      <nz-form-label bitFormLabelCol nzRequired>
+      <nz-form-label bitCol="label" nzRequired>
         {{bit.l['key']}}
       </nz-form-label>
-      <nz-form-control bitFormControlCol
+      <nz-form-control bitCol="control"
                        nzHasFeedback
                        [nzValidatingTip]="bit.l['validating']"
                        [nzErrorTip]="key.ref">
@@ -47,10 +47,10 @@
     </nz-form-item>
 
     <nz-form-item>
-      <nz-form-label bitFormLabelCol nzRequired>
+      <nz-form-label bitCol="label" nzRequired>
         {{bit.l['resource']}}
       </nz-form-label>
-      <nz-form-control bitFormControlCol>
+      <nz-form-control bitCol="control">
         <div>
           <button nz-button nzSize="small" type="button" (click)="allChecked()">{{bit.l['checked']}}</button>
           <button nz-button nzSize="small" type="button" (click)="allUnchecked()">{{bit.l['unchecked']}}</button>
@@ -71,10 +71,10 @@
     </nz-form-item>
 
     <nz-form-item>
-      <nz-form-label bitFormLabelCol nzRequired>
+      <nz-form-label bitCol="label" nzRequired>
         {{bit.l['status']}}
       </nz-form-label>
-      <nz-form-control bitFormControlCol>
+      <nz-form-control bitCol="control">
         <nz-switch formControlName="status"
                    [nzCheckedChildren]="bit.l['on']"
                    [nzUnCheckedChildren]="bit.l['off']">
@@ -85,13 +85,19 @@
     <nz-divider></nz-divider>
 
     <nz-form-item>
-      <nz-form-control bitFormControlCol="submit">
-        <button nz-button nzType="primary" [disabled]="!form.valid">
-          {{bit.l['submit']}}
-        </button>
-        <button nz-button type="button" bitBack>
-          {{bit.l['cancel']}}
-        </button>
+      <nz-form-control bitCol="submit">
+        <nz-space>
+          <nz-space-item>
+            <button nz-button nzType="primary" [disabled]="!form.valid">
+              <i nz-icon nzType="check"></i> {{bit.l['submit']}}
+            </button>
+          </nz-space-item>
+          <nz-space-item>
+            <button nz-button type="button" bitBack>
+              <i nz-icon nzType="close"></i> {{bit.l['cancel']}}
+            </button>
+          </nz-space-item>
+        </nz-space>
       </nz-form-control>
     </nz-form-item>
   </form>

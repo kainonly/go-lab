@@ -12,7 +12,6 @@ import {
 import {BitService, EventsService, SwalService} from 'ngx-bit';
 import packer from './language';
 import {Observable, of} from 'rxjs';
-import {Router} from '@angular/router';
 import {PolicyService} from '@common/policy.service';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {AclService} from '@common/acl.service';
@@ -23,7 +22,7 @@ import {AclService} from '@common/acl.service';
   styleUrls: ['./resource-index.component.scss']
 })
 export class ResourceIndexComponent implements OnInit, OnDestroy {
-  @ViewChild('nzTree', {static: false}) nzTree: NzTreeComponent;
+  @ViewChild('nzTree') nzTree: NzTreeComponent;
   private expanded: Set<string> = new Set();
   activeNode: NzTreeNode;
   nodes: NzTreeNodeOptions[] = [];

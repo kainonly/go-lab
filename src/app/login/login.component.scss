@@ -6,10 +6,14 @@
 }
 
 .login-wrapper {
-  width: 360px;
+  width: 320px;
   margin: 150px auto;
-  padding: 60px 25px 25px 25px;
+  padding: 40px 25px 25px 25px;
   background: #fff;
   border-radius: 3px;
   box-shadow: 0 7px 25px rgba(0, 0, 0, .08);
+
+  h1 {
+    padding-bottom: 10px;
+  }
 }
