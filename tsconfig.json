@@ -20,7 +20,10 @@
     ],
     "paths": {
       "ngx-bit": [
-        "projects/ngx-bit/src/public-api.ts"
+        "projects/ngx-bit/public-api.ts"
+      ],
+      "ngx-bit/*": [
+        "projects/ngx-bit/*"
       ],
       "@common": [
         "src/app/common"

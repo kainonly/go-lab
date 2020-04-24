@@ -1,7 +1,9 @@
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { NgxBitDirectiveModule, NgxBitExtModule, NgxBitPipeModule } from 'ngx-bit';
+import { BitDirectiveModule } from 'ngx-bit/directive';
+import { BitExtModule } from 'ngx-bit/component';
+import { BitPipeModule } from 'ngx-bit/pipe';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzGridModule } from 'ng-zorro-antd/grid';
@@ -68,9 +70,9 @@ import { NzUploadModule } from 'ng-zorro-antd/upload';
     NzResultModule,
     NzMessageModule,
     NzUploadModule,
-    NgxBitExtModule,
-    NgxBitPipeModule,
-    NgxBitDirectiveModule
+    BitExtModule,
+    BitPipeModule,
+    BitDirectiveModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
