@@ -59,22 +59,11 @@
         {{bit.l['writeLists']}}
       </nz-form-label>
       <nz-form-control bitCol="control">
-        <nz-checkbox-group [(ngModel)]="defaultWriteLists"
-                           [ngModelOptions]="{standalone:true}">
-        </nz-checkbox-group>
-        <br>
-        <nz-tag *ngFor="let operate of writeLists" nzMode="closeable"
-                (nzAfterClose)="deleteAddAction(operate)">
-          {{ operate }}
-        </nz-tag>
-        <nz-tag *ngIf="!writeVisible" class="editable-tag" nzNoAnimation (click)="showAddWriteAction()">
-          <i nz-icon nzType="plus"></i> {{bit.l['addMore']}}
-        </nz-tag>
-        <input *ngIf="writeVisible" style="width: 120px" nz-input nzSize="small"
-               [(ngModel)]="writeValue"
-               [ngModelOptions]="{standalone:true}"
-               (blur)="cancelAddWriteAction()"
-               (keydown.enter)="submitAddWriteAction()"/>
+        <nz-select nzMode="tags" formControlName="write">
+          <ng-container *ngFor="let v of writeLists">
+            <nz-option [nzLabel]="v" [nzValue]="v"></nz-option>
+          </ng-container>
+        </nz-select>
       </nz-form-control>
     </nz-form-item>
 
@@ -83,22 +72,11 @@
         {{bit.l['readLists']}}
       </nz-form-label>
       <nz-form-control bitCol="control">
-        <nz-checkbox-group [(ngModel)]="defaultReadLists"
-                           [ngModelOptions]="{standalone:true}">
-        </nz-checkbox-group>
-        <br>
-        <nz-tag *ngFor="let operate of readLists" nzMode="closeable"
-                (nzAfterClose)="deleteReadAction(operate)">
-          {{ operate }}
-        </nz-tag>
-        <nz-tag *ngIf="!readVisible" class="editable-tag" nzNoAnimation (click)="showAddReadAction()">
-          <i nz-icon nzType="plus"></i> {{bit.l['addMore']}}
-        </nz-tag>
-        <input *ngIf="readVisible" style="width: 120px" nz-input nzSize="small"
-               [(ngModel)]="readValue"
-               [ngModelOptions]="{standalone:true}"
-               (blur)="cancelAddReadAction()"
-               (keydown.enter)="submitAddReadAction()"/>
+        <nz-select nzMode="tags" formControlName="read">
+          <ng-container *ngFor="let v of readLists">
+            <nz-option [nzLabel]="v" [nzValue]="v"></nz-option>
+          </ng-container>
+        </nz-select>
       </nz-form-control>
     </nz-form-item>
 

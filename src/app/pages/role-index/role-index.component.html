@@ -76,10 +76,10 @@
           [(nzChecked)]="bit.listsAllChecked"
           [nzIndeterminate]="bit.listsIndeterminate"
           (nzCheckedChange)="bit.listsCheckAll($event,lists)"></th>
-      <th nzWidth="120px">{{bit.l['name']}}</th>
-      <th nzWidth="120px">{{bit.l['key']}}</th>
-      <th nzWidth="100px">{{bit.l['status']}}</th>
-      <th nzWidth="155px"
+      <th nzWidth="300px">{{bit.l['name']}}</th>
+      <th nzWidth="300px">{{bit.l['key']}}</th>
+      <th>{{bit.l['status']}}</th>
+      <th nzWidth="300px"
           nzRight="0px">{{bit.l['action']}}</th>
     </tr>
     </thead>
@@ -117,23 +117,25 @@
   </nz-table>
 </nz-card>
 
-<nz-drawer #nzDrawer
-           [nzWidth]="500"
-           [nzTitle]="nzTitle"
-           [nzVisible]="policyVisable"
-           (nzOnClose)="closePolicy()">
+<nz-drawer
+  #nzDrawer
+  [nzWidth]="500"
+  [nzTitle]="nzTitle"
+  [nzVisible]="policyVisable"
+  (nzOnClose)="closePolicy()"
+>
   <ng-template #nzTitle>
     <b *ngIf="activeData">{{bit.l['policy']}}: {{activeData.name|Locale:bit.locale}}</b>
   </ng-template>
   <ng-container *ngIf="activeData">
     <form nz-form>
       <ng-container *ngFor="let x of activeData.acl">
-        <nz-tag [nzColor]="'blue'">
-          {{x[0]}}:{{bit.l[policyInfo[x[1]]]}}
+        <nz-tag [nzColor]="x[1]===0?'default':'blue'">
+          {{x[0]}}
         </nz-tag>
       </ng-container>
 
-      <nz-divider></nz-divider>
+      <nz-divider [nzDashed]="true"></nz-divider>
 
       <nz-tree #nzTree
                [nzBlockNode]="true"

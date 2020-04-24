@@ -1,6 +1,6 @@
 export default {
   search: ['请输入您要搜索的资源控制名称', 'Please Enter the Resource Name'],
-  info: ['注：资源控制列可右键进行更多操作，资源控制列所包含的标签为访问控制策略绑定', '*:The resource control column can be right-clicked for more operations. The resource control column contains the label for the access control policy binding.'],
+  info: ['资源控制列可右键进行更多操作', 'The resource control column can be right-clicked for more operations.'],
   tag: ['分类标签', 'Tag'],
   onlyNav: ['非路由导航', 'Only Nav'],
   routerNav: ['路由导航', 'Router Nav'],

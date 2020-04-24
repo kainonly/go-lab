@@ -53,16 +53,28 @@
       <nz-form-control bitCol="control">
         <nz-space>
           <nz-space-item>
-            <button nz-button type="button" (click)="allChecked()">{{bit.l['checked']}}</button>
+            <button nz-button type="button" (click)="allChecked()">
+              <i nz-icon nzType="check-square"></i>
+              {{bit.l['checked']}}
+            </button>
           </nz-space-item>
           <nz-space-item>
-            <button nz-button type="button" (click)="allUnchecked()">{{bit.l['unchecked']}}</button>
+            <button nz-button type="button" (click)="allUnchecked()">
+              <i nz-icon nzType="close-square"></i>
+              {{bit.l['unchecked']}}
+            </button>
           </nz-space-item>
           <nz-space-item>
-            <button nz-button type="button" (click)="allExpand()">{{bit.l['expand']}}</button>
+            <button nz-button type="button" (click)="allExpand()">
+              <i nz-icon nzType="node-expand"></i>
+              {{bit.l['expand']}}
+            </button>
           </nz-space-item>
           <nz-space-item>
-            <button nz-button type="button" (click)="allClose()">{{bit.l['close']}}</button>
+            <button nz-button type="button" (click)="allClose()">
+              <i nz-icon nzType="node-collapse"></i>
+              {{bit.l['close']}}
+            </button>
           </nz-space-item>
         </nz-space>
 
