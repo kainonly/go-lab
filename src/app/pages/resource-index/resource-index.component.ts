@@ -1,5 +1,5 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {ResourceService} from '@common/resource.service';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ResourceService } from '@common/resource.service';
 import {
   NzContextMenuService,
   NzDropdownMenuComponent,
@@ -9,12 +9,12 @@ import {
   NzTreeComponent, NzTreeNode,
   NzTreeNodeOptions
 } from 'ng-zorro-antd';
-import {BitService, EventsService, SwalService} from 'ngx-bit';
+import { BitService, EventsService, SwalService } from 'ngx-bit';
+import { Observable, of } from 'rxjs';
+import { PolicyService } from '@common/policy.service';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AclService } from '@common/acl.service';
 import packer from './language';
-import {Observable, of} from 'rxjs';
-import {PolicyService} from '@common/policy.service';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {AclService} from '@common/acl.service';
 
 @Component({
   selector: 'app-resource-index',
@@ -47,7 +47,7 @@ export class ResourceIndexComponent implements OnInit, OnDestroy {
     private nzContextMenuService: NzContextMenuService,
     private resourceService: ResourceService,
     private policyService: PolicyService,
-    private aclService: AclService,
+    private aclService: AclService
   ) {
   }
 
@@ -82,7 +82,7 @@ export class ResourceIndexComponent implements OnInit, OnDestroy {
           router: v.router,
           policy: v.policy,
           children: [],
-          isLeaf: true,
+          isLeaf: true
         };
         refer.set(v.key, rows);
         return rows;
@@ -217,7 +217,7 @@ export class ResourceIndexComponent implements OnInit, OnDestroy {
    * 新增资源
    */
   addResource() {
-    this.bit.open(['resource-add', {parentId: this.activeNode.origin.id}]);
+    this.bit.open(['resource-add', { parentId: this.activeNode.origin.id }]);
   }
 
   /**

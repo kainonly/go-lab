@@ -1,6 +1,6 @@
-import {Injectable} from '@angular/core';
-import {HttpService} from 'ngx-bit';
-import {Observable} from 'rxjs';
+import { Injectable } from '@angular/core';
+import { HttpService } from 'ngx-bit';
+import { Observable } from 'rxjs';
 
 @Injectable()
 export class PolicyService {

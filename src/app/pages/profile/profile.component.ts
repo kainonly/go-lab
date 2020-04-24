@@ -1,13 +1,13 @@
-import {Component, OnInit} from '@angular/core';
-import {BitService} from 'ngx-bit';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {NzNotificationService} from 'ng-zorro-antd';
-import {MainService} from '@common/main.service';
+import { Component, OnInit } from '@angular/core';
+import { BitService } from 'ngx-bit';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { NzNotificationService } from 'ng-zorro-antd';
+import { MainService } from '@common/main.service';
 import packer from './language';
 
 @Component({
   selector: 'app-profile',
-  templateUrl: './profile.component.html',
+  templateUrl: './profile.component.html'
 })
 export class ProfileComponent implements OnInit {
   form: FormGroup;

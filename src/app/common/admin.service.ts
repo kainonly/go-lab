@@ -1,6 +1,6 @@
-import {Injectable} from '@angular/core';
-import {Observable} from 'rxjs';
-import {HttpService} from 'ngx-bit';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { HttpService } from 'ngx-bit';
 
 @Injectable()
 export class AdminService {

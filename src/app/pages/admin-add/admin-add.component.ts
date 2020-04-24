@@ -1,15 +1,15 @@
-import {Component, OnInit} from '@angular/core';
-import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {SwalService, BitService, asyncValidator} from 'ngx-bit';
-import {switchMap} from 'rxjs/operators';
-import {NzNotificationService} from 'ng-zorro-antd';
-import {AdminService} from '@common/admin.service';
-import {RoleService} from '@common/role.service';
+import { Component, OnInit } from '@angular/core';
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { SwalService, BitService, asyncValidator } from 'ngx-bit';
+import { switchMap } from 'rxjs/operators';
+import { NzNotificationService } from 'ng-zorro-antd';
+import { AdminService } from '@common/admin.service';
+import { RoleService } from '@common/role.service';
 import packer from './language';
 
 @Component({
   selector: 'app-admin-add',
-  templateUrl: './admin-add.component.html',
+  templateUrl: './admin-add.component.html'
 })
 export class AdminAddComponent implements OnInit {
   form: FormGroup;

@@ -1,12 +1,12 @@
-import {NgModule} from '@angular/core';
-import {ResourceAddComponent} from './resource-add.component';
-import {RouterModule, Routes} from '@angular/router';
-import {AppExtModule} from '@ext';
+import { NgModule } from '@angular/core';
+import { ResourceAddComponent } from './resource-add.component';
+import { RouterModule, Routes } from '@angular/router';
+import { AppExtModule } from '@ext';
 
 const routes: Routes = [
   {
     path: '',
-    component: ResourceAddComponent,
+    component: ResourceAddComponent
   }
 ];
 
@@ -15,7 +15,7 @@ const routes: Routes = [
     AppExtModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [ResourceAddComponent],
+  declarations: [ResourceAddComponent]
 })
 export class ResourceAddModule {
 }

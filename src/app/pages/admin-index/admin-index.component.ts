@@ -1,8 +1,8 @@
-import {Component, OnInit} from '@angular/core';
-import {SwalService, BitService} from 'ngx-bit';
-import {NzNotificationService} from 'ng-zorro-antd';
-import {AdminService} from '@common/admin.service';
-import {RoleService} from '@common/role.service';
+import { Component, OnInit } from '@angular/core';
+import { SwalService, BitService } from 'ngx-bit';
+import { NzNotificationService } from 'ng-zorro-antd';
+import { AdminService } from '@common/admin.service';
+import { RoleService } from '@common/role.service';
 import packer from './language';
 
 @Component({
@@ -18,7 +18,7 @@ export class AdminIndexComponent implements OnInit {
     public bit: BitService,
     public adminService: AdminService,
     private roleService: RoleService,
-    private notification: NzNotificationService,
+    private notification: NzNotificationService
   ) {
   }
 

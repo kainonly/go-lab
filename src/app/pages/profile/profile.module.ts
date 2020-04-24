@@ -1,7 +1,7 @@
-import {NgModule} from '@angular/core';
-import {RouterModule} from '@angular/router';
-import {AppExtModule} from '@ext';
-import {ProfileComponent} from './profile.component';
+import { NgModule } from '@angular/core';
+import { RouterModule } from '@angular/router';
+import { AppExtModule } from '@ext';
+import { ProfileComponent } from './profile.component';
 
 @NgModule({
   imports: [

@@ -1,7 +1,7 @@
-import {Injectable} from '@angular/core';
-import {CanActivate, Router} from '@angular/router';
-import {MainService} from '@common/main.service';
-import {map} from 'rxjs/operators';
+import { Injectable } from '@angular/core';
+import { CanActivate, Router } from '@angular/router';
+import { MainService } from '@common/main.service';
+import { map } from 'rxjs/operators';
 
 @Injectable()
 export class TokenService implements CanActivate {

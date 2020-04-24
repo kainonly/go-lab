@@ -1,7 +1,7 @@
-import {Injectable} from '@angular/core';
-import {Observable, of} from 'rxjs';
-import {switchMap} from 'rxjs/operators';
-import {HttpService} from 'ngx-bit';
+import { Injectable } from '@angular/core';
+import { Observable, of } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
+import { HttpService } from 'ngx-bit';
 
 @Injectable()
 export class ResourceService {

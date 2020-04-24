@@ -1,11 +1,11 @@
-import {Component, OnInit} from '@angular/core';
-import {Router} from '@angular/router';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {NzNotificationService} from 'ng-zorro-antd';
-import {MainService} from '@common/main.service';
-import {BitService, StorageService} from 'ngx-bit';
-import {StorageMap} from '@ngx-pwa/local-storage';
-import {switchMap} from 'rxjs/operators';
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { NzNotificationService } from 'ng-zorro-antd';
+import { MainService } from '@common/main.service';
+import { BitService, StorageService } from 'ngx-bit';
+import { StorageMap } from '@ngx-pwa/local-storage';
+import { switchMap } from 'rxjs/operators';
 import packer from './language';
 
 @Component({

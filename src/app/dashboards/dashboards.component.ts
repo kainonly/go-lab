@@ -1,13 +1,13 @@
-import {Component, OnInit, OnDestroy} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
-import {BitService, EventsService, StorageService} from 'ngx-bit';
-import {NzNotificationService} from 'ng-zorro-antd';
-import {MainService} from '@common/main.service';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { BitService, EventsService, StorageService } from 'ngx-bit';
+import { NzNotificationService } from 'ng-zorro-antd';
+import { MainService } from '@common/main.service';
 
 @Component({
   selector: 'app-dashboards',
   templateUrl: './dashboards.component.html',
-  styleUrls: ['./dashboards.component.scss'],
+  styleUrls: ['./dashboards.component.scss']
 })
 export class DashboardsComponent implements OnInit, OnDestroy {
   collapsed = false;

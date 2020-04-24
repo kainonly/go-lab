@@ -1,16 +1,15 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {asyncValidator, BitService, EventsService, SwalService} from 'ngx-bit';
-import {ActivatedRoute} from '@angular/router';
-import {NzTreeNodeOptions} from 'ng-zorro-antd/core/tree/nz-tree-base-node';
-import {ResourceService} from '@common/resource.service';
-import {switchMap} from 'rxjs/operators';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { asyncValidator, BitService, EventsService, SwalService } from 'ngx-bit';
+import { ActivatedRoute } from '@angular/router';
+import { NzTreeNodeOptions } from 'ng-zorro-antd/core/tree/nz-tree-base-node';
+import { ResourceService } from '@common/resource.service';
+import { switchMap } from 'rxjs/operators';
 import packer from './language';
-
 
 @Component({
   selector: 'app-resource-add',
-  templateUrl: './resource-add.component.html',
+  templateUrl: './resource-add.component.html'
 })
 export class ResourceAddComponent implements OnInit, OnDestroy {
   form: FormGroup;
@@ -23,7 +22,7 @@ export class ResourceAddComponent implements OnInit, OnDestroy {
     private events: EventsService,
     private swal: SwalService,
     private route: ActivatedRoute,
-    private resourceService: ResourceService,
+    private resourceService: ResourceService
   ) {
   }
 
@@ -42,7 +41,7 @@ export class ResourceAddComponent implements OnInit, OnDestroy {
       router: [false, [Validators.required]],
       policy: [false, [Validators.required]],
       icon: [null],
-      status: [true, [Validators.required]],
+      status: [true, [Validators.required]]
     });
     this.route.params.subscribe(params => {
       if (params.parentId) {
@@ -80,7 +79,7 @@ export class ResourceAddComponent implements OnInit, OnDestroy {
           id: v.id,
           parent: v.parent,
           children: [],
-          isLeaf: true,
+          isLeaf: true
         };
         refer.set(v.key, rows);
         return rows;

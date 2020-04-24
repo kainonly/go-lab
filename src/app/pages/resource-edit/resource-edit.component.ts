@@ -1,16 +1,16 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {asyncValidator, BitService, EventsService, SwalService} from 'ngx-bit';
-import {ActivatedRoute} from '@angular/router';
-import {NzTreeNodeOptions} from 'ng-zorro-antd/core/tree/nz-tree-base-node';
-import {ResourceService} from '@common/resource.service';
-import {switchMap} from 'rxjs/operators';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { asyncValidator, BitService, EventsService, SwalService } from 'ngx-bit';
+import { ActivatedRoute } from '@angular/router';
+import { NzTreeNodeOptions } from 'ng-zorro-antd/core/tree/nz-tree-base-node';
+import { ResourceService } from '@common/resource.service';
+import { switchMap } from 'rxjs/operators';
+import { AsyncSubject } from 'rxjs';
 import packer from './language';
-import {AsyncSubject} from 'rxjs';
 
 @Component({
   selector: 'app-resource-edit',
-  templateUrl: './resource-edit.component.html',
+  templateUrl: './resource-edit.component.html'
 })
 export class ResourceEditComponent implements OnInit, OnDestroy {
   private id: number;
@@ -24,7 +24,7 @@ export class ResourceEditComponent implements OnInit, OnDestroy {
     private events: EventsService,
     private swal: SwalService,
     private route: ActivatedRoute,
-    private resourceService: ResourceService,
+    private resourceService: ResourceService
   ) {
   }
 
@@ -43,7 +43,7 @@ export class ResourceEditComponent implements OnInit, OnDestroy {
       router: [false, [Validators.required]],
       policy: [false, [Validators.required]],
       icon: [null],
-      status: [true, [Validators.required]],
+      status: [true, [Validators.required]]
     });
     this.route.params.subscribe(params => {
       this.id = parseInt(params.id, 0);
@@ -99,7 +99,7 @@ export class ResourceEditComponent implements OnInit, OnDestroy {
           id: v.id,
           parent: v.parent,
           children: [],
-          isLeaf: true,
+          isLeaf: true
         };
         refer.set(v.key, rows);
         return rows;

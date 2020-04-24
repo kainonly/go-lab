@@ -1,20 +1,20 @@
-import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {SwalService, BitService, asyncValidator, EventsService} from 'ngx-bit';
-import {NzNotificationService, NzTreeComponent, NzTreeNodeOptions} from 'ng-zorro-antd';
-import {switchMap} from 'rxjs/operators';
-import {RoleService} from '@common/role.service';
-import {ResourceService} from '@common/resource.service';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { SwalService, BitService, asyncValidator, EventsService } from 'ngx-bit';
+import { NzNotificationService, NzTreeComponent, NzTreeNodeOptions } from 'ng-zorro-antd';
+import { switchMap } from 'rxjs/operators';
+import { RoleService } from '@common/role.service';
+import { ResourceService } from '@common/resource.service';
 import packer from './language';
-import {ActivatedRoute} from '@angular/router';
-import {AsyncSubject} from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
+import { AsyncSubject } from 'rxjs';
 
 @Component({
   selector: 'app-role-edit',
   templateUrl: './role-edit.component.html'
 })
 export class RoleEditComponent implements OnInit, AfterViewInit, OnDestroy {
-  @ViewChild('nzTree', {static: true}) nzTree: NzTreeComponent;
+  @ViewChild('nzTree', { static: true }) nzTree: NzTreeComponent;
   private id: number;
   private dataAsync: AsyncSubject<void> = new AsyncSubject<void>();
   private keyAsync: AsyncSubject<string> = new AsyncSubject();
@@ -86,7 +86,6 @@ export class RoleEditComponent implements OnInit, AfterViewInit, OnDestroy {
     return asyncValidator(this.roleService.validedKey(control.value, this.keyAsync));
   };
 
-
   /**
    * 获取数据
    */
@@ -117,7 +116,7 @@ export class RoleEditComponent implements OnInit, AfterViewInit, OnDestroy {
           key: v.key,
           parent: v.parent,
           children: [],
-          isLeaf: true,
+          isLeaf: true
         };
         refer.set(v.key, rows);
         return rows;

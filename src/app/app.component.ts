@@ -1,14 +1,14 @@
-import {Component, OnInit} from '@angular/core';
-import {BitService, ConfigService} from 'ngx-bit';
-import {NzMessageService} from 'ng-zorro-antd';
-import {Observable, of} from 'rxjs';
+import { Component, OnInit } from '@angular/core';
+import { BitService, ConfigService } from 'ngx-bit';
+import { NzMessageService } from 'ng-zorro-antd';
+import { Observable, of } from 'rxjs';
 import packer from './app.language';
 
 @Component({
   selector: 'app-root',
   template: `
-      <router-outlet></router-outlet>
-  `,
+    <router-outlet></router-outlet>
+  `
 })
 export class AppComponent implements OnInit {
   constructor(

@@ -1,7 +1,7 @@
-import {NgModule} from '@angular/core';
-import {Routes, RouterModule} from '@angular/router';
-import {AppExtModule} from '@ext';
-import {DashboardsComponent} from './dashboards/dashboards.component';
+import { NgModule } from '@angular/core';
+import { Routes, RouterModule } from '@angular/router';
+import { AppExtModule } from '@ext';
+import { DashboardsComponent } from './dashboards/dashboards.component';
 
 const routes: Routes = [
   {
@@ -79,7 +79,7 @@ const routes: Routes = [
   ],
   declarations: [
     DashboardsComponent
-  ],
+  ]
 })
 export class AppRouterModule {
 }

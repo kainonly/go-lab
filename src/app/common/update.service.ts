@@ -1,7 +1,7 @@
-import {ApplicationRef, Injectable} from '@angular/core';
-import {SwUpdate} from '@angular/service-worker';
-import {first, switchMapTo} from 'rxjs/operators';
-import {interval} from 'rxjs';
+import { ApplicationRef, Injectable } from '@angular/core';
+import { SwUpdate } from '@angular/service-worker';
+import { first, switchMapTo } from 'rxjs/operators';
+import { interval } from 'rxjs';
 
 @Injectable()
 export class UpdateService {

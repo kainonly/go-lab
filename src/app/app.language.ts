@@ -66,5 +66,5 @@ export default {
   logoutSuccess: ['登出成功', 'Logout Success'],
   timeout: ['超时登出', 'Timeout'],
   timeoutWarning: ['您的登录已超时，请重新登录', 'Your login has timed out, please log in again'],
-  rbacError: ['您没有权限或该权限已被关闭', 'You don\'t have permission or the permission has been turned off'],
+  rbacError: ['您没有权限或该权限已被关闭', 'You don\'t have permission or the permission has been turned off']
 };

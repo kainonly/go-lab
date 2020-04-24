@@ -1,7 +1,7 @@
-import {Component, OnInit} from '@angular/core';
-import {SwalService, BitService} from 'ngx-bit';
-import {NzNotificationService} from 'ng-zorro-antd';
-import {AclService} from '@common/acl.service';
+import { Component, OnInit } from '@angular/core';
+import { SwalService, BitService } from 'ngx-bit';
+import { NzNotificationService } from 'ng-zorro-antd';
+import { AclService } from '@common/acl.service';
 import packer from './language';
 
 @Component({
@@ -22,8 +22,8 @@ export class AclIndexComponent implements OnInit {
   ngOnInit() {
     this.bit.registerLocales(packer);
     this.bit.registerSearch('acl-index',
-      {field: 'name->zh_cn', op: 'like', value: ''},
-      {field: 'name->en_us', op: 'like', value: ''}
+      { field: 'name->zh_cn', op: 'like', value: '' },
+      { field: 'name->en_us', op: 'like', value: '' }
     ).subscribe(() => {
       this.getLists();
     });

@@ -1,7 +1,7 @@
-import {Injectable} from '@angular/core';
-import {HttpService} from 'ngx-bit';
-import {Observable, of} from 'rxjs';
-import {switchMap} from 'rxjs/operators';
+import { Injectable } from '@angular/core';
+import { HttpService } from 'ngx-bit';
+import { Observable, of } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 
 @Injectable()
 export class RoleService {

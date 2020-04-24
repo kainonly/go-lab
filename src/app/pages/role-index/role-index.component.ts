@@ -1,16 +1,16 @@
-import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
-import {SwalService, BitService} from 'ngx-bit';
-import {NzDrawerComponent, NzNotificationService, NzTreeComponent, NzTreeNodeOptions} from 'ng-zorro-antd';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { SwalService, BitService } from 'ngx-bit';
+import { NzDrawerComponent, NzNotificationService, NzTreeComponent, NzTreeNodeOptions } from 'ng-zorro-antd';
 import packer from './language';
-import {RoleService} from '@common/role.service';
-import {ResourceService} from '@common/resource.service';
+import { RoleService } from '@common/role.service';
+import { ResourceService } from '@common/resource.service';
 
 @Component({
   selector: 'app-role-index',
   templateUrl: './role-index.component.html'
 })
 export class RoleIndexComponent implements OnInit, AfterViewInit {
-  @ViewChild('nzDrawer', {static: true}) nzDrawer: NzDrawerComponent;
+  @ViewChild('nzDrawer', { static: true }) nzDrawer: NzDrawerComponent;
   @ViewChild('nzTree') nzTree: NzTreeComponent;
   lists = [];
   policyVisable = false;
@@ -26,15 +26,15 @@ export class RoleIndexComponent implements OnInit, AfterViewInit {
     public bit: BitService,
     private notification: NzNotificationService,
     public roleService: RoleService,
-    private resourceService: ResourceService,
+    private resourceService: ResourceService
   ) {
   }
 
   ngOnInit() {
     this.bit.registerLocales(packer);
     this.bit.registerSearch('role-index',
-      {field: 'name->zh_cn', op: 'like', value: ''},
-      {field: 'name->en_us', op: 'like', value: ''}
+      { field: 'name->zh_cn', op: 'like', value: '' },
+      { field: 'name->en_us', op: 'like', value: '' }
     ).subscribe(() => {
       this.getLists();
       this.getNodes();
@@ -87,7 +87,7 @@ export class RoleIndexComponent implements OnInit, AfterViewInit {
           parent: v.parent,
           disableCheckbox: true,
           children: [],
-          isLeaf: true,
+          isLeaf: true
         };
         refer.set(v.key, rows);
         return rows;
@@ -150,6 +150,5 @@ export class RoleIndexComponent implements OnInit, AfterViewInit {
     this.activeData = null;
     this.policyVisable = false;
   }
-
 
 }

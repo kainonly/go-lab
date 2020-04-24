@@ -1,10 +1,10 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {SwalService, BitService, asyncValidator, EventsService} from 'ngx-bit';
-import {NzNotificationService, NzTreeComponent, NzTreeNodeOptions} from 'ng-zorro-antd';
-import {switchMap} from 'rxjs/operators';
-import {RoleService} from '@common/role.service';
-import {ResourceService} from '@common/resource.service';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { SwalService, BitService, asyncValidator, EventsService } from 'ngx-bit';
+import { NzNotificationService, NzTreeComponent, NzTreeNodeOptions } from 'ng-zorro-antd';
+import { switchMap } from 'rxjs/operators';
+import { RoleService } from '@common/role.service';
+import { ResourceService } from '@common/resource.service';
 import packer from './language';
 
 @Component({
@@ -12,7 +12,7 @@ import packer from './language';
   templateUrl: './role-add.component.html'
 })
 export class RoleAddComponent implements OnInit, OnDestroy {
-  @ViewChild('nzTree', {static: true}) nzTree: NzTreeComponent;
+  @ViewChild('nzTree', { static: true }) nzTree: NzTreeComponent;
   private resource: string[] = [];
   nodes: NzTreeNodeOptions[] = [];
   form: FormGroup;
@@ -24,7 +24,7 @@ export class RoleAddComponent implements OnInit, OnDestroy {
     private notification: NzNotificationService,
     private swal: SwalService,
     private roleService: RoleService,
-    private resourceService: ResourceService,
+    private resourceService: ResourceService
   ) {
   }
 
@@ -66,7 +66,7 @@ export class RoleAddComponent implements OnInit, OnDestroy {
           key: v.key,
           parent: v.parent,
           children: [],
-          isLeaf: true,
+          isLeaf: true
         };
         refer.set(v.key, rows);
         return rows;

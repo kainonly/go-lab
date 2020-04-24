@@ -1,12 +1,12 @@
-import {NgModule} from '@angular/core';
-import {AdminIndexComponent} from './admin-index.component';
-import {RouterModule, Routes} from '@angular/router';
-import {AppExtModule} from '@ext';
+import { NgModule } from '@angular/core';
+import { AdminIndexComponent } from './admin-index.component';
+import { RouterModule, Routes } from '@angular/router';
+import { AppExtModule } from '@ext';
 
 const routes: Routes = [
   {
     path: '',
-    component: AdminIndexComponent,
+    component: AdminIndexComponent
   }
 ];
 

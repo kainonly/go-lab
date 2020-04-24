@@ -1,7 +1,7 @@
-import {Injectable} from '@angular/core';
-import {HttpService} from 'ngx-bit';
-import {Observable} from 'rxjs';
-import {map} from 'rxjs/operators';
+import { Injectable } from '@angular/core';
+import { HttpService } from 'ngx-bit';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Injectable()
 export class MainService {
@@ -73,7 +73,7 @@ export class MainService {
               }
             }
           }
-          return {resource, nav, router};
+          return { resource, nav, router };
         } else {
           return {};
         }

@@ -1,12 +1,12 @@
-import {Component, OnInit} from '@angular/core';
-import {SwalService, BitService, asyncValidator} from 'ngx-bit';
-import {AbstractControl, AsyncValidatorFn, FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {NzNotificationService} from 'ng-zorro-antd';
-import {map, switchMap} from 'rxjs/operators';
-import {AclService} from '@common/acl.service';
+import { Component, OnInit } from '@angular/core';
+import { SwalService, BitService, asyncValidator } from 'ngx-bit';
+import { AbstractControl, AsyncValidatorFn, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { NzNotificationService } from 'ng-zorro-antd';
+import { map, switchMap } from 'rxjs/operators';
+import { AclService } from '@common/acl.service';
+import { ActivatedRoute } from '@angular/router';
+import { AsyncSubject } from 'rxjs';
 import packer from './language';
-import {ActivatedRoute} from '@angular/router';
-import {AsyncSubject} from 'rxjs';
 
 @Component({
   selector: 'app-acl-edit',
@@ -26,7 +26,7 @@ export class AclEditComponent implements OnInit {
     private notification: NzNotificationService,
     private swal: SwalService,
     private route: ActivatedRoute,
-    private aclService: AclService,
+    private aclService: AclService
   ) {
   }
 

@@ -1,7 +1,7 @@
-import {NgModule} from '@angular/core';
-import {RouterModule, Routes} from '@angular/router';
-import {EmptyComponent} from './empty.component';
-import {AppExtModule} from '@ext';
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+import { EmptyComponent } from './empty.component';
+import { AppExtModule } from '@ext';
 
 const routes: Routes = [
   {

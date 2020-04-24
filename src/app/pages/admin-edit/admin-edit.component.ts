@@ -1,16 +1,16 @@
-import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {SwalService, BitService} from 'ngx-bit';
-import {switchMap} from 'rxjs/operators';
-import {NzNotificationService} from 'ng-zorro-antd';
-import {AdminService} from '@common/admin.service';
-import {RoleService} from '@common/role.service';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { SwalService, BitService } from 'ngx-bit';
+import { switchMap } from 'rxjs/operators';
+import { NzNotificationService } from 'ng-zorro-antd';
+import { AdminService } from '@common/admin.service';
+import { RoleService } from '@common/role.service';
+import { ActivatedRoute } from '@angular/router';
 import packer from './language';
-import {ActivatedRoute} from '@angular/router';
 
 @Component({
   selector: 'app-admin-edit',
-  templateUrl: './admin-edit.component.html',
+  templateUrl: './admin-edit.component.html'
 })
 export class AdminEditComponent implements OnInit {
   private id: number;
