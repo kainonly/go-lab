@@ -1,10 +1,10 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { asyncValidator, BitService, EventsService, SwalService } from 'ngx-bit';
-import { ActivatedRoute } from '@angular/router';
-import { NzTreeNodeOptions } from 'ng-zorro-antd/core/tree/nz-tree-base-node';
-import { ResourceService } from '@common/resource.service';
-import { switchMap } from 'rxjs/operators';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {asyncValidator, BitService, EventsService, SwalService} from 'ngx-bit';
+import {ActivatedRoute} from '@angular/router';
+import {NzTreeNodeOptions} from 'ng-zorro-antd/core/tree/nz-tree-base-node';
+import {ResourceService} from '@common/resource.service';
+import {switchMap} from 'rxjs/operators';
 import packer from './language';
 
 @Component({
@@ -110,7 +110,6 @@ export class ResourceAddComponent implements OnInit, OnDestroy {
   }
 
   submit(data) {
-    Reflect.set(data, 'name', JSON.stringify(data.name));
     this.resourceService.add(data).pipe(
       switchMap(res => this.swal.addAlert(res, this.form, {
         nav: false,

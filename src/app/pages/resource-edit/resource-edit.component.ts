@@ -1,11 +1,11 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { asyncValidator, BitService, EventsService, SwalService } from 'ngx-bit';
-import { ActivatedRoute } from '@angular/router';
-import { NzTreeNodeOptions } from 'ng-zorro-antd/core/tree/nz-tree-base-node';
-import { ResourceService } from '@common/resource.service';
-import { switchMap } from 'rxjs/operators';
-import { AsyncSubject } from 'rxjs';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {asyncValidator, BitService, EventsService, SwalService} from 'ngx-bit';
+import {ActivatedRoute} from '@angular/router';
+import {NzTreeNodeOptions} from 'ng-zorro-antd/core/tree/nz-tree-base-node';
+import {ResourceService} from '@common/resource.service';
+import {switchMap} from 'rxjs/operators';
+import {AsyncSubject} from 'rxjs';
 import packer from './language';
 
 @Component({
@@ -131,7 +131,6 @@ export class ResourceEditComponent implements OnInit, OnDestroy {
 
   submit(data) {
     Reflect.set(data, 'id', this.id);
-    Reflect.set(data, 'name', JSON.stringify(data.name));
     this.resourceService.edit(data).pipe(
       switchMap(res => this.swal.editAlert(res))
     ).subscribe(status => {
