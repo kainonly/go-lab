@@ -260,7 +260,11 @@ export class ResourceIndexComponent implements OnInit, OnDestroy {
    * 拖拽限制
    */
   beforeDrop = (arg: NzFormatBeforeDropEvent): Observable<any> => {
-    return of(arg.dragNode.level === arg.node.level && arg.pos !== 0);
+    return of(
+      arg.dragNode.level === arg.node.level
+      && arg.dragNode.origin.parent === arg.node.origin.parent
+      && arg.pos !== 0
+    );
   };
 
   /**
