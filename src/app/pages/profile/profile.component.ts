@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { BitService } from 'ngx-bit';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NzNotificationService } from 'ng-zorro-antd';
 import { MainService } from '@common/main.service';
 import packer from './language';
@@ -28,11 +28,96 @@ export class ProfileComponent implements OnInit {
       call: [null],
       email: [null, [Validators.email]],
       phone: [null],
-      old_password: [null, [Validators.minLength(8), Validators.maxLength(18)]],
-      new_password: [null, [Validators.minLength(8), Validators.maxLength(18)]]
+      old_password: [null, [this.validedPassword]],
+      new_password: [null, [this.validedNewPassword]],
+      new_password_check: [null, [this.checkNewPassword]]
     });
     this.getInformation();
   }
+
+  validedPassword = (control: AbstractControl) => {
+    if (!this.editPassword) {
+      return;
+    }
+    if (control.parent === undefined) {
+      return;
+    }
+    if (!control.value) {
+      return { required: true };
+    }
+    const value = control.value;
+    const len = value.length;
+    if (len < 12) {
+      return { min: true, error: true };
+    }
+    if (len > 20) {
+      return { max: true, error: true };
+    }
+    if (value.match(/^(?=.*[a-z])[\w|@$!%*?&-+]+$/) === null) {
+      return { lowercase: true, error: true };
+    }
+    if (value.match(/^(?=.*[A-Z])[\w|@$!%*?&-+]+$/) === null) {
+      return { uppercase: true, error: true };
+    }
+    if (value.match(/^(?=.*[0-9])[\w|@$!%*?&-+]+$/) === null) {
+      return { number: true, error: true };
+    }
+    if (value.match(/^(?=.*[@$!%*?&-+])[\w|@$!%*?&-+]+$/) === null) {
+      return { symbol: true, error: true };
+    }
+    return null;
+  };
+
+  validedNewPassword = (control: AbstractControl) => {
+    if (!this.editPassword) {
+      return;
+    }
+    if (control.parent === undefined) {
+      return;
+    }
+    if (!control.value) {
+      return { required: true };
+    }
+    control.parent.get('new_password_check').updateValueAndValidity();
+    const value = control.value;
+    const len = value.length;
+    if (len < 12) {
+      return { min: true, error: true };
+    }
+    if (len > 20) {
+      return { max: true, error: true };
+    }
+    if (value.match(/^(?=.*[a-z])[\w|@$!%*?&-+]+$/) === null) {
+      return { lowercase: true, error: true };
+    }
+    if (value.match(/^(?=.*[A-Z])[\w|@$!%*?&-+]+$/) === null) {
+      return { uppercase: true, error: true };
+    }
+    if (value.match(/^(?=.*[0-9])[\w|@$!%*?&-+]+$/) === null) {
+      return { number: true, error: true };
+    }
+    if (value.match(/^(?=.*[@$!%*?&-+])[\w|@$!%*?&-+]+$/) === null) {
+      return { symbol: true, error: true };
+    }
+    return null;
+  };
+
+  checkNewPassword = (control: AbstractControl) => {
+    if (!this.editPassword) {
+      return;
+    }
+    if (control.parent === undefined) {
+      return;
+    }
+    if (!control.value) {
+      return { required: true };
+    }
+    const password = control.parent.get('new_password').value;
+    if (control.value !== password) {
+      return { correctly: true, error: true };
+    }
+    return null;
+  };
 
   /**
    * 获取个人信息

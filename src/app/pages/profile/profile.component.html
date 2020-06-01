@@ -60,39 +60,81 @@
       </nz-form-control>
     </nz-form-item>
 
-    <ng-template [ngIf]="editPassword">
+    <ng-container *ngIf="editPassword">
       <nz-form-item>
-        <nz-form-label bitCol="label">
+        <nz-form-label bitCol="label" nzRequired>
           {{bit.l['oldPassword']}}
         </nz-form-label>
-        <nz-form-control bitCol="control"
-                         nzHasFeedback
-                         [nzErrorTip]="old_password.ref">
-          <input nz-input formControlName="old_password" type="password"
-                 [placeholder]="bit.l['passwordPlaceholder']"/>
-          <bit-error-tip #old_password [hasError]="{
-            minlength:bit.l['passwordCorrectly'],
-            maxlength:bit.l['passwordCorrectly']
+        <nz-form-control
+          bitCol="control"
+          nzHasFeedback
+          [nzErrorTip]="oldPassword.ref"
+        >
+          <input
+            nz-input
+            formControlName="old_password"
+            type="password"
+            [placeholder]="bit.l['passwordPlaceholder']"
+          />
+          <bit-error-tip #oldPassword [hasError]="{
+            min:bit.l['passwordMinLength'],
+            max:bit.l['passwordMaxLength'],
+            lowercase:bit.l['passwordLowercase'],
+            uppercase:bit.l['passwordUppercase'],
+            number:bit.l['passwordNumber'],
+            symbol:bit.l['passwordSymbol']
           }"></bit-error-tip>
         </nz-form-control>
       </nz-form-item>
 
       <nz-form-item>
-        <nz-form-label bitCol="label">
+        <nz-form-label bitCol="label" nzRequired>
           {{bit.l['newPassword']}}
         </nz-form-label>
-        <nz-form-control bitCol="control"
-                         nzHasFeedback
-                         [nzErrorTip]="new_password.ref">
-          <input nz-input formControlName="new_password" type="password"
-                 [placeholder]="bit.l['passwordPlaceholder']"/>
-          <bit-error-tip #new_password [hasError]="{
-            minlength:bit.l['passwordCorrectly'],
-            maxlength:bit.l['passwordCorrectly']
+        <nz-form-control
+          bitCol="control"
+          nzHasFeedback
+          [nzErrorTip]="newPassword.ref"
+        >
+          <input
+            nz-input
+            type="password"
+            formControlName="new_password"
+            [placeholder]="bit.l['passwordPlaceholder']"
+          />
+          <bit-error-tip #newPassword [hasError]="{
+            min:bit.l['passwordMinLength'],
+            max:bit.l['passwordMaxLength'],
+            lowercase:bit.l['passwordLowercase'],
+            uppercase:bit.l['passwordUppercase'],
+            number:bit.l['passwordNumber'],
+            symbol:bit.l['passwordSymbol']
           }"></bit-error-tip>
         </nz-form-control>
       </nz-form-item>
-    </ng-template>
+
+      <nz-form-item>
+        <nz-form-label bitCol="label" nzRequired>
+          {{bit.l['passwordCheck']}}
+        </nz-form-label>
+        <nz-form-control
+          bitCol="control"
+          nzHasFeedback
+          [nzValidatingTip]="bit.l['validating']"
+          [nzErrorTip]="newPasswordCheck.ref"
+        >
+          <input
+            nz-input
+            type="password"
+            formControlName="new_password_check"
+            [placeholder]="bit.l['passwordPlaceholder']"
+          />
+          <bit-error-tip #newPasswordCheck [hasError]="{
+            correctly:bit.l['passwordCorrectly']
+          }"></bit-error-tip>
+        </nz-form-control>
+      </nz-form-item>
+    </ng-container>
 
     <nz-divider></nz-divider>
 
