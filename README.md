@@ -3,7 +3,7 @@
 Angular 工具类测试项目, 查看 [demo](https://console.kainonly.com)
 
 - username `kain`
-- password `password`
+- password `pass@VAN1234`
 
 Angular 辅助库
 
