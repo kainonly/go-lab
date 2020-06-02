@@ -14,9 +14,11 @@
       <nz-form-label bitCol="label">
         {{bit.l['email']}}
       </nz-form-label>
-      <nz-form-control bitCol="control"
-                       nzHasFeedback
-                       [nzErrorTip]="email.ref">
+      <nz-form-control
+        bitCol="control"
+        nzHasFeedback
+        [nzErrorTip]="email.ref"
+      >
         <input nz-input formControlName="email" [placeholder]="bit.l['emailPlaceholder']"/>
         <bit-error-tip #email [hasError]="{
           email:bit.l['emailCorrectly']
@@ -37,10 +39,12 @@
       </nz-form-label>
       <nz-form-control bitCol="control">
         <p>{{bit.l['avatarTips']}}</p>
-        <nz-upload nzName="image"
-                   bitUpload
-                   nzListType="picture-card"
-                   (nzChange)="upload($event)">
+        <nz-upload
+          nzName="image"
+          bitUpload
+          nzListType="picture-card"
+          (nzChange)="upload($event)"
+        >
           <ng-container *ngIf="!avatar">
             <i nz-icon nzType="plus"></i>
             <div class="ant-upload-text">{{bit.l['upload']}}</div>
@@ -54,9 +58,12 @@
         {{bit.l['editPassword']}}
       </nz-form-label>
       <nz-form-control bitCol="control">
-        <nz-switch [(ngModel)]="editPassword"
-                   (ngModelChange)="editPasswordChange($event)"
-                   [ngModelOptions]="{standalone: true}"></nz-switch>
+        <nz-switch
+          [(ngModel)]="editPassword"
+          (ngModelChange)="editPasswordChange($event)"
+          [ngModelOptions]="{standalone: true}"
+        >
+        </nz-switch>
       </nz-form-control>
     </nz-form-item>
 
@@ -72,8 +79,8 @@
         >
           <input
             nz-input
-            formControlName="old_password"
             type="password"
+            formControlName="old_password"
             [placeholder]="bit.l['passwordPlaceholder']"
           />
           <bit-error-tip #oldPassword [hasError]="{
@@ -120,7 +127,6 @@
         <nz-form-control
           bitCol="control"
           nzHasFeedback
-          [nzValidatingTip]="bit.l['validating']"
           [nzErrorTip]="newPasswordCheck.ref"
         >
           <input

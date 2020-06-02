@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { BitService } from 'ngx-bit';
-import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { NzNotificationService } from 'ng-zorro-antd';
 import { MainService } from '@common/main.service';
 import packer from './language';
@@ -27,10 +27,7 @@ export class ProfileComponent implements OnInit {
     this.form = this.fb.group({
       call: [null],
       email: [null, [Validators.email]],
-      phone: [null],
-      old_password: [null, [this.validedPassword]],
-      new_password: [null, [this.validedNewPassword]],
-      new_password_check: [null, [this.checkNewPassword]]
+      phone: [null]
     });
     this.getInformation();
   }
@@ -125,12 +122,10 @@ export class ProfileComponent implements OnInit {
   getInformation() {
     this.mainService.information().subscribe(data => {
       this.avatar = data.avatar;
-      this.form.setValue({
+      this.form.patchValue({
         call: data.call,
         email: data.email,
-        phone: data.phone,
-        old_password: null,
-        new_password: null
+        phone: data.phone
       });
     });
   }
@@ -158,11 +153,19 @@ export class ProfileComponent implements OnInit {
    * 监听密码修改关闭
    */
   editPasswordChange(status: boolean) {
-    if (!status) {
-      this.form.get('old_password')
-        .setValue(null);
-      this.form.get('new_password')
-        .setValue(null);
+    if (status) {
+      this.form.addControl('old_password', new FormControl([null, [this.validedPassword]]));
+      this.form.addControl('new_password', new FormControl([null, [this.validedNewPassword]]));
+      this.form.addControl('new_password_check', new FormControl([null, [this.checkNewPassword]]));
+      this.form.patchValue({
+        old_password: null,
+        new_password: null,
+        new_password_check: null
+      });
+    } else {
+      this.form.removeControl('old_password');
+      this.form.removeControl('new_password');
+      this.form.removeControl('new_password_check');
     }
   }
 
@@ -173,6 +176,7 @@ export class ProfileComponent implements OnInit {
     if (this.avatar) {
       data.avatar = this.avatar;
     }
+    delete data.new_password_check;
     if (!this.editPassword) {
       delete data.old_password;
       delete data.new_password;

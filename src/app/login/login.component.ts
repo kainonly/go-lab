@@ -34,12 +34,12 @@ export class LoginComponent implements OnInit {
       username: [null, [
         Validators.required,
         Validators.minLength(4),
-        Validators.maxLength(20)
-      ]],
+        Validators.maxLength(20)]
+      ],
       password: [null, [
         Validators.required,
-        Validators.minLength(8),
-        Validators.maxLength(18)]
+        Validators.minLength(12),
+        Validators.maxLength(20)]
       ],
       remember: [1, [
         Validators.required

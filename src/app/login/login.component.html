@@ -6,12 +6,14 @@
     <form [formGroup]="form" (bitFormSubmit)="submit($event)">
       <nz-form-item>
         <nz-form-control [nzErrorTip]="username.ref">
-          <nz-input-group [nzSuffix]="usernameSuffix"
-                          [nzPrefix]="userPrefix">
-            <input type="text" nz-input
-                   formControlName="username"
-                   [nzAutocomplete]="auto"
-                   [placeholder]="bit.l['usernameRequire']">
+          <nz-input-group [nzSuffix]="usernameSuffix" [nzPrefix]="userPrefix">
+            <input
+              type="text"
+              nz-input
+              formControlName="username"
+              [nzAutocomplete]="auto"
+              [placeholder]="bit.l['usernameRequire']"
+            >
             <nz-autocomplete #auto>
               <ng-container *ngFor="let x of users">
                 <nz-auto-option [nzValue]="x">{{x}}</nz-auto-option>
@@ -21,9 +23,13 @@
               <i nz-icon nzType="user"></i>
             </ng-template>
             <ng-template #usernameSuffix>
-              <i nz-icon nzType="close-circle"
-                 *ngIf="form.get('username').value"
-                 (click)="form.get('username').reset()"></i>
+              <i
+                *ngIf="form.get('username').value"
+                nz-icon
+                nzType="close-circle"
+                (click)="form.get('username').reset()"
+              >
+              </i>
             </ng-template>
           </nz-input-group>
           <bit-error-tip #username [hasError]="{
@@ -37,19 +43,24 @@
 
       <nz-form-item>
         <nz-form-control [nzErrorTip]="password.ref">
-          <nz-input-group [nzSuffix]="passwordSuffix"
-                          [nzPrefix]="passwordPrefix">
-            <input type="password" nz-input
-                   formControlName="password"
-                   [placeholder]="bit.l['passwordRequire']">
+          <nz-input-group [nzSuffix]="passwordSuffix" [nzPrefix]="passwordPrefix">
+            <input
+              nz-input
+              type="password"
+              formControlName="password"
+              [placeholder]="bit.l['passwordRequire']"
+            >
           </nz-input-group>
           <ng-template #passwordPrefix>
             <i nz-icon nzType="lock"></i>
           </ng-template>
           <ng-template #passwordSuffix>
-            <i nz-icon nzType="close-circle"
-               *ngIf="form.get('password').value"
-               (click)="form.get('password').reset()">
+            <i
+              *ngIf="form.get('password').value"
+              nz-icon
+              nzType="close-circle"
+              (click)="form.get('password').reset()"
+            >
             </i>
           </ng-template>
           <bit-error-tip #password [hasError]="{
