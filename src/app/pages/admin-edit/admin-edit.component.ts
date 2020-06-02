@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SwalService, BitService } from 'ngx-bit';
 import { switchMap } from 'rxjs/operators';
 import { NzNotificationService } from 'ng-zorro-antd';
@@ -33,10 +33,8 @@ export class AdminEditComponent implements OnInit {
   ngOnInit() {
     this.bit.registerLocales(packer);
     this.form = this.fb.group({
-      password: [null, [
-        Validators.minLength(8),
-        Validators.maxLength(18)]
-      ],
+      password: [null, [this.validedPassword]],
+      password_check: [null, [this.checkPassword]],
       role: [null, [Validators.required]],
       call: [null],
       email: [null, [Validators.email]],
@@ -49,6 +47,51 @@ export class AdminEditComponent implements OnInit {
       this.getRole();
     });
   }
+
+  validedPassword = (control: AbstractControl) => {
+    if (control.parent === undefined) {
+      return;
+    }
+    if (!control.value) {
+      return;
+    }
+    control.parent.get('password_check').updateValueAndValidity();
+    const value = control.value;
+    const len = value.length;
+    if (len < 12) {
+      return { min: true, error: true };
+    }
+    if (len > 20) {
+      return { max: true, error: true };
+    }
+    if (value.match(/^(?=.*[a-z])[\w|@$!%*?&-+]+$/) === null) {
+      return { lowercase: true, error: true };
+    }
+    if (value.match(/^(?=.*[A-Z])[\w|@$!%*?&-+]+$/) === null) {
+      return { uppercase: true, error: true };
+    }
+    if (value.match(/^(?=.*[0-9])[\w|@$!%*?&-+]+$/) === null) {
+      return { number: true, error: true };
+    }
+    if (value.match(/^(?=.*[@$!%*?&-+])[\w|@$!%*?&-+]+$/) === null) {
+      return { symbol: true, error: true };
+    }
+    return null;
+  };
+
+  checkPassword = (control: AbstractControl) => {
+    if (control.parent === undefined) {
+      return;
+    }
+    if (!control.value) {
+      return;
+    }
+    const password = control.parent.get('password').value;
+    if (control.value !== password) {
+      return { correctly: true, error: true };
+    }
+    return null;
+  };
 
   /**
    * 获取数据
@@ -72,8 +115,7 @@ export class AdminEditComponent implements OnInit {
         });
       }
       this.username = data.username;
-      this.form.setValue({
-        password: null,
+      this.form.patchValue({
         role: data.role,
         call: data.call,
         email: data.email,
@@ -117,6 +159,7 @@ export class AdminEditComponent implements OnInit {
   submit(data) {
     Reflect.set(data, 'id', this.id);
     Reflect.set(data, 'avatar', this.avatar);
+    delete data.password_check;
     this.adminService.edit(data).pipe(
       switchMap(res => this.swal.editAlert(res))
     ).subscribe((status) => {

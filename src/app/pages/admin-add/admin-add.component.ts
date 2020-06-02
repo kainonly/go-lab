@@ -35,11 +35,8 @@ export class AdminAddComponent implements OnInit {
         Validators.maxLength(20)
       ], [this.validedUsername]
       ],
-      password: [null, [
-        Validators.required,
-        Validators.minLength(8),
-        Validators.maxLength(18)]
-      ],
+      password: [null, this.validedPassword],
+      password_check: [null, [this.checkPassword]],
       role: [null, [Validators.required]],
       call: [null],
       email: [null, [Validators.email]],
@@ -51,6 +48,51 @@ export class AdminAddComponent implements OnInit {
 
   validedUsername = (control: AbstractControl) => {
     return asyncValidator(this.adminService.validedUsername(control.value));
+  };
+
+  validedPassword = (control: AbstractControl) => {
+    if (control.parent === undefined) {
+      return;
+    }
+    if (!control.value) {
+      return { required: true };
+    }
+    control.parent.get('password_check').updateValueAndValidity();
+    const value = control.value;
+    const len = value.length;
+    if (len < 12) {
+      return { min: true, error: true };
+    }
+    if (len > 20) {
+      return { max: true, error: true };
+    }
+    if (value.match(/^(?=.*[a-z])[\w|@$!%*?&-+]+$/) === null) {
+      return { lowercase: true, error: true };
+    }
+    if (value.match(/^(?=.*[A-Z])[\w|@$!%*?&-+]+$/) === null) {
+      return { uppercase: true, error: true };
+    }
+    if (value.match(/^(?=.*[0-9])[\w|@$!%*?&-+]+$/) === null) {
+      return { number: true, error: true };
+    }
+    if (value.match(/^(?=.*[@$!%*?&-+])[\w|@$!%*?&-+]+$/) === null) {
+      return { symbol: true, error: true };
+    }
+    return null;
+  };
+
+  checkPassword = (control: AbstractControl) => {
+    if (control.parent === undefined) {
+      return;
+    }
+    if (!control.value) {
+      return { required: true };
+    }
+    const password = control.parent.get('password').value;
+    if (control.value !== password) {
+      return { correctly: true, error: true };
+    }
+    return null;
   };
 
   /**
@@ -88,6 +130,7 @@ export class AdminAddComponent implements OnInit {
     if (this.avatar) {
       data.avatar = this.avatar;
     }
+    delete data.password_check;
     this.adminService.add(data).pipe(
       switchMap(res => this.swal.addAlert(res, this.form, {
         status: true

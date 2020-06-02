@@ -27,15 +27,56 @@
 
     <nz-form-item>
       <nz-form-label bitCol="label">
-        {{bit.l['password']}}
+        <span>
+          {{bit.l['password']}}
+          <i
+            nz-icon
+            nzType="question-circle"
+            [nz-tooltip]="bit.l['passwordTips']"
+          >
+          </i>
+        </span>
       </nz-form-label>
-      <nz-form-control bitCol="control" nzHasFeedback [nzErrorTip]="password.ref">
-        <input nz-input formControlName="password" type="password" [placeholder]="bit.l['passwordPlaceholder']"/>
+      <nz-form-control
+        bitCol="control"
+        nzHasFeedback
+        [nzErrorTip]="password.ref"
+      >
+        <input
+          nz-input
+          type="password"
+          formControlName="password"
+          [placeholder]="bit.l['passwordPlaceholder']"
+        />
         <bit-error-tip #password [hasError]="{
-          required:bit.l['passwordRequire'],
-          minlength:bit.l['passwordCorrectly'],
-          maxlength:bit.l['passwordCorrectly']
-        }"></bit-error-tip>
+            min:bit.l['passwordMinLength'],
+            max:bit.l['passwordMaxLength'],
+            lowercase:bit.l['passwordLowercase'],
+            uppercase:bit.l['passwordUppercase'],
+            number:bit.l['passwordNumber'],
+            symbol:bit.l['passwordSymbol']
+          }"></bit-error-tip>
+      </nz-form-control>
+    </nz-form-item>
+
+    <nz-form-item>
+      <nz-form-label bitCol="label">
+        {{bit.l['passwordCheck']}}
+      </nz-form-label>
+      <nz-form-control
+        bitCol="control"
+        nzHasFeedback
+        [nzErrorTip]="passwordCheck.ref"
+      >
+        <input
+          nz-input
+          type="password"
+          formControlName="password_check"
+          [placeholder]="bit.l['passwordPlaceholder']"
+        />
+        <bit-error-tip #passwordCheck [hasError]="{
+            correctly:bit.l['passwordCorrectly']
+          }"></bit-error-tip>
       </nz-form-control>
     </nz-form-item>
 
