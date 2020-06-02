@@ -2,6 +2,10 @@ export default {
   oldPassword: ['旧密码', 'Old Password'],
   newPassword: ['新密码', 'New Password'],
   editPassword: ['修改密码', 'Edit Password'],
+  passwordTips: [
+    '密码最小为12位，由大写字母、小写字母、符号、数字组合',
+    'The password must be at least 12 digits and be composed of uppercase letters, lowercase letters, symbols, and numbers'
+  ],
   passwordPlaceholder: ['请输入用户密码', 'Please Enter Password'],
   passwordRequire: ['请输入用户密码', 'Please Enter Password!'],
   passwordMinLength: ['密码长度必须大于12位', 'Password length must be greater than 12 digits'],

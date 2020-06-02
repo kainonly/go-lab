@@ -96,7 +96,15 @@
 
       <nz-form-item>
         <nz-form-label bitCol="label" nzRequired>
+          <span>
           {{bit.l['newPassword']}}
+            <i
+              nz-icon
+              nzType="question-circle"
+              [nz-tooltip]="bit.l['passwordTips']"
+            >
+            </i>
+          </span>
         </nz-form-label>
         <nz-form-control
           bitCol="control"
