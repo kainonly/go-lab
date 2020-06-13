@@ -5,7 +5,10 @@
     "build": "ng build --prod",
     "docs": "docsify serve ./projects/ngx-bit/docs",
     "build:ngx-bit": "ng build ngx-bit --prod",
-    "release:ngx-bit": "cd dist/ngx-bit && npm publish"
+    "release:ngx-bit": "cd dist/ngx-bit && npm publish",
+    "test": "ng test",
+    "lint": "ng lint",
+    "e2e": "ng e2e"
   },
   "private": true,
   "dependencies": {
