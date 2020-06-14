@@ -23,6 +23,7 @@
     "@angular/service-worker": "~9.1.0",
     "@ngx-pwa/local-storage": "^9.0.3",
     "ajv": "^6.12.0",
+    "mqtt": "^4.1.0",
     "ng-zorro-antd": "^9.0.0",
     "ngx-bit": "^8.2.11",
     "rxjs": "~6.5.5",
