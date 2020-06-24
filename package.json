@@ -6,6 +6,8 @@
     "docs": "docsify serve ./projects/ngx-bit/docs",
     "build:ngx-bit": "ng build ngx-bit --prod",
     "release:ngx-bit": "cd dist/ngx-bit && npm publish",
+    "build:ngx-mqtt-lite": "ng build ngx-mqtt-lite --prod",
+    "release:ngx-mqtt-lite": "cd dist/ngx-mqtt-lite && npm publish",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"
