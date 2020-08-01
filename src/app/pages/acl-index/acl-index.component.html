@@ -67,7 +67,7 @@
     [nzPageSize]="lists.limit"
     [nzFrontPagination]="false"
     [(nzPageIndex)]="lists.index"
-    (nzPageIndexChange)="getLists()"
+    (nzPageIndexChange)="lists.persistence();getLists()"
     nzSize="middle"
   >
     <thead>

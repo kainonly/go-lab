@@ -11,7 +11,7 @@ export const environment = {
     uploadsPath: 'system/main/uploads',
     withCredentials: true,
     httpInterceptor: true,
-    pageLimit: 10,
+    pageLimit: 2,
     breadcrumbTop: 0,
     col: {
       label: {

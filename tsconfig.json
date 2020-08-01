@@ -46,6 +46,9 @@
       "ngx-bit/factory": [
         "projects/ngx-bit/factory/public-api.ts"
       ],
+      "ngx-bit/operates": [
+        "projects/ngx-bit/operates/public-api.ts"
+      ],
       "ngx-mqtt-lite": [
         "projects/ngx-mqtt-lite/src/public-api.ts"
       ],

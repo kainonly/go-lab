@@ -2,9 +2,9 @@ import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { SwalService, BitService } from 'ngx-bit';
 import { NzDrawerComponent, NzNotificationService, NzTreeComponent, NzTreeNodeOptions } from 'ng-zorro-antd';
 import { ListByPage } from 'ngx-bit/factory';
-import packer from './language';
 import { RoleService } from '@common/role.service';
 import { ResourceService } from '@common/resource.service';
+import packer from './language';
 
 @Component({
   selector: 'app-role-index',
