@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { SwalService, BitService } from 'ngx-bit';
 import { NzDrawerComponent, NzNotificationService, NzTreeComponent, NzTreeNodeOptions } from 'ng-zorro-antd';
+import { ListByPage } from 'ngx-bit/factory';
 import packer from './language';
 import { RoleService } from '@common/role.service';
 import { ResourceService } from '@common/resource.service';
@@ -12,13 +13,9 @@ import { ResourceService } from '@common/resource.service';
 export class RoleIndexComponent implements OnInit, AfterViewInit {
   @ViewChild('nzDrawer', { static: true }) nzDrawer: NzDrawerComponent;
   @ViewChild('nzTree') nzTree: NzTreeComponent;
-  lists = [];
+  lists: ListByPage;
   policyVisable = false;
   activeData: any;
-  policyInfo = {
-    0: 'readonly',
-    1: 'readandwrite'
-  };
   nodes: NzTreeNodeOptions[] = [];
 
   constructor(
@@ -32,13 +29,15 @@ export class RoleIndexComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.bit.registerLocales(packer);
-    this.bit.registerSearch('role-index',
-      { field: 'name->zh_cn', op: 'like', value: '' },
-      { field: 'name->en_us', op: 'like', value: '' }
-    ).subscribe(() => {
-      this.getLists();
-      this.getNodes();
+    this.lists = this.bit.listByPage({
+      id: 'role-index',
+      query: [
+        { field: 'name->zh_cn', op: 'like', value: '' },
+        { field: 'name->en_us', op: 'like', value: '' }
+      ]
     });
+    this.getLists();
+    this.getNodes();
   }
 
   ngAfterViewInit(): void {
@@ -65,12 +64,15 @@ export class RoleIndexComponent implements OnInit, AfterViewInit {
    * 获取列表数据
    */
   getLists(refresh = false) {
-    this.roleService.lists(this.bit.getSearch(), refresh).subscribe(data => {
-      this.lists = data.map(v => {
+    this.roleService.lists(
+      this.lists,
+      refresh
+    ).subscribe(data => {
+      this.lists.setData(data.map(v => {
         v.acl = v.acl.split(',').map(c => c.split(':'));
         v.resource = v.resource.split(',');
         return v;
-      });
+      }));
     });
   }
 
@@ -134,7 +136,7 @@ export class RoleIndexComponent implements OnInit, AfterViewInit {
    * 选中删除
    */
   deleteCheckData() {
-    const id = this.lists.filter(value => value.checked).map(v => v.id);
+    const id = this.lists.data.filter(value => value.checked).map(v => v.id);
     this.deleteData(id);
   }
 

@@ -2,14 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { SwalService, BitService } from 'ngx-bit';
 import { NzNotificationService } from 'ng-zorro-antd';
 import { AclService } from '@common/acl.service';
-import packer from './language';
+import { ListByPage } from 'ngx-bit/factory';
 
 @Component({
   selector: 'app-acl-index',
   templateUrl: './acl-index.component.html'
 })
 export class AclIndexComponent implements OnInit {
-  lists = [];
+  lists: ListByPage;
 
   constructor(
     private swal: SwalService,
@@ -20,30 +20,27 @@ export class AclIndexComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.bit.registerLocales(packer);
-    this.bit.registerSearch('acl-index',
-      { field: 'name->zh_cn', op: 'like', value: '' },
-      { field: 'name->en_us', op: 'like', value: '' }
-    ).subscribe(() => {
-      this.getLists();
+    // this.bit.registerLocales(packer);
+    this.lists = this.bit.listByPage({
+      id: 'acl-index',
+      query: [
+        { field: 'name->zh_cn', op: 'like', value: '' },
+        { field: 'name->en_us', op: 'like', value: '' }
+      ]
     });
+    this.getLists();
   }
 
   /**
    * 获取列表数据
    */
   getLists(refresh = false) {
-    this.aclService.lists(this.bit.getSearch(), refresh).subscribe(data => {
-      this.lists = data;
+    this.aclService.lists(
+      this.lists,
+      refresh
+    ).subscribe(data => {
+      this.lists.setData(data);
     });
-  }
-
-  /**
-   * 选择标签
-   */
-  selectType(value: number) {
-    this.bit.search[0].value = value;
-    this.getLists(true);
   }
 
   /**
@@ -70,7 +67,7 @@ export class AclIndexComponent implements OnInit {
    * 选中删除
    */
   deleteCheckData() {
-    const id = this.lists.filter(value => value.checked).map(v => v.id);
+    const id = this.lists.data.filter(value => value.checked).map(v => v.id);
     this.deleteData(id);
   }
 }

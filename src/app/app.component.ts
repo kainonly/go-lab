@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ComponentFactoryResolver, getPlatform, OnInit } from '@angular/core';
 import { BitService, ConfigService } from 'ngx-bit';
 import { NzMessageService } from 'ng-zorro-antd';
 import { Observable, of } from 'rxjs';

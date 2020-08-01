@@ -3,6 +3,7 @@ import { SwalService, BitService } from 'ngx-bit';
 import { NzNotificationService } from 'ng-zorro-antd';
 import { AdminService } from '@common/admin.service';
 import { RoleService } from '@common/role.service';
+import { ListByPage } from 'ngx-bit/factory';
 import packer from './language';
 
 @Component({
@@ -10,7 +11,7 @@ import packer from './language';
   templateUrl: './admin-index.component.html'
 })
 export class AdminIndexComponent implements OnInit {
-  lists = [];
+  lists: ListByPage;
   role: any = {};
 
   constructor(
@@ -24,20 +25,25 @@ export class AdminIndexComponent implements OnInit {
 
   ngOnInit() {
     this.bit.registerLocales(packer);
-    this.bit.registerSearch('admin-index', {
-      field: 'username', op: 'like', value: ''
-    }).subscribe(() => {
-      this.getLists();
-      this.getRole();
+    this.lists = this.bit.listByPage({
+      id: 'admin-index',
+      query: [
+        { field: 'username', op: 'like', value: '' }
+      ]
     });
+    this.getLists();
+    this.getRole();
   }
 
   /**
    * 获取列表数据
    */
   getLists(refresh = false) {
-    this.adminService.lists(this.bit.getSearch(), refresh).subscribe((data) => {
-      this.lists = data;
+    this.adminService.lists(
+      this.lists,
+      refresh
+    ).subscribe((data) => {
+      this.lists.setData(data);
     });
   }
 
@@ -83,7 +89,7 @@ export class AdminIndexComponent implements OnInit {
    * 选中删除
    */
   deleteCheckData() {
-    const id = this.lists.filter((value) => value.checked).map((v) => v.id);
+    const id = this.lists.data.filter((value) => value.checked).map((v) => v.id);
     this.deleteData(id);
   }
 

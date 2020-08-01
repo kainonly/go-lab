@@ -8,13 +8,13 @@
 
 <nz-card>
   <nz-space>
-    <nz-space-item *ngIf="bit.hasSearch('name->'+bit.locale)">
+    <nz-space-item *ngIf="lists.hasSearch('name->'+bit.locale)">
       <nz-input-group nzSearch [nzAddOnAfter]="nzAddOnAfter" style="width: 320px">
         <input
           nz-input
-          bitSearchStart="role-index"
+          [bitSearchStart]="lists"
           [placeholder]="bit.l['search']"
-          [(ngModel)]="bit.search['name->'+bit.locale].value"
+          [(ngModel)]="lists.search['name->'+bit.locale].value"
           (after)="getLists(true)"
         >
       </nz-input-group>
@@ -23,7 +23,7 @@
           nz-button
           nzType="primary"
           nzSearch
-          bitSearchStart="role-index"
+          [bitSearchStart]="lists"
           (after)="getLists(true)"
         >
           <i nz-icon nzType="search"></i>
@@ -39,7 +39,7 @@
       <button
         nz-button
         nzType="default"
-        bitSearchClear="role-index"
+        [bitSearchClear]="lists"
         (after)="getLists(true)"
       >
         <i nz-icon nzType="clear"></i> {{bit.l['clearSearch']}}
@@ -49,7 +49,7 @@
       <button
         nz-button
         nzType="danger"
-        [disabled]="bit.listsDisabledAction"
+        [disabled]="!lists.batch"
         (click)="deleteCheckData()"
       >
         <i nz-icon nzType="rest"></i> {{bit.l['bulkDelete']}}
@@ -61,21 +61,21 @@
 
   <nz-table
     #table
-    [nzData]="lists"
-    [nzLoading]="bit.listsLoading"
-    [nzTotal]="bit.listsTotals"
-    [nzPageSize]="bit.pageLimit"
+    [nzData]="lists.data"
+    [nzLoading]="lists.loading"
+    [nzTotal]="lists.totals"
+    [nzPageSize]="lists.limit"
     [nzFrontPagination]="false"
-    [(nzPageIndex)]="bit.listsPageIndex"
+    [(nzPageIndex)]="lists.index"
     (nzPageIndexChange)="getLists()"
     nzSize="middle"
   >
     <thead>
     <tr>
       <th nzShowCheckbox nzWidth="65px"
-          [(nzChecked)]="bit.listsAllChecked"
-          [nzIndeterminate]="bit.listsIndeterminate"
-          (nzCheckedChange)="bit.listsCheckAll($event,lists)"></th>
+          [(nzChecked)]="lists.checked"
+          [nzIndeterminate]="lists.indeterminate"
+          (nzCheckedChange)="lists.checkedAll($event)"></th>
       <th nzWidth="300px">{{bit.l['name']}}</th>
       <th nzWidth="300px">{{bit.l['key']}}</th>
       <th>{{bit.l['status']}}</th>
@@ -88,14 +88,16 @@
       <tr>
         <td nzShowCheckbox
             [(nzChecked)]="data.checked"
-            (nzCheckedChange)="bit.listsRefreshStatus(lists)"></td>
+            (nzCheckedChange)="lists.refreshStatus()"></td>
         <td>{{data.name|Locale:bit.locale}}</td>
         <td>{{data.key}}</td>
         <td>
-          <nz-switch [(ngModel)]="data.status"
-                     [nzCheckedChildren]="bit.l['on']"
-                     [nzUnCheckedChildren]="bit.l['off']"
-                     [bitStatusChange]="roleService.status(data)">
+          <nz-switch
+            [(ngModel)]="data.status"
+            [nzCheckedChildren]="bit.l['on']"
+            [nzUnCheckedChildren]="bit.l['off']"
+            [bitStatusChange]="roleService.status(data)"
+          >
           </nz-switch>
         </td>
         <td>
