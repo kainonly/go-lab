@@ -1,6 +1,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {asyncValidator, BitService, EventsService, SwalService} from 'ngx-bit';
+import {asyncValidator, BitService, BitEventsService, SwalService} from 'ngx-bit';
 import {ActivatedRoute} from '@angular/router';
 import {NzTreeNodeOptions} from 'ng-zorro-antd/core/tree/nz-tree-base-node';
 import {ResourceService} from '@common/resource.service';
@@ -21,7 +21,7 @@ export class ResourceEditComponent implements OnInit, OnDestroy {
   constructor(
     public bit: BitService,
     private fb: FormBuilder,
-    private events: EventsService,
+    private events: BitEventsService,
     private swal: SwalService,
     private route: ActivatedRoute,
     private resourceService: ResourceService

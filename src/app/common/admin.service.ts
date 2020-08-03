@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { HttpService } from 'ngx-bit';
+import { BitHttpService } from 'ngx-bit';
 
 @Injectable()
 export class AdminService {
   private model = 'admin';
 
   constructor(
-    private http: HttpService
+    private http: BitHttpService
   ) {
   }
 

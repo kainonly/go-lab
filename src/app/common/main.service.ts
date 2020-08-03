@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpService } from 'ngx-bit';
+import { BitHttpService } from 'ngx-bit';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -8,7 +8,7 @@ export class MainService {
   private model = 'main';
 
   constructor(
-    private http: HttpService
+    private http: BitHttpService
   ) {
   }
 

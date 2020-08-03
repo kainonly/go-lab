@@ -2,14 +2,14 @@ import { Injectable } from '@angular/core';
 import { ListByPage } from 'ngx-bit/factory';
 import { Observable, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
-import { HttpService } from 'ngx-bit';
+import { BitHttpService } from 'ngx-bit';
 
 @Injectable()
 export class AclService {
   private model = 'acl';
 
   constructor(
-    private http: HttpService
+    private http: BitHttpService
   ) {
   }
 

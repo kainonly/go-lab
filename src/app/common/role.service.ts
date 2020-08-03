@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpService } from 'ngx-bit';
+import { BitHttpService } from 'ngx-bit';
 import { Observable, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 
@@ -8,7 +8,7 @@ export class RoleService {
   private model = 'role';
 
   constructor(
-    private http: HttpService
+    private http: BitHttpService
   ) {
   }
 

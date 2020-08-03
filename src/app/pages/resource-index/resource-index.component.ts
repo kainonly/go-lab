@@ -9,7 +9,7 @@ import {
   NzTreeComponent, NzTreeNode,
   NzTreeNodeOptions
 } from 'ng-zorro-antd';
-import { BitService, EventsService, SwalService } from 'ngx-bit';
+import { BitService, BitEventsService, SwalService } from 'ngx-bit';
 import { Observable, of } from 'rxjs';
 import { PolicyService } from '@common/policy.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -40,7 +40,7 @@ export class ResourceIndexComponent implements OnInit, OnDestroy {
 
   constructor(
     public bit: BitService,
-    private events: EventsService,
+    private events: BitEventsService,
     private fb: FormBuilder,
     private swal: SwalService,
     private notification: NzNotificationService,

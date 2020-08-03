@@ -1,6 +1,6 @@
 import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {SwalService, BitService, asyncValidator, EventsService} from 'ngx-bit';
+import {SwalService, BitService, asyncValidator, BitEventsService} from 'ngx-bit';
 import {NzNotificationService, NzTreeComponent, NzTreeNodeOptions} from 'ng-zorro-antd';
 import {switchMap} from 'rxjs/operators';
 import {RoleService} from '@common/role.service';
@@ -25,7 +25,7 @@ export class RoleEditComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(
     public bit: BitService,
     private fb: FormBuilder,
-    private events: EventsService,
+    private events: BitEventsService,
     private notification: NzNotificationService,
     private swal: SwalService,
     private roleService: RoleService,

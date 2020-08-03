@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BitService, EventsService, StorageService } from 'ngx-bit';
+import { BitService, BitEventsService, StorageService } from 'ngx-bit';
 import { NzNotificationService } from 'ng-zorro-antd';
 import { MainService } from '@common/main.service';
 
@@ -17,7 +17,7 @@ export class DashboardsComponent implements OnInit, OnDestroy {
     private router: Router,
     private route: ActivatedRoute,
     private mainService: MainService,
-    private events: EventsService,
+    private events: BitEventsService,
     private storage: StorageService,
     private notification: NzNotificationService,
     public bit: BitService

@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
-import { HttpService } from 'ngx-bit';
+import { BitHttpService } from 'ngx-bit';
 
 @Injectable()
 export class ResourceService {
   private model = 'resource';
 
   constructor(
-    private http: HttpService
+    private http: BitHttpService
   ) {
   }
 
