@@ -34,10 +34,11 @@ export class AclIndexComponent implements OnInit {
   /**
    * 获取列表数据
    */
-  getLists(refresh = false) {
+  getLists(refresh = false, event?: number) {
     this.aclService.lists(
       this.lists,
-      refresh
+      refresh,
+      event !== undefined
     ).subscribe(data => {
       this.lists.setData(data);
     });

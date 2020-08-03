@@ -61,13 +61,14 @@
 
   <nz-table
     #table
+
     [nzData]="lists.data"
     [nzLoading]="lists.loading"
     [nzTotal]="lists.totals"
     [nzPageSize]="lists.limit"
     [nzFrontPagination]="false"
     [(nzPageIndex)]="lists.index"
-    (nzPageIndexChange)="lists.persistence();getLists()"
+    (nzPageIndexChange)="getLists(false,$event)"
     nzSize="middle"
   >
     <thead>

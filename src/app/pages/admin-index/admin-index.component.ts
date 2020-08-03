@@ -38,10 +38,11 @@ export class AdminIndexComponent implements OnInit {
   /**
    * 获取列表数据
    */
-  getLists(refresh = false) {
+  getLists(refresh = false, event?: number) {
     this.adminService.lists(
       this.lists,
-      refresh
+      refresh,
+      event !== undefined
     ).subscribe((data) => {
       this.lists.setData(data);
     });

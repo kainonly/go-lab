@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { ListByPage } from 'ngx-bit/factory';
 import { Observable, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { HttpService } from 'ngx-bit';
@@ -16,8 +17,11 @@ export class AclService {
     return this.http.originLists(this.model);
   }
 
-  lists(search: any, refresh: boolean): Observable<any> {
-    return this.http.lists(this.model, search, refresh);
+  lists(factory: ListByPage, refresh: boolean, persistence: boolean): Observable<any> {
+    return this.http.lists(this.model, factory, {
+      refresh,
+      persistence
+    });
   }
 
   add(data: any) {

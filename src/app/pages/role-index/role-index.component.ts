@@ -63,10 +63,11 @@ export class RoleIndexComponent implements OnInit, AfterViewInit {
   /**
    * 获取列表数据
    */
-  getLists(refresh = false) {
+  getLists(refresh = false, event?: number) {
     this.roleService.lists(
       this.lists,
-      refresh
+      refresh,
+      event !== undefined
     ).subscribe(data => {
       this.lists.setData(data.map(v => {
         v.acl = v.acl.split(',').map(c => c.split(':'));

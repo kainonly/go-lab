@@ -16,8 +16,11 @@ export class RoleService {
     return this.http.originLists(this.model);
   }
 
-  lists(search: any, refresh: boolean): Observable<any> {
-    return this.http.lists(this.model, search, refresh);
+  lists(search: any, refresh: boolean, persistence: boolean): Observable<any> {
+    return this.http.lists(this.model, search, {
+      refresh,
+      persistence
+    });
   }
 
   get(id: number) {
