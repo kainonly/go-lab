@@ -62,7 +62,7 @@ export class AdminIndexComponent implements OnInit {
   /**
    * 删除单操作
    */
-  deleteData(id: any) {
+  deleteData(id: any[]) {
     this.swal.deleteAlert(this.adminService.delete(id)).subscribe((res) => {
       if (!res.error) {
         this.notification.success(
@@ -90,7 +90,7 @@ export class AdminIndexComponent implements OnInit {
    * 选中删除
    */
   deleteCheckData() {
-    const id = this.lists.data.filter((value) => value.checked).map((v) => v.id);
+    const id = this.lists.getChecked().map((v) => v.id);
     this.deleteData(id);
   }
 

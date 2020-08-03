@@ -19,7 +19,7 @@ export class PolicyService {
     return this.http.add(this.model, data);
   }
 
-  delete(id: number | number[]): Observable<any> {
-    return this.http.delete(this.model, Array.isArray(id) ? id : [id]);
+  delete(id: any[]): Observable<any> {
+    return this.http.delete(this.model, id);
   }
 }

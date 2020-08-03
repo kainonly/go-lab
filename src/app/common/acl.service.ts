@@ -28,7 +28,7 @@ export class AclService {
     return this.http.add(this.model, data);
   }
 
-  get(id: number) {
+  get(id: any) {
     return this.http.get(this.model, id);
   }
 
@@ -36,8 +36,8 @@ export class AclService {
     return this.http.edit(this.model, data);
   }
 
-  delete(id: number | number[]): Observable<any> {
-    return this.http.delete(this.model, Array.isArray(id) ? id : [id]);
+  delete(id: any[]): Observable<any> {
+    return this.http.delete(this.model, id);
   }
 
   status(data: any): Observable<any> {
@@ -49,13 +49,17 @@ export class AclService {
    */
   validedName(name: string, edit: Observable<string> = of(null)) {
     return edit.pipe(
-      switchMap(nameKey => (name === nameKey ? of({
+      switchMap(nameKey => {
+        if (name !== nameKey) {
+          return this.http.req(this.model + '/validedName', {
+            name
+          });
+        }
+        return of({
           error: 0,
           data: false
-        }) : this.http.req(this.model + '/validedName', {
-          name
-        })
-      ))
+        });
+      })
     );
   }
 
@@ -64,13 +68,17 @@ export class AclService {
    */
   validedKey(key: string, edit: Observable<string> = of(null)) {
     return edit.pipe(
-      switchMap(editKey => (key === editKey ? of({
+      switchMap(editKey => {
+        if (key !== editKey) {
+          return this.http.req(this.model + '/validedKey', {
+            key
+          });
+        }
+        return of({
           error: 0,
           data: false
-        }) : this.http.req(this.model + '/validedKey', {
-          key
-        })
-      ))
+        });
+      })
     );
   }
 }

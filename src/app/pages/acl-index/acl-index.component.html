@@ -61,7 +61,6 @@
 
   <nz-table
     #table
-
     [nzData]="lists.data"
     [nzLoading]="lists.loading"
     [nzTotal]="lists.totals"
@@ -112,7 +111,7 @@
           <i nz-icon nzType="edit"></i> {{bit.l['edit']}}
         </a>
         <nz-divider nzType="vertical"></nz-divider>
-        <a (click)="deleteData(data.id)">
+        <a (click)="deleteData([data.id])">
           <i nz-icon nzType="delete"></i> {{bit.l['delete']}}
         </a>
       </td>

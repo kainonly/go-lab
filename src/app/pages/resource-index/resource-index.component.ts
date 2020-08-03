@@ -232,7 +232,7 @@ export class ResourceIndexComponent implements OnInit, OnDestroy {
    */
   deleteResource() {
     this.swal.deleteAlert(
-      this.resourceService.delete(this.activeNode.origin.id)
+      this.resourceService.delete([this.activeNode.origin.id])
     ).subscribe(res => {
       if (!res.error) {
         this.getNodes();
@@ -385,7 +385,7 @@ export class ResourceIndexComponent implements OnInit, OnDestroy {
    * 删除策略绑定
    */
   deletePolicy(id: number) {
-    this.policyService.delete(id).subscribe(res => {
+    this.policyService.delete([id]).subscribe(res => {
       if (!res.error) {
         this.notification.success(
           this.bit.l.operateSuccess,

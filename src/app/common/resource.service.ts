@@ -28,8 +28,8 @@ export class ResourceService {
     return this.http.edit(this.model, data);
   }
 
-  delete(id: number | number[]): Observable<any> {
-    return this.http.delete(this.model, Array.isArray(id) ? id : [id]);
+  delete(id: any[]): Observable<any> {
+    return this.http.delete(this.model, id);
   }
 
   /**
@@ -46,13 +46,17 @@ export class ResourceService {
    */
   validedKey(key: string, edit: Observable<string> = of(null)) {
     return edit.pipe(
-      switchMap(editKey => (key === editKey ? of({
+      switchMap(editKey => {
+        if (key !== editKey) {
+          return this.http.req(this.model + '/validedKey', {
+            key
+          });
+        }
+        return of({
           error: 0,
           data: false
-        }) : this.http.req(this.model + '/validedKey', {
-          key
-        })
-      ))
+        });
+      })
     );
   }
 }

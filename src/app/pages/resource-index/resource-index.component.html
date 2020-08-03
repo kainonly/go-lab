@@ -13,10 +13,12 @@
   <nz-space>
     <nz-space-item>
       <nz-input-group [nzSuffix]="suffixIcon" style="width: 320px">
-        <input type="text"
-               nz-input
-               [placeholder]="bit.l['search']"
-               [(ngModel)]="search"/>
+        <input
+          type="text"
+          nz-input
+          [placeholder]="bit.l['search']"
+          [(ngModel)]="search"
+        />
       </nz-input-group>
       <ng-template #suffixIcon>
         <i nz-icon nzType="search"></i>
