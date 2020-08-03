@@ -198,46 +198,6 @@
           }
         }
       }
-    },
-    "ngx-experiment": {
-      "projectType": "library",
-      "root": "projects/ngx-experiment",
-      "sourceRoot": "projects/ngx-experiment/src",
-      "prefix": "lib",
-      "architect": {
-        "build": {
-          "builder": "@angular-devkit/build-ng-packagr:build",
-          "options": {
-            "tsConfig": "projects/ngx-experiment/tsconfig.lib.json",
-            "project": "projects/ngx-experiment/ng-package.json"
-          },
-          "configurations": {
-            "production": {
-              "tsConfig": "projects/ngx-experiment/tsconfig.lib.prod.json"
-            }
-          }
-        },
-        "test": {
-          "builder": "@angular-devkit/build-angular:karma",
-          "options": {
-            "main": "projects/ngx-experiment/src/test.ts",
-            "tsConfig": "projects/ngx-experiment/tsconfig.spec.json",
-            "karmaConfig": "projects/ngx-experiment/karma.conf.js"
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "projects/ngx-experiment/tsconfig.lib.json",
-              "projects/ngx-experiment/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
-          }
-        }
-      }
     }
   },
   "defaultProject": "van-console",

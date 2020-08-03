@@ -7,7 +7,6 @@ import { registerLocaleData } from '@angular/common';
 import zh from '@angular/common/locales/zh';
 import { NZ_I18N, zh_CN } from 'ng-zorro-antd';
 import { NgxBitModule } from 'ngx-bit';
-import { NgxExperimentModule } from 'ngx-experiment';
 import { environment } from '@env';
 
 registerLocaleData(zh);
@@ -49,8 +48,7 @@ const routes: Routes = [
     NgxBitModule.forRoot(environment.bit),
     RouterModule.forRoot(routes, { useHash: true }),
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
-    StorageModule.forRoot({ IDBNoWrap: false }),
-    NgxExperimentModule
+    StorageModule.forRoot({ IDBNoWrap: false })
   ],
   providers: [
     UpdateService,
