@@ -1,9 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { asyncValidator, BitService, BitEventsService, SwalService } from 'ngx-bit';
+import { BitService, BitEventsService, SwalService } from 'ngx-bit';
 import { ActivatedRoute } from '@angular/router';
 import { NzTreeNodeOptions } from 'ng-zorro-antd/core/tree/nz-tree-base-node';
 import { ResourceService } from '@common/resource.service';
+import { asyncValidator } from 'ngx-bit/operates';
 import { switchMap } from 'rxjs/operators';
 import { AsyncSubject } from 'rxjs';
 
