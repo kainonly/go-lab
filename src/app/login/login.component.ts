@@ -54,7 +54,7 @@ export class LoginComponent implements OnInit {
   submit(data: any) {
     this.mainService.login(data.username, data.password).subscribe(res => {
       if (!res.error) {
-        this.support.clear();
+        this.support.clearStorage();
         if (data.remember) {
           this.storageMap.get('users').pipe(
             switchMap((lists: Set<string>) =>
@@ -66,8 +66,12 @@ export class LoginComponent implements OnInit {
           ).subscribe(() => {
           });
         }
-        sessionStorage.setItem('currentUsername', data.username);
-        sessionStorage.setItem('loginTime', new Date().toISOString());
+        this.storageMap.set('currentUsername', data.username).subscribe(() => {
+          // ok
+        });
+        this.storageMap.set('loginTime', new Date().toISOString()).subscribe(() => {
+          // ok
+        });
         this.notification.success(
           this.bit.l.loginTips,
           this.bit.l.loginSuccess

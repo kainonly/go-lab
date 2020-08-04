@@ -26,19 +26,15 @@ export class DashboardsComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.getMenuLists();
-    this.support.setup(this.router);
-    this.events.on('locale').subscribe(locale => {
-      this.bit.locale = locale;
-    });
+    this.support.autoBreadcrumb(this.router);
     this.events.on('refresh-menu').subscribe(() => {
       this.getMenuLists();
     });
   }
 
   ngOnDestroy() {
-    this.events.off('locale');
     this.events.off('refresh-menu');
-    this.support.destory();
+    this.support.unsubscribe();
   }
 
   /**
@@ -46,7 +42,7 @@ export class DashboardsComponent implements OnInit, OnDestroy {
    */
   private getMenuLists() {
     this.mainService.resource().subscribe(data => {
-      this.support.putResource(data.resource, data.router);
+      this.support.setResource(data.resource, data.router);
       this.navLists = data.nav;
     });
   }
@@ -56,8 +52,8 @@ export class DashboardsComponent implements OnInit, OnDestroy {
    */
   logout() {
     this.mainService.logout().subscribe(() => {
-      this.support.clear();
-      this.support.destory();
+      this.support.clearStorage();
+      this.support.unsubscribe();
       this.router.navigateByUrl('/login');
       this.notification.success(this.bit.l.logout, this.bit.l.logoutSuccess);
     });
