@@ -41,14 +41,14 @@
           <ng-container *ngFor="let x of navs">
             <ng-container *ngIf="x.router;else notRouter">
               <li nz-menu-item
-                  [nzSelected]="bit.navActive.indexOf(x.key)!==-1"
+                  [nzSelected]="support.navActive.indexOf(x.key)!==-1"
                   [bitOpen]="[x.key]">
                 <i nz-icon [nzType]="x.icon"></i>
                 <span class="nav-text">{{x.name|Locale:bit.locale}}</span>
               </li>
             </ng-container>
             <ng-template #notRouter>
-              <li nz-submenu [nzOpen]="bit.navActive.indexOf(x.key)!==-1">
+              <li nz-submenu [nzOpen]="support.navActive.indexOf(x.key)!==-1">
                 <span title><i nz-icon [nzType]="x.icon"></i><span>{{x.name|Locale:bit.locale}}</span></span>
                 <ul>
                   <ng-container *ngTemplateOutlet="navTpl; context: {$implicit: x.children}"></ng-container>
@@ -67,7 +67,7 @@
         <nz-breadcrumb-item>
           <a routerLink="/">{{bit.l['dashboard']}}</a>
         </nz-breadcrumb-item>
-        <nz-breadcrumb-item *ngFor="let x of bit.breadcrumb;last as islast">
+        <nz-breadcrumb-item *ngFor="let x of support.breadcrumb;last as islast">
           <ng-container *ngIf="islast;else notLast">{{x.name|Locale:bit.locale}}</ng-container>
           <ng-template #notLast>
             <a *ngIf="x.router;else notRouterlink" [bitCrossLevel]="x.key">

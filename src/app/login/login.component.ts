@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NzNotificationService } from 'ng-zorro-antd';
 import { MainService } from '@common/main.service';
-import { BitService, StorageService } from 'ngx-bit';
+import { BitService, BitSupportService } from 'ngx-bit';
 import { StorageMap } from '@ngx-pwa/local-storage';
 import { switchMap } from 'rxjs/operators';
 
@@ -22,7 +22,7 @@ export class LoginComponent implements OnInit {
     private router: Router,
     private fb: FormBuilder,
     public bit: BitService,
-    private storageService: StorageService,
+    private support: BitSupportService,
     private storageMap: StorageMap
   ) {
   }
@@ -54,7 +54,7 @@ export class LoginComponent implements OnInit {
   submit(data: any) {
     this.mainService.login(data.username, data.password).subscribe(res => {
       if (!res.error) {
-        this.storageService.clear();
+        this.support.clear();
         if (data.remember) {
           this.storageMap.get('users').pipe(
             switchMap((lists: Set<string>) =>

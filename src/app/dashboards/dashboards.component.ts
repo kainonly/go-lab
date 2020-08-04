@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BitService, BitEventsService, StorageService } from 'ngx-bit';
+import { BitService, BitEventsService, BitSupportService } from 'ngx-bit';
 import { NzNotificationService } from 'ng-zorro-antd';
 import { MainService } from '@common/main.service';
 
@@ -18,15 +18,15 @@ export class DashboardsComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private mainService: MainService,
     private events: BitEventsService,
-    private storage: StorageService,
     private notification: NzNotificationService,
+    public support: BitSupportService,
     public bit: BitService
   ) {
   }
 
   ngOnInit() {
     this.getMenuLists();
-    this.storage.setup(this.router);
+    this.support.setup(this.router);
     this.events.on('locale').subscribe(locale => {
       this.bit.locale = locale;
     });
@@ -38,7 +38,7 @@ export class DashboardsComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.events.off('locale');
     this.events.off('refresh-menu');
-    this.storage.destory();
+    this.support.destory();
   }
 
   /**
@@ -46,7 +46,7 @@ export class DashboardsComponent implements OnInit, OnDestroy {
    */
   private getMenuLists() {
     this.mainService.resource().subscribe(data => {
-      this.storage.putResource(data.resource, data.router);
+      this.support.putResource(data.resource, data.router);
       this.navLists = data.nav;
     });
   }
@@ -56,10 +56,8 @@ export class DashboardsComponent implements OnInit, OnDestroy {
    */
   logout() {
     this.mainService.logout().subscribe(() => {
-      this.bit.breadcrumb = [];
-      this.bit.navActive = [];
-      this.storage.clear();
-      this.storage.destory();
+      this.support.clear();
+      this.support.destory();
       this.router.navigateByUrl('/login');
       this.notification.success(this.bit.l.logout, this.bit.l.logoutSuccess);
     });
