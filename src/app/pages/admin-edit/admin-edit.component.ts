@@ -6,7 +6,6 @@ import { NzNotificationService } from 'ng-zorro-antd';
 import { AdminService } from '@common/admin.service';
 import { RoleService } from '@common/role.service';
 import { ActivatedRoute } from '@angular/router';
-import packer from './language';
 
 @Component({
   selector: 'app-admin-edit',
@@ -31,7 +30,7 @@ export class AdminEditComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.bit.registerLocales(packer);
+    this.bit.registerLocales(import('./language'));
     this.form = this.fb.group({
       password: [null, [this.validedPassword]],
       password_check: [null, [this.checkPassword]],

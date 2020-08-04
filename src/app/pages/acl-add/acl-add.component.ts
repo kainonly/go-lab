@@ -4,7 +4,6 @@ import { SwalService, BitService, asyncValidator } from 'ngx-bit';
 import { NzNotificationService } from 'ng-zorro-antd';
 import { AclService } from '@common/acl.service';
 import { map, switchMap } from 'rxjs/operators';
-import packer from './language';
 
 @Component({
   selector: 'app-acl-add',
@@ -25,7 +24,7 @@ export class AclAddComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.bit.registerLocales(packer);
+    this.bit.registerLocales(import('./language'));
     this.form = this.fb.group({
       name: this.fb.group(this.bit.i18nGroup({
         validate: {

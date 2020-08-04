@@ -4,7 +4,6 @@ import { NzDrawerComponent, NzNotificationService, NzTreeComponent, NzTreeNodeOp
 import { ListByPage } from 'ngx-bit/factory';
 import { RoleService } from '@common/role.service';
 import { ResourceService } from '@common/resource.service';
-import packer from './language';
 
 @Component({
   selector: 'app-role-index',
@@ -28,7 +27,7 @@ export class RoleIndexComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
-    this.bit.registerLocales(packer);
+    this.bit.registerLocales(import('./language'));
     this.lists = this.bit.listByPage({
       id: 'role-index',
       query: [

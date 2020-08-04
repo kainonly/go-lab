@@ -6,7 +6,6 @@ import { map, switchMap } from 'rxjs/operators';
 import { AclService } from '@common/acl.service';
 import { ActivatedRoute } from '@angular/router';
 import { AsyncSubject } from 'rxjs';
-import packer from './language';
 
 @Component({
   selector: 'app-acl-edit',
@@ -31,7 +30,7 @@ export class AclEditComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.bit.registerLocales(packer);
+    this.bit.registerLocales(import('./language'));
     this.form = this.fb.group({
       name: this.fb.group(this.bit.i18nGroup({
         validate: {

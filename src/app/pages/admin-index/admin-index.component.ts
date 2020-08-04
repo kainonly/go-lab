@@ -4,7 +4,6 @@ import { NzNotificationService } from 'ng-zorro-antd';
 import { AdminService } from '@common/admin.service';
 import { RoleService } from '@common/role.service';
 import { ListByPage } from 'ngx-bit/factory';
-import packer from './language';
 
 @Component({
   selector: 'app-admin-index',
@@ -24,7 +23,7 @@ export class AdminIndexComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.bit.registerLocales(packer);
+    this.bit.registerLocales(import('./language'));
     this.lists = this.bit.listByPage({
       id: 'admin-index',
       query: [

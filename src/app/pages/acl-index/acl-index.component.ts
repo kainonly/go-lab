@@ -20,7 +20,7 @@ export class AclIndexComponent implements OnInit {
   }
 
   ngOnInit() {
-    // this.bit.registerLocales(packer);
+    this.bit.registerLocales(import('./language'));
     this.lists = this.bit.listByPage({
       id: 'acl-index',
       query: [

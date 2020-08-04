@@ -27,7 +27,6 @@ export class DashboardsComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.getMenuLists();
     this.storage.setup(this.router);
-    this.bit.registerLocales({});
     this.events.on('locale').subscribe(locale => {
       this.bit.locale = locale;
     });

@@ -3,7 +3,6 @@ import { BitService } from 'ngx-bit';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { NzNotificationService } from 'ng-zorro-antd';
 import { MainService } from '@common/main.service';
-import packer from './language';
 
 @Component({
   selector: 'app-profile',
@@ -23,7 +22,7 @@ export class ProfileComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.bit.registerLocales(packer);
+    this.bit.registerLocales(import('./language'));
     this.form = this.fb.group({
       call: [null],
       email: [null, [Validators.email]],

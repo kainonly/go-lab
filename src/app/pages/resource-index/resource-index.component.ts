@@ -14,7 +14,6 @@ import { Observable, of } from 'rxjs';
 import { PolicyService } from '@common/policy.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AclService } from '@common/acl.service';
-import packer from './language';
 
 @Component({
   selector: 'app-resource-index',
@@ -52,7 +51,7 @@ export class ResourceIndexComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.bit.registerLocales(packer);
+    this.bit.registerLocales(import('./language'));
     this.getNodes();
     this.getPolicy();
     this.events.on('locale').subscribe(() => {

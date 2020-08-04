@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { BitService } from 'ngx-bit';
-import packer from './app.language';
+import { BitConfigService, BitService } from 'ngx-bit';
 
 @Component({
   selector: 'app-root',
@@ -10,11 +9,12 @@ import packer from './app.language';
 })
 export class AppComponent implements OnInit {
   constructor(
-    private bit: BitService
+    private bit: BitService,
+    private config: BitConfigService
   ) {
   }
 
   ngOnInit() {
-    this.bit.registerLocales(packer, true);
+    this.config.setupLocales(import('./app.language'));
   }
 }

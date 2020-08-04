@@ -6,7 +6,6 @@ import { MainService } from '@common/main.service';
 import { BitService, StorageService } from 'ngx-bit';
 import { StorageMap } from '@ngx-pwa/local-storage';
 import { switchMap } from 'rxjs/operators';
-import packer from './language';
 
 @Component({
   selector: 'app-login',
@@ -29,7 +28,7 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.bit.registerLocales(packer);
+    this.bit.registerLocales(import('./language'));
     this.form = this.fb.group({
       username: [null, [
         Validators.required,

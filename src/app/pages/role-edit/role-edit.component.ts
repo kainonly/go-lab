@@ -5,7 +5,6 @@ import {NzNotificationService, NzTreeComponent, NzTreeNodeOptions} from 'ng-zorr
 import {switchMap} from 'rxjs/operators';
 import {RoleService} from '@common/role.service';
 import {ResourceService} from '@common/resource.service';
-import packer from './language';
 import {ActivatedRoute} from '@angular/router';
 import {AsyncSubject} from 'rxjs';
 
@@ -35,7 +34,7 @@ export class RoleEditComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.bit.registerLocales(packer);
+    this.bit.registerLocales(import('./language'));
     this.form = this.fb.group({
       name: this.fb.group(this.bit.i18nGroup({
         validate: {

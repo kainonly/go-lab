@@ -1,12 +1,11 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {asyncValidator, BitService, BitEventsService, SwalService} from 'ngx-bit';
-import {ActivatedRoute} from '@angular/router';
-import {NzTreeNodeOptions} from 'ng-zorro-antd/core/tree/nz-tree-base-node';
-import {ResourceService} from '@common/resource.service';
-import {switchMap} from 'rxjs/operators';
-import {AsyncSubject} from 'rxjs';
-import packer from './language';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { asyncValidator, BitService, BitEventsService, SwalService } from 'ngx-bit';
+import { ActivatedRoute } from '@angular/router';
+import { NzTreeNodeOptions } from 'ng-zorro-antd/core/tree/nz-tree-base-node';
+import { ResourceService } from '@common/resource.service';
+import { switchMap } from 'rxjs/operators';
+import { AsyncSubject } from 'rxjs';
 
 @Component({
   selector: 'app-resource-edit',
@@ -29,7 +28,7 @@ export class ResourceEditComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.bit.registerLocales(packer);
+    this.bit.registerLocales(import('./language'));
     this.form = this.fb.group({
       name: this.fb.group(this.bit.i18nGroup({
         validate: {

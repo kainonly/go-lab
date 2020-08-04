@@ -5,7 +5,6 @@ import {ActivatedRoute} from '@angular/router';
 import {NzTreeNodeOptions} from 'ng-zorro-antd/core/tree/nz-tree-base-node';
 import {ResourceService} from '@common/resource.service';
 import {switchMap} from 'rxjs/operators';
-import packer from './language';
 
 @Component({
   selector: 'app-resource-add',
@@ -27,7 +26,7 @@ export class ResourceAddComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.bit.registerLocales(packer);
+    this.bit.registerLocales(import('./language'));
     this.form = this.fb.group({
       name: this.fb.group(this.bit.i18nGroup({
         validate: {

@@ -1,7 +1,7 @@
 import { en_US, zh_CN } from 'ng-zorro-antd';
-import { BitConfig } from 'ngx-bit/types';
+import { factoryBitConfig } from 'ngx-bit/operates';
 
-const bit: BitConfig = {
+const bit = factoryBitConfig({
   url: {
     api: 'http://localhost:9501',
     static: 'https://cdn.kainonly.com/',
@@ -37,7 +37,11 @@ const bit: BitConfig = {
   },
   locale: {
     default: 'zh_cn',
-    bind: new Map([
+    mapping: new Map<number, string>([
+      [0, 'zh_cn'],
+      [1, 'en_us']
+    ]),
+    bind: new Map<string, any>([
       ['zh_cn', zh_CN],
       ['en_us', en_US]
     ])
@@ -63,7 +67,7 @@ const bit: BitConfig = {
     ]
   },
   page: 20
-};
+});
 
 export const environment = {
   production: false,
