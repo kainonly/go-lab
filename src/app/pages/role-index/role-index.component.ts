@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import { SwalService, BitService } from 'ngx-bit';
+import { BitSwalService, BitService } from 'ngx-bit';
 import { NzDrawerComponent, NzNotificationService, NzTreeComponent, NzTreeNodeOptions } from 'ng-zorro-antd';
 import { ListByPage } from 'ngx-bit/factory';
 import { RoleService } from '@common/role.service';
@@ -18,7 +18,7 @@ export class RoleIndexComponent implements OnInit, AfterViewInit {
   nodes: NzTreeNodeOptions[] = [];
 
   constructor(
-    private swal: SwalService,
+    private swal: BitSwalService,
     public bit: BitService,
     private notification: NzNotificationService,
     public roleService: RoleService,

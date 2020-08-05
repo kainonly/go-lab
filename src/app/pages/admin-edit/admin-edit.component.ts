@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { SwalService, BitService } from 'ngx-bit';
+import { BitSwalService, BitService } from 'ngx-bit';
 import { switchMap } from 'rxjs/operators';
 import { NzNotificationService } from 'ng-zorro-antd';
 import { AdminService } from '@common/admin.service';
@@ -19,7 +19,7 @@ export class AdminEditComponent implements OnInit {
   roleLists: any[] = [];
 
   constructor(
-    private swal: SwalService,
+    private swal: BitSwalService,
     private fb: FormBuilder,
     public bit: BitService,
     private route: ActivatedRoute,
@@ -98,7 +98,7 @@ export class AdminEditComponent implements OnInit {
   getData() {
     this.adminService.get(this.id).subscribe(data => {
       if (data.self) {
-        SwalService.native.fire({
+        BitSwalService.native.fire({
           title: this.bit.l.operateInfo,
           text: this.bit.l.selfTips,
           icon: 'info',

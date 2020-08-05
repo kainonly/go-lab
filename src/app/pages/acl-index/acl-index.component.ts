@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { SwalService, BitService } from 'ngx-bit';
+import { BitSwalService, BitService } from 'ngx-bit';
 import { NzNotificationService } from 'ng-zorro-antd';
 import { AclService } from '@common/acl.service';
 import { ListByPage } from 'ngx-bit/factory';
@@ -12,7 +12,7 @@ export class AclIndexComponent implements OnInit {
   lists: ListByPage;
 
   constructor(
-    private swal: SwalService,
+    private swal: BitSwalService,
     public bit: BitService,
     public aclService: AclService,
     private notification: NzNotificationService

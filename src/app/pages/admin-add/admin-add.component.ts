@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { SwalService, BitService } from 'ngx-bit';
+import { BitSwalService, BitService } from 'ngx-bit';
 import { asyncValidator } from 'ngx-bit/operates';
 import { switchMap } from 'rxjs/operators';
 import { NzNotificationService } from 'ng-zorro-antd';
@@ -17,7 +17,7 @@ export class AdminAddComponent implements OnInit {
   roleLists: any[] = [];
 
   constructor(
-    private swal: SwalService,
+    private swal: BitSwalService,
     private fb: FormBuilder,
     public bit: BitService,
     private notification: NzNotificationService,

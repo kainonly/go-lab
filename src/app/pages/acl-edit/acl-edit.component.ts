@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { SwalService, BitService } from 'ngx-bit';
+import { BitSwalService, BitService } from 'ngx-bit';
 import { AbstractControl, AsyncValidatorFn, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NzNotificationService } from 'ng-zorro-antd';
 import { asyncValidator } from 'ngx-bit/operates';
@@ -24,7 +24,7 @@ export class AclEditComponent implements OnInit {
     public bit: BitService,
     private fb: FormBuilder,
     private notification: NzNotificationService,
-    private swal: SwalService,
+    private swal: BitSwalService,
     private route: ActivatedRoute,
     private aclService: AclService
   ) {

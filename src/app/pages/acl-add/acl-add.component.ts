@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, AsyncValidatorFn, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { SwalService, BitService } from 'ngx-bit';
+import { BitSwalService, BitService } from 'ngx-bit';
 import { NzNotificationService } from 'ng-zorro-antd';
 import { AclService } from '@common/acl.service';
 import { asyncValidator } from 'ngx-bit/operates';
@@ -19,7 +19,7 @@ export class AclAddComponent implements OnInit {
     public bit: BitService,
     private fb: FormBuilder,
     private notification: NzNotificationService,
-    private swal: SwalService,
+    private swal: BitSwalService,
     private aclService: AclService
   ) {
   }

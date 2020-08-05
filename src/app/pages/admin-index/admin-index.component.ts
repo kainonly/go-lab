@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { SwalService, BitService } from 'ngx-bit';
+import { BitSwalService, BitService } from 'ngx-bit';
 import { NzNotificationService } from 'ng-zorro-antd';
 import { AdminService } from '@common/admin.service';
 import { RoleService } from '@common/role.service';
@@ -14,7 +14,7 @@ export class AdminIndexComponent implements OnInit {
   role: any = {};
 
   constructor(
-    private swal: SwalService,
+    private swal: BitSwalService,
     public bit: BitService,
     public adminService: AdminService,
     private roleService: RoleService,
