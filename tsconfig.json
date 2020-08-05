@@ -34,23 +34,8 @@
       "ngx-bit": [
         "projects/ngx-bit/src/public-api.ts"
       ],
-      "ngx-bit/directive": [
-        "projects/ngx-bit/src/directive/public-api.ts"
-      ],
-      "ngx-bit/component": [
-        "projects/ngx-bit/src/component/public-api.ts"
-      ],
-      "ngx-bit/pipe": [
-        "projects/ngx-bit/src/pipe/public-api.ts"
-      ],
-      "ngx-bit/factory": [
-        "projects/ngx-bit/src/factory/public-api.ts"
-      ],
-      "ngx-bit/operates": [
-        "projects/ngx-bit/src/operates/public-api.ts"
-      ],
-      "ngx-bit/types": [
-        "projects/ngx-bit/src/types/public-api.ts"
+      "ngx-bit/*": [
+        "projects/ngx-bit/src/*"
       ],
       "ngx-mqtt-lite": [
         "projects/ngx-mqtt-lite/src/public-api.ts"
