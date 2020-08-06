@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { BitSwalService, BitService } from 'ngx-bit';
 import { AbstractControl, AsyncValidatorFn, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NzNotificationService } from 'ng-zorro-antd';
-import { asyncValidator } from 'ngx-bit/operates';
+import { asyncValidator } from 'ngx-bit/../../../../projects/ngx-bit/operates';
 import { map, switchMap } from 'rxjs/operators';
 import { AclService } from '@common/acl.service';
 import { ActivatedRoute } from '@angular/router';

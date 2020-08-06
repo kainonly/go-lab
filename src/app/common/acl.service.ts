@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ListByPage } from 'ngx-bit/factory';
+import { ListByPage } from 'ngx-bit/../../../projects/ngx-bit/factory';
 import { Observable, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { BitHttpService } from 'ngx-bit';
