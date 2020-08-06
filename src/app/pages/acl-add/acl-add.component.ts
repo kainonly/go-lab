@@ -3,7 +3,7 @@ import { AbstractControl, AsyncValidatorFn, FormBuilder, FormGroup, Validators }
 import { BitSwalService, BitService } from 'ngx-bit';
 import { NzNotificationService } from 'ng-zorro-antd';
 import { AclService } from '@common/acl.service';
-import { asyncValidator } from 'ngx-bit/../../../../projects/ngx-bit/operates';
+import { asyncValidator } from 'ngx-bit/operates';
 import { map, switchMap } from 'rxjs/operators';
 
 @Component({

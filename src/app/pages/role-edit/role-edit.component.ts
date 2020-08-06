@@ -2,7 +2,7 @@ import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { BitSwalService, BitService, BitEventsService } from 'ngx-bit';
 import { NzNotificationService, NzTreeComponent, NzTreeNodeOptions } from 'ng-zorro-antd';
-import { asyncValidator } from 'ngx-bit/../../../../projects/ngx-bit/operates';
+import { asyncValidator } from 'ngx-bit/operates';
 import { switchMap } from 'rxjs/operators';
 import { RoleService } from '@common/role.service';
 import { ResourceService } from '@common/resource.service';

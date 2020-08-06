@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { BitSwalService, BitService } from 'ngx-bit';
-import { asyncValidator } from 'ngx-bit/../../../../projects/ngx-bit/operates';
+import { asyncValidator } from 'ngx-bit/operates';
 import { switchMap } from 'rxjs/operators';
 import { NzNotificationService } from 'ng-zorro-antd';
 import { AdminService } from '@common/admin.service';
