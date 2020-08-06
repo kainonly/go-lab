@@ -1,5 +1,5 @@
 import { en_US, zh_CN } from 'ng-zorro-antd';
-import { factoryBitConfig } from 'ngx-bit/../../projects/ngx-bit/operates';
+import { factoryBitConfig } from 'ngx-bit/operates';
 
 const bit = factoryBitConfig({
   url: {

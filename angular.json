@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "van-console": {
+    "angularx-utils": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/van-console",
+            "outputPath": "dist/angularx-utils",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -69,11 +69,11 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "van-console:build"
+            "browserTarget": "angularx-utils:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "van-console:build:production"
+              "browserTarget": "angularx-utils:build:production"
             }
           }
         }
@@ -100,7 +100,7 @@
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "main": "projects/ngx-bit/src/test.ts",
+            "main": "projects/ngx-bit/test.ts",
             "tsConfig": "projects/ngx-bit/tsconfig.spec.json",
             "karmaConfig": "projects/ngx-bit/karma.conf.js"
           }
@@ -200,7 +200,7 @@
       }
     }
   },
-  "defaultProject": "van-console",
+  "defaultProject": "angularx-utils",
   "cli": {
     "analytics": "ab1bb0eb-ad9b-4481-8057-ff2d76424627"
   }
