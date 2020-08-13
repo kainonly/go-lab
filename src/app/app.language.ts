@@ -59,6 +59,7 @@ export default {
   items: ['项目', 'items'],
   clearSearch: ['清除搜索', 'Clear Search'],
   noResult: ['当前列表无数据', 'No data in current list'],
+  i18n: ['多语言输入框', 'a multilingual input box'],
   noTips: ['无提示', 'No prompt'],
   statusSuccess: ['状态已更新成功', 'Status updated successfully'],
   statusError: ['请求错误，状态更新失败', 'Request error, status update failed'],

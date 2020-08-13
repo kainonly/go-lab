@@ -30,10 +30,10 @@ export class AclAddComponent implements OnInit {
       name: this.fb.group(this.bit.i18nGroup({
         validate: {
           zh_cn: [Validators.required],
-          en_us: []
+          en_us: [Validators.required]
         },
         asyncValidate: {
-          zh_cn: [this.existsName],
+          zh_cn: [],
           en_us: []
         }
       })),
