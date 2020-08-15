@@ -1,6 +1,0 @@
-[submodule "projects/ngx-bit"]
-	path = projects/ngx-bit
-	url = git@github.com:kainonly/ngx-bit.git
-[submodule "projects/ngx-mqtt-lite"]
-	path = projects/ngx-mqtt-lite
-	url = git@github.com:kainonly/ngx-mqtt-lite.git
