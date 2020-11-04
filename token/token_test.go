@@ -1,18 +1,19 @@
 package token
 
 import (
+	"github.com/dgrijalva/jwt-go"
 	"os"
 	"testing"
 )
 
-var token []byte
+var tokenString string
 var err error
 
 func TestMain(m *testing.M) {
 	Options = map[string]Option{
 		"system": {
-			Issuer:   "iris-helper",
-			Audience: []string{"tester"},
+			Issuer:   "helper",
+			Audience: []string{"dev"},
 			Expires:  3600,
 		},
 	}
@@ -20,17 +21,17 @@ func TestMain(m *testing.M) {
 }
 
 func TestMake(t *testing.T) {
-	token, err = Make("system", map[string]interface{}{
+	tokenString, err = Make("system", jwt.MapClaims{
 		"username": "kain",
 	})
 	if err != nil {
 		t.Fatal(err)
 	}
-	t.Log(string(token))
+	t.Log(tokenString)
 }
 
 func TestVerify(t *testing.T) {
-	claims, err := Verify("system", token, nil)
+	claims, err := Verify("system", tokenString, nil)
 	if err != nil {
 		t.Fatal(err)
 	}

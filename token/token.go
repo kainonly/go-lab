@@ -2,58 +2,62 @@ package token
 
 import (
 	"fmt"
+	"github.com/dgrijalva/jwt-go"
 	"github.com/google/uuid"
-	"github.com/kataras/jwt"
 	"time"
 )
 
 type Option struct {
-	Issuer   string   `yaml:"issuer"`
-	Audience []string `yaml:"audience"`
-	Expires  uint     `yaml:"expires"`
+	Issuer   string
+	Audience []string
+	Expires  uint
 }
 
-type Handle func(option Option) (claims map[string]interface{}, err error)
+type Handle func(option Option) (claims jwt.MapClaims, err error)
 
 var (
 	Key     []byte
 	Options map[string]Option
-	Method  = jwt.HS256
+	Method  jwt.SigningMethod = jwt.SigningMethodHS256
 )
 
-func Make(scene string, claims map[string]interface{}) (token []byte, err error) {
+func Make(scene string, claims jwt.MapClaims) (tokenString string, err error) {
 	option, exists := Options[scene]
 	if !exists {
 		err = fmt.Errorf("the [%v] scene does not exist", scene)
 		return
 	}
 	claims["jti"] = uuid.New()
+	claims["iat"] = time.Now().Unix()
 	claims["iss"] = option.Issuer
 	claims["aud"] = option.Audience
-	token, err = jwt.Sign(Method, Key, claims, jwt.MaxAge(time.Second*time.Duration(option.Expires)))
-	if err != nil {
-		return
-	}
+	claims["exp"] = time.Now().Add(time.Second * time.Duration(option.Expires)).Unix()
+	token := jwt.NewWithClaims(Method, claims)
+	tokenString, err = token.SignedString(Key)
 	return
 }
 
-func Verify(scene string, token []byte, refresh Handle) (claims map[string]interface{}, err error) {
+func Verify(scene string, tokenString string, refresh Handle) (claims jwt.MapClaims, err error) {
 	option, exists := Options[scene]
 	if !exists {
 		err = fmt.Errorf("the [%v] scene does not exist", scene)
 		return
 	}
-	var verifiedToken *jwt.VerifiedToken
-	verifiedToken, err = jwt.Verify(Method, Key, token)
-	if err != nil {
-		if err == jwt.ErrExpired && refresh != nil {
-			return refresh(option)
+	var token *jwt.Token
+	token, err = jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 		}
-		return
-	}
-	err = verifiedToken.Claims(&claims)
+		return Key, nil
+	})
 	if err != nil {
-		return
+		if ve, ok := err.(*jwt.ValidationError); ok {
+			if ve.Errors == jwt.ValidationErrorExpired {
+				return refresh(option)
+			}
+		}
+	} else {
+		claims = token.Claims.(jwt.MapClaims)
 	}
 	return
 }
