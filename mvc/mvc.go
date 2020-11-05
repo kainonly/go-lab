@@ -37,6 +37,6 @@ func (c *Mvc) AutoController(path string, controller interface{}) {
 	for i := 0; i < typ.NumMethod(); i++ {
 		name := typ.Method(i).Name
 		method := val.MethodByName(name).Interface()
-		c.POST(path+"/"+xstrings.ToSnakeCase(name), c.Handle(method))
+		c.POST(path+"/"+xstrings.FirstRuneToLower(name), c.Handle(method))
 	}
 }
