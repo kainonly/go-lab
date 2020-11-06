@@ -1,4 +1,4 @@
-module github.com/kainonly/gin-support
+module github.com/kainonly/gin-extra
 
 go 1.15
 
