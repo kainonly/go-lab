@@ -6,16 +6,19 @@ import (
 	"reflect"
 )
 
-type Mvc struct {
-	*gin.Engine
+type mvc struct {
+	routes     *gin.RouterGroup
 	dependency interface{}
 }
 
-func (c *Mvc) Dependency(dependency interface{}) {
+func Factory(routes *gin.RouterGroup, dependency interface{}) *mvc {
+	c := new(mvc)
+	c.routes = routes
 	c.dependency = dependency
+	return c
 }
 
-func (c *Mvc) Handle(handlersFn interface{}) gin.HandlerFunc {
+func (c *mvc) Handle(handlersFn interface{}) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		switch method := handlersFn.(type) {
 		case func() interface{}:
@@ -31,12 +34,12 @@ func (c *Mvc) Handle(handlersFn interface{}) gin.HandlerFunc {
 	}
 }
 
-func (c *Mvc) AutoController(path string, controller interface{}) {
+func (c *mvc) AutoController(path string, controller interface{}) {
 	typ := reflect.TypeOf(controller)
 	val := reflect.ValueOf(controller)
 	for i := 0; i < typ.NumMethod(); i++ {
 		name := typ.Method(i).Name
 		method := val.MethodByName(name).Interface()
-		c.POST(path+"/"+xstrings.FirstRuneToLower(name), c.Handle(method))
+		c.routes.POST(path+"/"+xstrings.FirstRuneToLower(name), c.Handle(method))
 	}
 }

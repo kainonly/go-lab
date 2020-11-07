@@ -21,12 +21,7 @@ func Cors(option Option) gin.HandlerFunc {
 	allowHeader := strings.Join(option.AllowHeader, ",")
 	exposedHeader := strings.Join(option.ExposedHeader, ",")
 	maxAge := strconv.Itoa(option.MaxAge)
-
 	return func(ctx *gin.Context) {
-		if ctx.Request.Method == "OPTIONS" {
-			ctx.Status(200)
-			return
-		}
 		ctx.Header("access-control-allow-origin", origin)
 		ctx.Header("Access-Control-Allow-Methods", method)
 		ctx.Header("Access-Control-Allow-Headers", allowHeader)
@@ -34,6 +29,10 @@ func Cors(option Option) gin.HandlerFunc {
 		ctx.Header("Access-Control-Max-Age", maxAge)
 		if option.Credentials {
 			ctx.Header("Access-Control-Allow-Credentials", "true")
+		}
+		if ctx.Request.Method == "OPTIONS" {
+			ctx.Status(200)
+			return
 		}
 		ctx.Next()
 	}
