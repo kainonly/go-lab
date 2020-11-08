@@ -7,12 +7,12 @@ import (
 )
 
 type Option struct {
-	Origin        []string
-	Method        []string
-	AllowHeader   []string
-	ExposedHeader []string
-	MaxAge        int
-	Credentials   bool
+	Origin        []string `yaml:"origin"`
+	Method        []string `yaml:"method"`
+	AllowHeader   []string `yaml:"allow_header"`
+	ExposedHeader []string `yaml:"exposed_header"`
+	MaxAge        int      `yaml:"max_age"`
+	Credentials   bool     `yaml:"credentials"`
 }
 
 func Cors(option Option) gin.HandlerFunc {

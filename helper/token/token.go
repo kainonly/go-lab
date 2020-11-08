@@ -8,9 +8,9 @@ import (
 )
 
 type Option struct {
-	Issuer   string
-	Audience []string
-	Expires  uint
+	Issuer   string   `yaml:"issuer"`
+	Audience []string `yaml:"audience"`
+	Expires  uint     `yaml:"expires"`
 }
 
 type Handle func(option Option) (claims jwt.MapClaims, err error)
