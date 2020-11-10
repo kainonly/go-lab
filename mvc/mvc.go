@@ -35,8 +35,14 @@ func (c *mvc) Handle(handlersFn interface{}) gin.HandlerFunc {
 }
 
 type Auto struct {
-	Path       string
-	Controller interface{}
+	Path        string
+	Controller  interface{}
+	Middlewares []Middleware
+}
+
+type Middleware struct {
+	Handle gin.HandlerFunc
+	Only   []string
 }
 
 func (c *mvc) AutoController(auto Auto) {
@@ -45,6 +51,19 @@ func (c *mvc) AutoController(auto Auto) {
 	for i := 0; i < typ.NumMethod(); i++ {
 		name := typ.Method(i).Name
 		method := val.MethodByName(name).Interface()
-		c.routes.POST(auto.Path+"/"+xstrings.FirstRuneToLower(name), c.Handle(method))
+		var handlers []gin.HandlerFunc
+		for _, middleware := range auto.Middlewares {
+			if len(middleware.Only) == 0 {
+				handlers = append(handlers, middleware.Handle)
+			} else {
+				for _, m := range middleware.Only {
+					if m == name {
+						handlers = append(handlers, middleware.Handle)
+					}
+				}
+			}
+		}
+		handlers = append(handlers, c.Handle(method))
+		c.routes.POST(auto.Path+"/"+xstrings.FirstRuneToLower(name), handlers...)
 	}
 }
