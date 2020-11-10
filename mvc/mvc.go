@@ -34,12 +34,17 @@ func (c *mvc) Handle(handlersFn interface{}) gin.HandlerFunc {
 	}
 }
 
-func (c *mvc) AutoController(path string, controller interface{}) {
-	typ := reflect.TypeOf(controller)
-	val := reflect.ValueOf(controller)
+type Auto struct {
+	Path       string
+	Controller interface{}
+}
+
+func (c *mvc) AutoController(auto Auto) {
+	typ := reflect.TypeOf(auto.Controller)
+	val := reflect.ValueOf(auto.Controller)
 	for i := 0; i < typ.NumMethod(); i++ {
 		name := typ.Method(i).Name
 		method := val.MethodByName(name).Interface()
-		c.routes.POST(path+"/"+xstrings.FirstRuneToLower(name), c.Handle(method))
+		c.routes.POST(auto.Path+"/"+xstrings.FirstRuneToLower(name), c.Handle(method))
 	}
 }
