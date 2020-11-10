@@ -7,6 +7,25 @@ import (
 	"time"
 )
 
+var (
+	Key     []byte
+	Options map[string]Option
+	Method  jwt.SigningMethod = jwt.SigningMethodHS256
+)
+
+type Token struct {
+	value  string
+	claims jwt.MapClaims
+}
+
+func (c *Token) String() string {
+	return c.value
+}
+
+func (c *Token) Claims() jwt.MapClaims {
+	return c.claims
+}
+
 type Option struct {
 	Issuer   string   `yaml:"issuer"`
 	Audience []string `yaml:"audience"`
@@ -15,25 +34,25 @@ type Option struct {
 
 type Handle func(option Option) (claims jwt.MapClaims, err error)
 
-var (
-	Key     []byte
-	Options map[string]Option
-	Method  jwt.SigningMethod = jwt.SigningMethodHS256
-)
-
-func Make(scene string, claims jwt.MapClaims) (tokenString string, err error) {
+func Make(scene string, claims jwt.MapClaims) (token *Token, err error) {
 	option, exists := Options[scene]
 	if !exists {
 		err = fmt.Errorf("the [%v] scene does not exist", scene)
 		return
 	}
+	token = new(Token)
 	claims["jti"] = uuid.New()
 	claims["iat"] = time.Now().Unix()
 	claims["iss"] = option.Issuer
 	claims["aud"] = option.Audience
 	claims["exp"] = time.Now().Add(time.Second * time.Duration(option.Expires)).Unix()
-	token := jwt.NewWithClaims(Method, claims)
-	tokenString, err = token.SignedString(Key)
+	t := jwt.NewWithClaims(Method, claims)
+	token.claims = t.Claims.(jwt.MapClaims)
+	token.value, err = t.SignedString(Key)
+	if err != nil {
+		return
+	}
+
 	return
 }
 

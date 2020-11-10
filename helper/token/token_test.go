@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-var tokenString string
+var token *Token
 var err error
 
 func TestMain(m *testing.M) {
@@ -21,17 +21,17 @@ func TestMain(m *testing.M) {
 }
 
 func TestMake(t *testing.T) {
-	tokenString, err = Make("system", jwt.MapClaims{
+	claims := jwt.MapClaims{
 		"username": "kain",
-	})
-	if err != nil {
+	}
+	if token, err = Make("system", claims); err != nil {
 		t.Fatal(err)
 	}
-	t.Log(tokenString)
+	t.Log(token.String())
 }
 
 func TestVerify(t *testing.T) {
-	claims, err := Verify("system", tokenString, nil)
+	claims, err := Verify("system", token.String(), nil)
 	if err != nil {
 		t.Fatal(err)
 	}
