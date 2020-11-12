@@ -7,29 +7,35 @@ import (
 )
 
 type mvc struct {
-	routes     *gin.RouterGroup
-	dependency interface{}
+	routes *gin.RouterGroup
 }
 
-func Factory(routes *gin.RouterGroup, dependency interface{}) *mvc {
+func Factory(routes *gin.RouterGroup) *mvc {
 	c := new(mvc)
 	c.routes = routes
-	c.dependency = dependency
 	return c
 }
 
-func (c *mvc) Handle(handlersFn interface{}) gin.HandlerFunc {
+func Handle(handlersFn interface{}) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		switch method := handlersFn.(type) {
-		case func() interface{}:
-			ctx.JSON(200, method())
-			break
-		case func(ctx *gin.Context) interface{}:
-			ctx.JSON(200, method(ctx))
-			break
-		case func(*gin.Context, interface{}) interface{}:
-			ctx.JSON(200, method(ctx, c.dependency))
-			break
+		if method, ok := handlersFn.(func(ctx *gin.Context) interface{}); ok {
+			result := method(ctx)
+			switch val := result.(type) {
+			case bool:
+				if val {
+					ctx.Status(200)
+				} else {
+					ctx.Status(500)
+				}
+				break
+			case error:
+				ctx.JSON(400, val.Error())
+				break
+			default:
+				ctx.JSON(200, val)
+			}
+		} else {
+			ctx.Status(404)
 		}
 	}
 }
@@ -63,7 +69,7 @@ func (c *mvc) AutoController(auto Auto) {
 				}
 			}
 		}
-		handlers = append(handlers, c.Handle(method))
+		handlers = append(handlers, Handle(method))
 		c.routes.POST(auto.Path+"/"+xstrings.FirstRuneToLower(name), handlers...)
 	}
 }
