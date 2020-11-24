@@ -16,23 +16,32 @@ func Factory(routes *gin.RouterGroup) *mvc {
 	return c
 }
 
-func Handle(handlersFn interface{}) gin.HandlerFunc {
+func Handle(handlerFn interface{}) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		if method, ok := handlersFn.(func(ctx *gin.Context) interface{}); ok {
-			result := method(ctx)
-			switch val := result.(type) {
+		if method, ok := handlerFn.(func(ctx *gin.Context) interface{}); ok {
+			handle := method(ctx)
+			switch result := handle.(type) {
 			case bool:
-				if val {
-					ctx.Status(200)
+				if result {
+					ctx.JSON(200, gin.H{
+						"error": 0,
+						"msg":   "ok",
+					})
 				} else {
-					ctx.Status(500)
+					ctx.Status(403)
 				}
 				break
 			case error:
-				ctx.JSON(400, val.Error())
+				ctx.JSON(200, gin.H{
+					"error": 1,
+					"msg":   result.Error(),
+				})
 				break
 			default:
-				ctx.JSON(200, val)
+				ctx.JSON(200, gin.H{
+					"error": 0,
+					"data":  result,
+				})
 			}
 		} else {
 			ctx.Status(404)
