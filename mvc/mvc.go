@@ -28,7 +28,7 @@ func Handle(handlerFn interface{}) gin.HandlerFunc {
 						"msg":   "ok",
 					})
 				} else {
-					ctx.Status(403)
+					ctx.Status(500)
 				}
 				break
 			case error:

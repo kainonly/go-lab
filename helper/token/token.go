@@ -26,7 +26,7 @@ func (c *Token) Claims() jwt.MapClaims {
 }
 
 // create a token
-// @param claims jwt.MapClaims @refer http://self-issued.info/docs/draft-ietf-oauth-json-web-token.html#Claims
+// @param claims jwt.MapClaims http://self-issued.info/docs/draft-ietf-oauth-json-web-token.html#Claims
 // @param expires time.Duration
 // @return token *Token
 func Make(claims jwt.MapClaims, expires time.Duration) (token *Token, err error) {

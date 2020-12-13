@@ -8,7 +8,6 @@ import (
 	"golang.org/x/crypto/argon2"
 	"regexp"
 	"strconv"
-	"strings"
 )
 
 var (
@@ -44,14 +43,12 @@ func Make(password string, option Option) (hashedPassword string, err error) {
 		option.Threads = DefaultThreads
 	}
 	hash := argon2.IDKey([]byte(password), salt, option.Time, option.Memory, option.Threads, 32)
-	var build strings.Builder
-	build.WriteString("$argon2id$v=" + strconv.Itoa(argon2.Version))
-	build.WriteString("$m=" + strconv.Itoa(int(option.Memory)))
-	build.WriteString(",t=" + strconv.Itoa(int(option.Time)))
-	build.WriteString(",p=" + strconv.Itoa(int(option.Threads)))
-	build.WriteString("$" + base64.RawStdEncoding.EncodeToString(salt))
-	build.WriteString("$" + base64.RawStdEncoding.EncodeToString(hash))
-	hashedPassword = build.String()
+	hashedPassword = "$argon2id$v=" + strconv.Itoa(argon2.Version)
+	hashedPassword += "$m=" + strconv.Itoa(int(option.Memory))
+	hashedPassword += ",t=" + strconv.Itoa(int(option.Time))
+	hashedPassword += ",p=" + strconv.Itoa(int(option.Threads))
+	hashedPassword += "$" + base64.RawStdEncoding.EncodeToString(salt)
+	hashedPassword += "$" + base64.RawStdEncoding.EncodeToString(hash)
 	return
 }
 
@@ -65,23 +62,23 @@ func Verify(password string, hashedPassword string) (result bool, err error) {
 	if args[1] != `argon2id` {
 		return false, ErrInvalidHash
 	}
-	version, err := strconv.Atoi(args[2])
-	if err != nil {
+	var version int
+	if version, err = strconv.Atoi(args[2]); err != nil {
 		return false, err
 	}
 	if version != argon2.Version {
 		return false, ErrIncompatibleVersion
 	}
-	memory, err := strconv.ParseUint(args[3], 10, 32)
-	if err != nil {
+	var memory uint64
+	if memory, err = strconv.ParseUint(args[3], 10, 32); err != nil {
 		return false, err
 	}
-	time, err := strconv.ParseUint(args[4], 10, 32)
-	if err != nil {
+	var time uint64
+	if time, err = strconv.ParseUint(args[4], 10, 32); err != nil {
 		return false, err
 	}
-	threads, err := strconv.Atoi(args[5])
-	if err != nil {
+	var threads int
+	if threads, err = strconv.Atoi(args[5]); err != nil {
 		return false, err
 	}
 	option := Option{
@@ -89,12 +86,12 @@ func Verify(password string, hashedPassword string) (result bool, err error) {
 		Time:    uint32(time),
 		Threads: uint8(threads),
 	}
-	decodeSalt, err := base64.RawStdEncoding.DecodeString(args[6])
-	if err != nil {
+	var decodeSalt []byte
+	if decodeSalt, err = base64.RawStdEncoding.DecodeString(args[6]); err != nil {
 		return false, err
 	}
-	hash, err := base64.RawStdEncoding.DecodeString(args[7])
-	if err != nil {
+	var hash []byte
+	if hash, err = base64.RawStdEncoding.DecodeString(args[7]); err != nil {
 		return false, err
 	}
 	newHash := argon2.IDKey([]byte(password), decodeSalt, option.Time, option.Memory, option.Threads, 32)
