@@ -1,4 +1,4 @@
-package mvc
+package mvcx
 
 import (
 	"github.com/gin-gonic/gin"
@@ -6,21 +6,27 @@ import (
 	"reflect"
 )
 
-type mvc struct {
-	routes *gin.RouterGroup
+type mvcx struct {
+	routes     *gin.RouterGroup
+	dependency interface{}
 }
 
-func Factory(routes *gin.RouterGroup) *mvc {
-	c := new(mvc)
-	c.routes = routes
-	return c
+func Initialize(routes *gin.RouterGroup, dependency interface{}) *mvcx {
+	return &mvcx{
+		routes:     routes,
+		dependency: dependency,
+	}
+}
+
+type Middleware struct {
+	Handle gin.HandlerFunc
+	Only   []string
 }
 
 func Handle(handlerFn interface{}) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		if method, ok := handlerFn.(func(ctx *gin.Context) interface{}); ok {
-			handle := method(ctx)
-			switch result := handle.(type) {
+		if fn, ok := handlerFn.(func(ctx *gin.Context) interface{}); ok {
+			switch result := fn(ctx).(type) {
 			case bool:
 				if result {
 					ctx.JSON(200, gin.H{
@@ -28,7 +34,10 @@ func Handle(handlerFn interface{}) gin.HandlerFunc {
 						"msg":   "ok",
 					})
 				} else {
-					ctx.Status(500)
+					ctx.JSON(200, gin.H{
+						"error": 1,
+						"msg":   "failed",
+					})
 				}
 				break
 			case error:
@@ -49,25 +58,19 @@ func Handle(handlerFn interface{}) gin.HandlerFunc {
 	}
 }
 
-type Auto struct {
-	Path        string
-	Controller  interface{}
-	Middlewares []Middleware
-}
-
-type Middleware struct {
-	Handle gin.HandlerFunc
-	Only   []string
-}
-
-func (c *mvc) AutoController(auto Auto) {
-	typ := reflect.TypeOf(auto.Controller)
-	val := reflect.ValueOf(auto.Controller)
+func (c *mvcx) AutoController(path string, controller interface{}, middlewares ...Middleware) {
+	if control, ok := controller.(interface {
+		Inject(dependency interface{})
+	}); ok {
+		control.Inject(c.dependency)
+	}
+	typ := reflect.TypeOf(controller)
+	val := reflect.ValueOf(controller)
 	for i := 0; i < typ.NumMethod(); i++ {
 		name := typ.Method(i).Name
 		method := val.MethodByName(name).Interface()
 		var handlers []gin.HandlerFunc
-		for _, middleware := range auto.Middlewares {
+		for _, middleware := range middlewares {
 			if len(middleware.Only) == 0 {
 				handlers = append(handlers, middleware.Handle)
 			} else {
@@ -79,6 +82,6 @@ func (c *mvc) AutoController(auto Auto) {
 			}
 		}
 		handlers = append(handlers, Handle(method))
-		c.routes.POST(auto.Path+"/"+xstrings.FirstRuneToLower(name), handlers...)
+		c.routes.POST(path+"/"+xstrings.FirstRuneToLower(name), handlers...)
 	}
 }
