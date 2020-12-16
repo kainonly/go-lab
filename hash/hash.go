@@ -11,7 +11,7 @@ import (
 )
 
 var (
-	Default = argon2Option{
+	DEFAULT = argon2Option{
 		time:    uint32(4),
 		memory:  uint32(64 * 1024),
 		threads: uint8(1),
@@ -41,10 +41,18 @@ func (c time) apply(opt *argon2Option) {
 	opt.time = uint32(c)
 }
 
+func Memory(value uint32) Option {
+	return memory(value)
+}
+
 type memory uint32
 
 func (c memory) apply(opt *argon2Option) {
 	opt.memory = uint32(c)
+}
+
+func Threads(value uint8) Option {
+	return threads(value)
 }
 
 type threads uint8
@@ -53,12 +61,16 @@ func (c threads) apply(opt *argon2Option) {
 	opt.threads = uint8(c)
 }
 
+// Use argon2id hash to generate user password
+//	@param `password` string user password
+//	@param `options` ...Option the algorithm using the memory, time, and threads options
+//	@return `hashedPassword` string hash password
 func Make(password string, options ...Option) (hashedPassword string, err error) {
 	salt := make([]byte, 16)
 	if _, err = rand.Read(salt); err != nil {
 		return
 	}
-	option := Default
+	option := DEFAULT
 	for _, value := range options {
 		value.apply(&option)
 	}
@@ -72,6 +84,9 @@ func Make(password string, options ...Option) (hashedPassword string, err error)
 	return
 }
 
+// Verifying that a password matches a hash
+//	@param `password` string user password
+//	@param `hashedPassword` string hash password
 func Verify(password string, hashedPassword string) (result bool, err error) {
 	args := regexp.
 		MustCompile(`^\$(\w+)\$v=(\d+)\$m=(\d+),t=(\d+),p=(\d+)\$(\S+)\$(\S+)`).
