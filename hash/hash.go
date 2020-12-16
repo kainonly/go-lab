@@ -11,42 +11,62 @@ import (
 )
 
 var (
-	DefaultTime    = uint32(4)
-	DefaultMemory  = uint32(64 * 1024)
-	DefaultThreads = uint8(1)
-)
+	Default = argon2Option{
+		time:    uint32(4),
+		memory:  uint32(64 * 1024),
+		threads: uint8(1),
+	}
 
-var (
 	ErrInvalidHash         = errors.New(`the encoded hash is not in the correct format`)
-	ErrIncompatibleVersion = errors.New(`incompatible version of argon2`)
+	ErrIncompatibleVersion = errors.New(`incompatible version of argon2id`)
 )
 
-type Option struct {
-	Time    uint32
-	Memory  uint32
-	Threads uint8
+type Option interface {
+	apply(param *argon2Option)
 }
 
-func Make(password string, option Option) (hashedPassword string, err error) {
+type argon2Option struct {
+	time    uint32
+	memory  uint32
+	threads uint8
+}
+
+func Time(value uint32) Option {
+	return time(value)
+}
+
+type time uint32
+
+func (c time) apply(opt *argon2Option) {
+	opt.time = uint32(c)
+}
+
+type memory uint32
+
+func (c memory) apply(opt *argon2Option) {
+	opt.memory = uint32(c)
+}
+
+type threads uint8
+
+func (c threads) apply(opt *argon2Option) {
+	opt.threads = uint8(c)
+}
+
+func Make(password string, options ...Option) (hashedPassword string, err error) {
 	salt := make([]byte, 16)
-	_, err = rand.Read(salt)
-	if err != nil {
+	if _, err = rand.Read(salt); err != nil {
 		return
 	}
-	if option.Time == 0 {
-		option.Time = DefaultTime
+	option := Default
+	for _, value := range options {
+		value.apply(&option)
 	}
-	if option.Memory == 0 {
-		option.Memory = DefaultMemory
-	}
-	if option.Threads == 0 {
-		option.Threads = DefaultThreads
-	}
-	hash := argon2.IDKey([]byte(password), salt, option.Time, option.Memory, option.Threads, 32)
+	hash := argon2.IDKey([]byte(password), salt, option.time, option.memory, option.threads, 32)
 	hashedPassword = "$argon2id$v=" + strconv.Itoa(argon2.Version)
-	hashedPassword += "$m=" + strconv.Itoa(int(option.Memory))
-	hashedPassword += ",t=" + strconv.Itoa(int(option.Time))
-	hashedPassword += ",p=" + strconv.Itoa(int(option.Threads))
+	hashedPassword += "$m=" + strconv.Itoa(int(option.memory))
+	hashedPassword += ",t=" + strconv.Itoa(int(option.time))
+	hashedPassword += ",p=" + strconv.Itoa(int(option.threads))
 	hashedPassword += "$" + base64.RawStdEncoding.EncodeToString(salt)
 	hashedPassword += "$" + base64.RawStdEncoding.EncodeToString(hash)
 	return
@@ -81,10 +101,10 @@ func Verify(password string, hashedPassword string) (result bool, err error) {
 	if threads, err = strconv.Atoi(args[5]); err != nil {
 		return false, err
 	}
-	option := Option{
-		Memory:  uint32(memory),
-		Time:    uint32(time),
-		Threads: uint8(threads),
+	option := argon2Option{
+		memory:  uint32(memory),
+		time:    uint32(time),
+		threads: uint8(threads),
 	}
 	var decodeSalt []byte
 	if decodeSalt, err = base64.RawStdEncoding.DecodeString(args[6]); err != nil {
@@ -94,7 +114,7 @@ func Verify(password string, hashedPassword string) (result bool, err error) {
 	if hash, err = base64.RawStdEncoding.DecodeString(args[7]); err != nil {
 		return false, err
 	}
-	newHash := argon2.IDKey([]byte(password), decodeSalt, option.Time, option.Memory, option.Threads, 32)
+	newHash := argon2.IDKey([]byte(password), decodeSalt, option.time, option.memory, option.threads, 32)
 	if subtle.ConstantTimeCompare(hash, newHash) == 1 {
 		return true, nil
 	}
