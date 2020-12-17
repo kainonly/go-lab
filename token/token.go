@@ -8,9 +8,24 @@ import (
 )
 
 var (
-	Key    []byte
-	Method jwt.SigningMethod = jwt.SigningMethodHS256
+	def = tokenOption{
+		key:    nil,
+		method: jwt.SigningMethodHS256,
+	}
 )
+
+type tokenOption struct {
+	key    []byte
+	method jwt.SigningMethod
+}
+
+func LoadKey(value []byte) {
+	def.key = value
+}
+
+func SigningMethod(value jwt.SigningMethod) {
+	def.method = value
+}
 
 type Token struct {
 	value  string
@@ -34,9 +49,9 @@ func Make(claims jwt.MapClaims, expires time.Duration) (token *Token, err error)
 	claims["jti"] = uuid.New()
 	claims["iat"] = time.Now().Unix()
 	claims["exp"] = time.Now().Add(expires).Unix()
-	ref := jwt.NewWithClaims(Method, claims)
+	ref := jwt.NewWithClaims(def.method, claims)
 	token.claims = ref.Claims.(jwt.MapClaims)
-	if token.value, err = ref.SignedString(Key); err != nil {
+	if token.value, err = ref.SignedString(def.key); err != nil {
 		return
 	}
 	return
@@ -57,7 +72,7 @@ func Verify(tokenString string, refresh RefreshHandle) (claims jwt.MapClaims, er
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 		}
-		return Key, nil
+		return def.key, nil
 	}); err != nil {
 		if ve, ok := err.(*jwt.ValidationError); ok {
 			if ve.Errors == jwt.ValidationErrorExpired {

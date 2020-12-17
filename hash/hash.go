@@ -11,7 +11,7 @@ import (
 )
 
 var (
-	DEFAULT = argon2Option{
+	def = argon2Option{
 		time:    uint32(4),
 		memory:  uint32(64 * 1024),
 		threads: uint8(1),
@@ -70,7 +70,7 @@ func Make(password string, options ...Option) (hashedPassword string, err error)
 	if _, err = rand.Read(salt); err != nil {
 		return
 	}
-	option := DEFAULT
+	option := def
 	for _, value := range options {
 		value.apply(&option)
 	}
