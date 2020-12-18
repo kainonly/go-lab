@@ -19,25 +19,21 @@ type tokenOption struct {
 	method jwt.SigningMethod
 }
 
+// Load signing key
+//	@param `value` []byte
 func LoadKey(value []byte) {
 	def.key = value
 }
 
+// Set signature method
+//	@param `value` jwt.SigningMethod
 func SigningMethod(value jwt.SigningMethod) {
 	def.method = value
 }
 
 type Token struct {
-	value  string
-	claims jwt.MapClaims
-}
-
-func (c *Token) String() string {
-	return c.value
-}
-
-func (c *Token) Claims() jwt.MapClaims {
-	return c.claims
+	Value  string
+	Claims jwt.MapClaims
 }
 
 // create a token
@@ -50,8 +46,8 @@ func Make(claims jwt.MapClaims, expires time.Duration) (token *Token, err error)
 	claims["iat"] = time.Now().Unix()
 	claims["exp"] = time.Now().Add(expires).Unix()
 	ref := jwt.NewWithClaims(def.method, claims)
-	token.claims = ref.Claims.(jwt.MapClaims)
-	if token.value, err = ref.SignedString(def.key); err != nil {
+	token.Claims = ref.Claims.(jwt.MapClaims)
+	if token.Value, err = ref.SignedString(def.key); err != nil {
 		return
 	}
 	return
@@ -75,7 +71,7 @@ func Verify(tokenString string, refresh RefreshHandle) (claims jwt.MapClaims, er
 		return def.key, nil
 	}); err != nil {
 		if ve, ok := err.(*jwt.ValidationError); ok {
-			if ve.Errors == jwt.ValidationErrorExpired {
+			if ve.Errors == jwt.ValidationErrorExpired && refresh != nil {
 				if token != nil {
 					return refresh(token.Claims.(jwt.MapClaims))
 				}

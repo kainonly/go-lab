@@ -11,6 +11,10 @@ type mvcx struct {
 	dependency interface{}
 }
 
+// Initialize the mvc factory function
+//	@param `routes` *gin.RouterGroup
+//	@param `dependency` interface{}
+//	@return *mvcx
 func Initialize(routes *gin.RouterGroup, dependency interface{}) *mvcx {
 	return &mvcx{
 		routes:     routes,
@@ -18,11 +22,9 @@ func Initialize(routes *gin.RouterGroup, dependency interface{}) *mvcx {
 	}
 }
 
-type Middleware struct {
-	Handle gin.HandlerFunc
-	Only   []string
-}
-
+// Unified response results
+//	@param `handlerFn` interface{} method
+//	@return gin.HandlerFunc
 func Handle(handlerFn interface{}) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		if fn, ok := handlerFn.(func(ctx *gin.Context) interface{}); ok {
@@ -58,6 +60,19 @@ func Handle(handlerFn interface{}) gin.HandlerFunc {
 	}
 }
 
+type Middleware struct {
+
+	// Middleware definition
+	Handle gin.HandlerFunc
+
+	// Limit the methods that include middleware
+	Only []string
+}
+
+// Automatically register controller routing
+//	@param `path` string
+//	@param `controller` interface{}
+//	@param `middlewares` ...Middleware
 func (c *mvcx) AutoController(path string, controller interface{}, middlewares ...Middleware) {
 	if control, ok := controller.(interface {
 		Inject(dependency interface{})
