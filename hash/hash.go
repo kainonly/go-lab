@@ -26,8 +26,14 @@ type Option interface {
 }
 
 type argon2Option struct {
-	time    uint32
-	memory  uint32
+
+	// Maximum memory (in kibibytes) that may be used to compute the Argon2 hash
+	time uint32
+
+	// Maximum amount of time it may take to compute the Argon2 hash
+	memory uint32
+
+	// Number of threads to use for computing the Argon2 hash
 	threads uint8
 }
 

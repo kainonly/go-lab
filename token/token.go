@@ -41,9 +41,9 @@ func (c *Token) Claims() jwt.MapClaims {
 }
 
 // create a token
-// 	@param claims jwt.MapClaims http://self-issued.info/docs/draft-ietf-oauth-json-web-token.html#Claims
-// 	@param expires time.Duration
-// 	@return token *Token
+// 	@param `claims` jwt.MapClaims http://self-issued.info/docs/draft-ietf-oauth-json-web-token.html#Claims
+// 	@param `expires` time.Duration
+// 	@return `token` *Token
 func Make(claims jwt.MapClaims, expires time.Duration) (token *Token, err error) {
 	token = new(Token)
 	claims["jti"] = uuid.New()
@@ -58,7 +58,7 @@ func Make(claims jwt.MapClaims, expires time.Duration) (token *Token, err error)
 }
 
 // token refresh logic
-// 	@param claims jwt.MapClaims
+// 	@param `claims` jwt.MapClaims
 // 	@return jwt.MapClaims
 type RefreshHandle func(claims jwt.MapClaims) (jwt.MapClaims, error)
 
