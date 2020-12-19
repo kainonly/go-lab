@@ -46,7 +46,7 @@ func Cors(option Option) gin.HandlerFunc {
 			ctx.Header("Access-Control-Allow-Credentials", "true")
 		}
 		if ctx.Request.Method == "OPTIONS" {
-			ctx.Status(200)
+			ctx.AbortWithStatus(200)
 			return
 		}
 		ctx.Next()

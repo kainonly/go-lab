@@ -1,4 +1,4 @@
-package token
+package tokenx
 
 import (
 	"fmt"
@@ -59,12 +59,12 @@ func Make(claims jwt.MapClaims, expires time.Duration) (token *Token, err error)
 type RefreshHandle func(claims jwt.MapClaims) (jwt.MapClaims, error)
 
 // verify that the token is valid
-// 	@param tokenString string
-// 	@param refresh RefreshHandle
-// 	@return claims jwt.MapClaims
-func Verify(tokenString string, refresh RefreshHandle) (claims jwt.MapClaims, err error) {
+// 	@param `value` string
+// 	@param `refresh` RefreshHandle
+// 	@return `claims` jwt.MapClaims
+func Verify(value string, refresh RefreshHandle) (claims jwt.MapClaims, err error) {
 	var token *jwt.Token
-	if token, err = jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+	if token, err = jwt.Parse(value, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 		}
