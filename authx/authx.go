@@ -34,37 +34,45 @@ func Create(ctx *gin.Context, cookie typ.Cookie, claims jwt.MapClaims, refresh R
 	return
 }
 
-func Verify(ctx *gin.Context) {
-
+func Verify(ctx *gin.Context, cookie typ.Cookie, refresh RefreshTokenAPI) (err error) {
+	var value string
+	if value, err = ctx.Cookie(cookie.Name); err != nil {
+		return
+	}
+	if _, err = tokenx.Verify(value, func(claims jwt.MapClaims) (jwt.MapClaims, error) {
+		jti := claims["jti"].(string)
+		ack := claims["ack"].(string)
+		if result := refresh.Verify(jti, ack); !result {
+			return nil, errors.New("refresh token verification expired")
+		}
+		defaultClaims := jwt.MapClaims{
+			"jti": jti,
+			"ack": ack,
+		}
+		standardClaims := []string{"aud", "exp", "jti", "iat", "iss", "nbf", "sub"}
+		for key, value := range claims {
+			for _, claimName := range standardClaims {
+				if key == claimName {
+					continue
+				}
+			}
+			defaultClaims[key] = value
+		}
+		var token *tokenx.Token
+		if token, err = tokenx.Make(defaultClaims, time.Hour); err != nil {
+			return nil, err
+		}
+		cookie.Set(ctx, token.Value)
+		return token.Claims, nil
+	}); err != nil {
+		return
+	}
+	return
 }
 
 func AuthVerify(cookie typ.Cookie, refresh RefreshTokenAPI) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		var err error
-		var tokenString string
-		if tokenString, err = ctx.Cookie(cookie.Name); err != nil {
-			ctx.AbortWithStatusJSON(200, gin.H{
-				"error": 1,
-				"msg":   err.Error(),
-			})
-			return
-		}
-		if _, err := tokenx.Verify(tokenString, func(claims jwt.MapClaims) (jwt.MapClaims, error) {
-			jti := claims["jti"].(string)
-			ack := claims["ack"].(string)
-			if result := refresh.Verify(jti, ack); !result {
-				return nil, errors.New("refresh token verification expired")
-			}
-			var token *tokenx.Token
-			if token, err = tokenx.Make(jwt.MapClaims{
-				"jti": jti,
-				"ack": ack,
-			}, time.Hour); err != nil {
-				return nil, err
-			}
-			cookie.Set(ctx, token.Value)
-			return token.Claims, nil
-		}); err != nil {
+		if err := Verify(ctx, cookie, refresh); err != nil {
 			ctx.AbortWithStatusJSON(200, gin.H{
 				"error": 1,
 				"msg":   err.Error(),
