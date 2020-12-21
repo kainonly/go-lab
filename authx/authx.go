@@ -13,6 +13,7 @@ import (
 type RefreshTokenAPI interface {
 	Verify(value ...interface{}) bool
 	Factory(value ...interface{})
+	Destory(jti string, ack string) error
 }
 
 func Create(ctx *gin.Context, cookie typ.Cookie, claims jwt.MapClaims, refresh RefreshTokenAPI) (err error) {
@@ -68,6 +69,20 @@ func Verify(ctx *gin.Context, cookie typ.Cookie, refresh RefreshTokenAPI) (err e
 		return
 	}
 	return
+}
+
+func Destory(ctx *gin.Context, cookie string, refresh RefreshTokenAPI) (err error) {
+	var value string
+	if value, err = ctx.Cookie(cookie); err != nil {
+		return
+	}
+	var claims jwt.MapClaims
+	if claims, err = tokenx.Verify(value, func(c jwt.MapClaims) (jwt.MapClaims, error) {
+		return c, nil
+	}); err != nil {
+		return
+	}
+	return refresh.Destory(claims["jti"].(string), claims["ack"].(string))
 }
 
 func AuthVerify(cookie typ.Cookie, refresh RefreshTokenAPI) gin.HandlerFunc {
