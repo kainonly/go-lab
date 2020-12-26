@@ -16,6 +16,11 @@ type RefreshTokenAPI interface {
 	Destory(jti string, ack string) error
 }
 
+// create auth
+//	@param `ctx` *gin.Context
+//	@param `cookie` typ.Cookie
+//	@param `claims` jwt.MapClaims
+//	@param `refresh` RefreshTokenAPI
 func Create(ctx *gin.Context, cookie typ.Cookie, claims jwt.MapClaims, refresh RefreshTokenAPI) (err error) {
 	jti := str.Uuid()
 	ack := str.Random(8)
