@@ -16,6 +16,11 @@ type RefreshTokenAPI interface {
 	Destory(jti string, ack string) error
 }
 
+// Create authorization logic
+//	@param `ctx` *gin.Context
+//	@param `cookie` typ.Cookie
+//	@param `claims` jwt.MapClaims
+//	@param `refresh` RefreshTokenAPI refreshToken factory
 func Create(ctx *gin.Context, cookie typ.Cookie, claims jwt.MapClaims, refresh RefreshTokenAPI) (err error) {
 	jti := str.Uuid()
 	ack := str.Random(8)
@@ -35,6 +40,10 @@ func Create(ctx *gin.Context, cookie typ.Cookie, claims jwt.MapClaims, refresh R
 	return
 }
 
+// Verify authorization logic
+//	@param `ctx` *gin.Context
+//	@param `cookie` typ.Cookie
+//	@param `refresh` RefreshTokenAPI refreshToken verification
 func Verify(ctx *gin.Context, cookie typ.Cookie, refresh RefreshTokenAPI) (err error) {
 	var value string
 	if value, err = ctx.Cookie(cookie.Name); err != nil {
@@ -71,6 +80,26 @@ func Verify(ctx *gin.Context, cookie typ.Cookie, refresh RefreshTokenAPI) (err e
 	return
 }
 
+// Authorization verification middleware
+//	@param `cookie` typ.Cookie
+//	@param `refresh` RefreshTokenAPI refreshToken verification
+func AuthVerify(cookie typ.Cookie, refresh RefreshTokenAPI) gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		if err := Verify(ctx, cookie, refresh); err != nil {
+			ctx.AbortWithStatusJSON(200, gin.H{
+				"error": 1,
+				"msg":   err.Error(),
+			})
+			return
+		}
+		ctx.Next()
+	}
+}
+
+// Destroy authorization logic
+//	@param `ctx` *gin.Context
+//	@param `cookie` typ.Cookie
+//	@param `refresh` RefreshTokenAPI refreshToken destory verification
 func Destory(ctx *gin.Context, cookie string, refresh RefreshTokenAPI) (err error) {
 	var value string
 	if value, err = ctx.Cookie(cookie); err != nil {
@@ -83,17 +112,4 @@ func Destory(ctx *gin.Context, cookie string, refresh RefreshTokenAPI) (err erro
 		return
 	}
 	return refresh.Destory(claims["jti"].(string), claims["ack"].(string))
-}
-
-func AuthVerify(cookie typ.Cookie, refresh RefreshTokenAPI) gin.HandlerFunc {
-	return func(ctx *gin.Context) {
-		if err := Verify(ctx, cookie, refresh); err != nil {
-			ctx.AbortWithStatusJSON(200, gin.H{
-				"error": 1,
-				"msg":   err.Error(),
-			})
-			return
-		}
-		ctx.Next()
-	}
 }
