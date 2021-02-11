@@ -49,7 +49,8 @@ func Verify(ctx *gin.Context, cookie typ.Cookie, refresh RefreshTokenAPI) (err e
 	if value, err = ctx.Cookie(cookie.Name); err != nil {
 		return
 	}
-	if _, err = tokenx.Verify(value, func(claims jwt.MapClaims) (jwt.MapClaims, error) {
+	var parseClaims jwt.MapClaims
+	if parseClaims, err = tokenx.Verify(value, func(claims jwt.MapClaims) (jwt.MapClaims, error) {
 		jti := claims["jti"].(string)
 		ack := claims["ack"].(string)
 		if result := refresh.Verify(jti, ack); !result {
@@ -77,6 +78,7 @@ func Verify(ctx *gin.Context, cookie typ.Cookie, refresh RefreshTokenAPI) (err e
 	}); err != nil {
 		return
 	}
+	ctx.Set("auth", parseClaims)
 	return
 }
 
