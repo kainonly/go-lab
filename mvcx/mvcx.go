@@ -22,6 +22,11 @@ func Initialize(routes *gin.RouterGroup, dependency interface{}) *mvcx {
 	}
 }
 
+type Response struct {
+	Code int
+	Msg  string
+}
+
 // Unified response results
 //	@param `handlerFn` interface{} method
 //	@return gin.HandlerFunc
@@ -29,6 +34,11 @@ func Handle(handlerFn interface{}) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		if fn, ok := handlerFn.(func(ctx *gin.Context) interface{}); ok {
 			switch result := fn(ctx).(type) {
+			case Response:
+				ctx.JSON(200, gin.H{
+					"error": result.Code,
+					"msg":   result.Msg,
+				})
 			case bool:
 				if result {
 					ctx.JSON(200, gin.H{
@@ -38,7 +48,7 @@ func Handle(handlerFn interface{}) gin.HandlerFunc {
 				} else {
 					ctx.JSON(200, gin.H{
 						"error": 1,
-						"msg":   "failed",
+						"msg":   "fail",
 					})
 				}
 				break
