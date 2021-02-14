@@ -16,9 +16,10 @@ var (
 )
 
 type RefreshTokenAPI interface {
-	Verify(value ...interface{}) bool
 	Factory(value ...interface{})
-	Destory(jti string, ack string) error
+	Renewal(value ...interface{})
+	Verify(value ...interface{}) bool
+	Destory(value ...interface{}) (err error)
 }
 
 // Create authorization logic
@@ -27,20 +28,13 @@ type RefreshTokenAPI interface {
 //	@param `claims` jwt.MapClaims
 //	@param `refresh` RefreshTokenAPI refreshToken factory
 func Create(ctx *gin.Context, cookie typ.Cookie, claims jwt.MapClaims, refresh RefreshTokenAPI) (err error) {
-	jti := str.Uuid()
-	ack := str.Random(8)
-	defaultClaims := jwt.MapClaims{
-		"jti": jti,
-		"ack": ack,
-	}
-	for key, value := range claims {
-		defaultClaims[key] = value
-	}
+	claims["jit"] = str.Uuid().String()
+	claims["ack"] = str.Random(8)
 	var token *tokenx.Token
-	if token, err = tokenx.Make(defaultClaims, time.Hour); err != nil {
+	if token, err = tokenx.Make(claims, time.Hour); err != nil {
 		return
 	}
-	refresh.Factory(jti.String(), ack, time.Hour*72)
+	refresh.Factory(claims["jit"], claims["ack"], time.Hour)
 	cookie.Set(ctx, token.Value)
 	return
 }
@@ -56,16 +50,14 @@ func Verify(ctx *gin.Context, cookie typ.Cookie, refresh RefreshTokenAPI) (err e
 	}
 	var parseClaims jwt.MapClaims
 	if parseClaims, err = tokenx.Verify(value, func(claims jwt.MapClaims) (jwt.MapClaims, error) {
-		jti := claims["jti"].(string)
-		ack := claims["ack"].(string)
-		if result := refresh.Verify(jti, ack); !result {
+		if result := refresh.Verify(claims["jti"].(string), claims["ack"].(string)); !result {
 			return nil, RefreshTokenExpired
 		}
 		for _, defaultClaim := range []string{"aud", "exp", "jti", "iat", "iss", "nbf", "sub"} {
 			delete(claims, defaultClaim)
 		}
 		var token *tokenx.Token
-		if token, err = tokenx.Make(claims, time.Hour); err != nil {
+		if token, err = tokenx.Make(claims, time.Minute*15); err != nil {
 			return nil, err
 		}
 		cookie.Set(ctx, token.Value)
@@ -73,6 +65,7 @@ func Verify(ctx *gin.Context, cookie typ.Cookie, refresh RefreshTokenAPI) (err e
 	}); err != nil {
 		return
 	}
+	refresh.Renewal(parseClaims["jti"].(string), time.Hour)
 	ctx.Set("auth", parseClaims)
 	return
 }
