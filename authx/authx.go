@@ -10,6 +10,11 @@ import (
 	"time"
 )
 
+var (
+	UserLoginError      = errors.New("please first authorize user login")
+	RefreshTokenExpired = errors.New("refresh token verification expired")
+)
+
 type RefreshTokenAPI interface {
 	Verify(value ...interface{}) bool
 	Factory(value ...interface{})
@@ -47,14 +52,14 @@ func Create(ctx *gin.Context, cookie typ.Cookie, claims jwt.MapClaims, refresh R
 func Verify(ctx *gin.Context, cookie typ.Cookie, refresh RefreshTokenAPI) (err error) {
 	var value string
 	if value, err = ctx.Cookie(cookie.Name); err != nil {
-		return
+		return UserLoginError
 	}
 	var parseClaims jwt.MapClaims
 	if parseClaims, err = tokenx.Verify(value, func(claims jwt.MapClaims) (jwt.MapClaims, error) {
 		jti := claims["jti"].(string)
 		ack := claims["ack"].(string)
 		if result := refresh.Verify(jti, ack); !result {
-			return nil, errors.New("refresh token verification expired")
+			return nil, RefreshTokenExpired
 		}
 		defaultClaims := jwt.MapClaims{
 			"jti": jti,
@@ -105,7 +110,7 @@ func AuthVerify(cookie typ.Cookie, refresh RefreshTokenAPI) gin.HandlerFunc {
 func Destory(ctx *gin.Context, cookie string, refresh RefreshTokenAPI) (err error) {
 	var value string
 	if value, err = ctx.Cookie(cookie); err != nil {
-		return
+		return nil
 	}
 	var claims jwt.MapClaims
 	if claims, err = tokenx.Verify(value, func(c jwt.MapClaims) (jwt.MapClaims, error) {
@@ -114,4 +119,14 @@ func Destory(ctx *gin.Context, cookie string, refresh RefreshTokenAPI) (err erro
 		return
 	}
 	return refresh.Destory(claims["jti"].(string), claims["ack"].(string))
+}
+
+// Get authorization claims
+//	@param `ctx` *gin.Context
+func Get(ctx *gin.Context) (jwt.MapClaims, error) {
+	val, exists := ctx.Get("auth")
+	if !exists {
+		return nil, UserLoginError
+	}
+	return val.(jwt.MapClaims), nil
 }
