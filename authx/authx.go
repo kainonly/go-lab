@@ -61,21 +61,11 @@ func Verify(ctx *gin.Context, cookie typ.Cookie, refresh RefreshTokenAPI) (err e
 		if result := refresh.Verify(jti, ack); !result {
 			return nil, RefreshTokenExpired
 		}
-		defaultClaims := jwt.MapClaims{
-			"jti": jti,
-			"ack": ack,
-		}
-		standardClaims := []string{"aud", "exp", "jti", "iat", "iss", "nbf", "sub"}
-		for key, value := range claims {
-			for _, claimName := range standardClaims {
-				if key == claimName {
-					continue
-				}
-			}
-			defaultClaims[key] = value
+		for _, defaultClaim := range []string{"aud", "exp", "jti", "iat", "iss", "nbf", "sub"} {
+			delete(claims, defaultClaim)
 		}
 		var token *tokenx.Token
-		if token, err = tokenx.Make(defaultClaims, time.Hour); err != nil {
+		if token, err = tokenx.Make(claims, time.Hour); err != nil {
 			return nil, err
 		}
 		cookie.Set(ctx, token.Value)
@@ -90,7 +80,7 @@ func Verify(ctx *gin.Context, cookie typ.Cookie, refresh RefreshTokenAPI) (err e
 // Authorization verification middleware
 //	@param `cookie` typ.Cookie
 //	@param `refresh` RefreshTokenAPI refreshToken verification
-func AuthVerify(cookie typ.Cookie, refresh RefreshTokenAPI) gin.HandlerFunc {
+func Middleware(cookie typ.Cookie, refresh RefreshTokenAPI) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		if err := Verify(ctx, cookie, refresh); err != nil {
 			ctx.AbortWithStatusJSON(200, gin.H{
