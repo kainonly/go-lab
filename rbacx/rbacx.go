@@ -38,10 +38,12 @@ func Middleware(prefix string, user UserAPI, role RoleAPI, acl AclAPI) gin.Handl
 			})
 		}
 		userData := user.Get(auth["user"].(string))
-		roleAcl := role.Get(
-			strings.Split(userData["role"].(string), ","),
-			"acl",
-		)
+		roleKeys := userData["role"].([]interface{})
+		keys := make([]string, len(roleKeys))
+		for index, value := range roleKeys {
+			keys[index] = value.(string)
+		}
+		roleAcl := role.Get(keys, "acl")
 		if userData["acl"] != nil {
 			roleAcl.Add(userData["acl"].([]interface{})...)
 		}
