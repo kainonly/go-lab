@@ -20,3 +20,17 @@ func RegisterCustomValidate() {
 		v.RegisterValidation("switch", SwitchFunc)
 	}
 }
+
+// determines if the given string is a valid json
+//	@param `val` interface{}
+//	@return bool
+func IsJson(val interface{}) bool {
+	return validator.New().Var(val, "json") == nil
+}
+
+// determines if the given string is a valid UUID
+//	@param `val` interface{}
+//	@return bool
+func IsUuid(val interface{}) bool {
+	return validator.New().Var(val, "uuid") == nil
+}

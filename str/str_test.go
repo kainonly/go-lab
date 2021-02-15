@@ -22,19 +22,6 @@ func (s *MySuite) TestRandom(c *C) {
 	c.Log(result)
 }
 
-func (s *MySuite) TestIsJson(c *C) {
-	c.Assert(IsJson(`{"name":"kain"}`), Equals, true)
-	c.Assert(IsJson(`{}`), Equals, true)
-	c.Assert(IsJson(`[]`), Equals, true)
-	c.Assert(IsJson(`{"name":kkk}`), Equals, false)
-	c.Assert(IsJson(`hello`), Equals, false)
-}
-
-func (s *MySuite) TestIsUuid(c *C) {
-	c.Assert(IsUuid("asd"), Equals, false)
-	c.Assert(IsUuid(Uuid().String()), Equals, true)
-}
-
 func (s *MySuite) TestUuid(c *C) {
 	result := Uuid().String()
 	if err = validator.New().Var(result, "uuid"); err != nil {

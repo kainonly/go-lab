@@ -13,7 +13,7 @@ import (
 var (
 	def = argon2Option{
 		time:    uint32(4),
-		memory:  uint32(64 * 1024),
+		memory:  uint32(65536),
 		threads: uint8(1),
 	}
 

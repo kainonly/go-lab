@@ -1,7 +1,6 @@
 package str
 
 import (
-	"github.com/go-playground/validator/v10"
 	"github.com/google/uuid"
 	"github.com/huandu/xstrings"
 	"math/rand"
@@ -21,20 +20,6 @@ func Random(length int, letterRunes ...rune) string {
 		b[i] = letterRunes[rand.Intn(len(letterRunes))]
 	}
 	return string(b)
-}
-
-// determines if the given string is a valid json
-//	@param `val` interface{}
-//	@return bool
-func IsJson(val interface{}) bool {
-	return validator.New().Var(val, "json") == nil
-}
-
-// determines if the given string is a valid UUID
-//	@param `val` interface{}
-//	@return bool
-func IsUuid(val interface{}) bool {
-	return validator.New().Var(val, "uuid") == nil
 }
 
 // generates a UUID (version 4)
@@ -70,4 +55,17 @@ func Kebab(str string) string {
 //	@return string
 func Limit(str string, length int) string {
 	return str[:length-1] + "..."
+}
+
+// filter empty string
+//	@param `value` []string
+//	@return []string
+func FilterEmpty(value []string) []string {
+	var newValue []string
+	for _, str := range value {
+		if str != "" {
+			newValue = append(newValue, str)
+		}
+	}
+	return newValue
 }
