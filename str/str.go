@@ -56,16 +56,3 @@ func Kebab(str string) string {
 func Limit(str string, length int) string {
 	return str[:length-1] + "..."
 }
-
-// filter empty string
-//	@param `value` []string
-//	@return []string
-func FilterEmpty(value []string) []string {
-	var newValue []string
-	for _, str := range value {
-		if str != "" {
-			newValue = append(newValue, str)
-		}
-	}
-	return newValue
-}
