@@ -27,6 +27,8 @@ type Response struct {
 	Msg  string
 }
 
+type Raw map[string]interface{}
+
 // Unified response results
 //	@param `handlerFn` interface{} method
 //	@return gin.HandlerFunc
@@ -39,6 +41,8 @@ func Handle(handlerFn interface{}) gin.HandlerFunc {
 					"error": result.Code,
 					"msg":   result.Msg,
 				})
+			case Raw:
+				ctx.JSON(200, result)
 			case bool:
 				if result {
 					ctx.JSON(200, gin.H{
