@@ -11,19 +11,20 @@ import (
 	"mime/multipart"
 	"net/http"
 	"net/url"
+	"path"
 	"strconv"
 	"time"
 )
 
 var (
-	DEF = option{}
+	DEF = Option{}
 )
 
-type option struct {
-	Bucket    string
-	Region    string
-	SecretID  string
-	SecretKey string
+type Option struct {
+	Bucket    string `yaml:"bucket"`
+	Region    string `yaml:"region"`
+	SecretID  string `yaml:"secret_id"`
+	SecretKey string `yaml:"secret_key"`
 }
 
 func Client() *cos.Client {
@@ -39,8 +40,9 @@ func Client() *cos.Client {
 
 func Put(fileHeader *multipart.FileHeader) (fileName string, err error) {
 	client := Client()
-	fileName = time.Now().Format("2006-01-02") + "/" +
-		str.Uuid().String()
+	fileName = time.Now().Format("20060102") +
+		"/" + str.Uuid().String() +
+		"." + path.Ext(fileHeader.Filename)
 	var file multipart.File
 	if file, err = fileHeader.Open(); err != nil {
 		return
@@ -73,7 +75,7 @@ func Delete(keys []string) error {
 func GeneratePostPresigned(expired int64, conditions ...[]interface{}) (data map[string]interface{}, err error) {
 	now := time.Now()
 	keyTime := strconv.Itoa(int(now.Unix())) + ";" + strconv.Itoa(int(now.Unix()+expired))
-	fileName := time.Now().Format("2006-01-02") + "/" + str.Uuid().String()
+	fileName := time.Now().Format("20060102") + "/" + str.Uuid().String()
 	conditions = append(conditions, []interface{}{"bucket", DEF.Bucket})
 	conditions = append(conditions, []interface{}{"starts-with", "$key", fileName})
 	conditions = append(conditions, []interface{}{"q-sign-algorithm", "sha1"})
