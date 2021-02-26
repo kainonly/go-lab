@@ -5,6 +5,7 @@ import (
 	"crypto/hmac"
 	"crypto/sha1"
 	"encoding/base64"
+	"encoding/hex"
 	jsoniter "github.com/json-iterator/go"
 	"github.com/kainonly/gin-extra/str"
 	"github.com/tencentyun/cos-go-sdk-v5"
@@ -72,15 +73,15 @@ func Delete(keys []string) error {
 	return nil
 }
 
-func GeneratePostPresigned(expired int64, conditions ...[]interface{}) (data map[string]interface{}, err error) {
+func GeneratePostPresigned(expired int64, conditions ...interface{}) (data map[string]interface{}, err error) {
 	now := time.Now()
 	keyTime := strconv.Itoa(int(now.Unix())) + ";" + strconv.Itoa(int(now.Unix()+expired))
 	fileName := time.Now().Format("20060102") + "/" + str.Uuid().String()
-	conditions = append(conditions, []interface{}{"bucket", DEF.Bucket})
+	conditions = append(conditions, map[string]interface{}{"bucket": DEF.Bucket})
 	conditions = append(conditions, []interface{}{"starts-with", "$key", fileName})
-	conditions = append(conditions, []interface{}{"q-sign-algorithm", "sha1"})
-	conditions = append(conditions, []interface{}{"q-ak", DEF.SecretID})
-	conditions = append(conditions, []interface{}{"q-sign-time", keyTime})
+	conditions = append(conditions, map[string]interface{}{"q-sign-algorithm": "sha1"})
+	conditions = append(conditions, map[string]interface{}{"q-ak": DEF.SecretID})
+	conditions = append(conditions, map[string]interface{}{"q-sign-time": keyTime})
 	policy := map[string]interface{}{
 		"expiration": now.Add(time.Duration(expired) * time.Second).UTC().Format(time.RFC3339),
 		"conditions": conditions,
@@ -91,13 +92,13 @@ func GeneratePostPresigned(expired int64, conditions ...[]interface{}) (data map
 	}
 	signKeyHash := hmac.New(sha1.New, []byte(DEF.SecretKey))
 	signKeyHash.Write([]byte(keyTime))
-	signKey := base64.StdEncoding.EncodeToString(signKeyHash.Sum(nil))
+	signKey := hex.EncodeToString(signKeyHash.Sum(nil))
 	stringToSignHash := sha1.New()
 	stringToSignHash.Write(policyData)
-	stringToSign := base64.StdEncoding.EncodeToString(stringToSignHash.Sum(nil))
+	stringToSign := hex.EncodeToString(stringToSignHash.Sum(nil))
 	signatureHash := hmac.New(sha1.New, []byte(signKey))
 	signatureHash.Write([]byte(stringToSign))
-	signature := base64.StdEncoding.EncodeToString(signatureHash.Sum(nil))
+	signature := hex.EncodeToString(signatureHash.Sum(nil))
 	data = map[string]interface{}{
 		"filename": fileName,
 		"option": map[string]interface{}{
