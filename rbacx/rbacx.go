@@ -1,6 +1,7 @@
 package rbacx
 
 import (
+	"context"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/emirpasic/gods/sets/hashset"
 	"github.com/gin-gonic/gin"
@@ -9,23 +10,23 @@ import (
 )
 
 type UserAPI interface {
-	Get(username string) (result map[string]interface{})
+	Get(ctx context.Context, username string) (result map[string]interface{})
 }
 
 type RoleAPI interface {
-	Get(keys []string, mode string) *hashset.Set
+	Get(ctx context.Context, keys []string, mode string) *hashset.Set
 }
 
 type AclAPI interface {
-	Get(key string, policy string) *hashset.Set
+	Get(ctx context.Context, key string, policy string) *hashset.Set
 }
 
-// Rbac verification middleware
+// Middleware Rbac verification middleware
 //	@param `prefix` path prefix
-//	@param `user` UserAPI
-//	@param `role` RoleAPI
-//	@param `acl` AclAPI
-func Middleware(prefix string, user UserAPI, role RoleAPI, acl AclAPI) gin.HandlerFunc {
+//	@param `userAPI` UserAPI
+//	@param `roleAPI` RoleAPI
+//	@param `aclAPI` AclAPI
+func Middleware(prefix string, userAPI UserAPI, roleAPI RoleAPI, aclAPI AclAPI) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		var err error
 		path := strings.Replace(ctx.Request.URL.Path, prefix, "", 1)
@@ -37,15 +38,17 @@ func Middleware(prefix string, user UserAPI, role RoleAPI, acl AclAPI) gin.Handl
 				"msg":   err.Error(),
 			})
 		}
-		userData := user.Get(auth["user"].(string))
-		roleKeys := userData["role"].([]interface{})
-		keys := make([]string, len(roleKeys))
-		for index, value := range roleKeys {
-			keys[index] = value.(string)
+		redisCtx := context.Background()
+		user := auth["user"].(string)
+		data := userAPI.Get(redisCtx, user)
+		roles := data["role"].([]interface{})
+		roleKeys := make([]string, len(roles))
+		for index, value := range roles {
+			roleKeys[index] = value.(string)
 		}
-		roleAcl := role.Get(keys, "acl")
-		if userData["acl"] != nil {
-			roleAcl.Add(userData["acl"].([]interface{})...)
+		roleAcl := roleAPI.Get(redisCtx, roleKeys, "acl")
+		if data["acl"] != nil {
+			roleAcl.Add(data["acl"].([]interface{})...)
 		}
 		policyCursor := ""
 		policyValues := []string{"0", "1"}
@@ -60,7 +63,7 @@ func Middleware(prefix string, user UserAPI, role RoleAPI, acl AclAPI) gin.Handl
 				"msg":   "rbac invalid, policy is empty",
 			})
 		}
-		scope := acl.Get(acts[0], policyCursor)
+		scope := aclAPI.Get(redisCtx, acts[0], policyCursor)
 		if scope.Empty() {
 			ctx.AbortWithStatusJSON(200, gin.H{
 				"error": 1,

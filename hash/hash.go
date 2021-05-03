@@ -67,7 +67,7 @@ func (c threads) apply(opt *argon2Option) {
 	opt.threads = uint8(c)
 }
 
-// Use argon2id hash to generate user password
+// Make Use argon2id hash to generate user password
 //	@param `password` string user password
 //	@param `options` ...Option the algorithm using the memory, time, and threads options
 //	@return `hashedPassword` string hash password
@@ -90,7 +90,7 @@ func Make(password string, options ...Option) (hashedPassword string, err error)
 	return
 }
 
-// Verifying that a password matches a hash
+// Verify Verifying that a password matches a hash
 //	@param `password` string user password
 //	@param `hashedPassword` string hash password
 func Verify(password string, hashedPassword string) (result bool, err error) {
