@@ -19,14 +19,12 @@ type tokenOption struct {
 	method jwt.SigningMethod
 }
 
-// Load signing key
-//	@param `value` []byte
+// LoadKey signing key
 func LoadKey(value []byte) {
 	def.key = value
 }
 
-// Set signature method
-//	@param `value` jwt.SigningMethod
+// SigningMethod set signature method
 func SigningMethod(value jwt.SigningMethod) {
 	def.method = value
 }
@@ -36,10 +34,7 @@ type Token struct {
 	Claims jwt.MapClaims
 }
 
-// create a token
-// 	@param `claims` jwt.MapClaims http://self-issued.info/docs/draft-ietf-oauth-json-web-token.html#Claims
-// 	@param `expires` time.Duration
-// 	@return `token` *Token
+// Make create a token
 func Make(claims jwt.MapClaims, expires time.Duration) (token *Token, err error) {
 	token = new(Token)
 	claims["jti"] = uuid.New()
@@ -53,15 +48,10 @@ func Make(claims jwt.MapClaims, expires time.Duration) (token *Token, err error)
 	return
 }
 
-// token refresh logic
-// 	@param `claims` jwt.MapClaims
-// 	@return jwt.MapClaims
+// RefreshHandle token refresh logic
 type RefreshHandle func(claims jwt.MapClaims) (jwt.MapClaims, error)
 
-// verify that the token is valid
-// 	@param `value` string
-// 	@param `refresh` RefreshHandle
-// 	@return `claims` jwt.MapClaims
+// Verify that the token is valid
 func Verify(value string, refresh RefreshHandle) (claims jwt.MapClaims, err error) {
 	var token *jwt.Token
 	if token, err = jwt.Parse(value, func(token *jwt.Token) (interface{}, error) {

@@ -7,9 +7,7 @@ import (
 	"time"
 )
 
-// generates a random string of the specified length
-//	@param `length` string
-//	@return string
+// Random generates a random string of the specified length
 func Random(length int, letterRunes ...rune) string {
 	b := make([]rune, length)
 	if len(letterRunes) == 0 {
@@ -22,37 +20,27 @@ func Random(length int, letterRunes ...rune) string {
 	return string(b)
 }
 
-// generates a UUID (version 4)
-//	@return uuid.UUID
+// Uuid generates a UUID (version 4)
 func Uuid() uuid.UUID {
 	return uuid.New()
 }
 
-// converts the given string to CamelCase
-//	@param `str` string
-//	@return string
+// Camel converts the given string to CamelCase
 func Camel(str string) string {
 	return xstrings.ToCamelCase(str)
 }
 
-// converts the given string to snake_case
-//	@param `str` string
-//	@return string
+// Snake converts the given string to snake_case
 func Snake(str string) string {
 	return xstrings.ToSnakeCase(str)
 }
 
-// converts the given string to kebab-case
-//	@param `str` string
-//	@return string
+// Kebab converts the given string to kebab-case
 func Kebab(str string) string {
 	return xstrings.ToKebabCase(str)
 }
 
-// truncates the given string to the specified length
-//	@param `str` string
-//	@param `length` int
-//	@return string
+// Limit truncates the given string to the specified length
 func Limit(str string, length int) string {
 	return str[:length-1] + "..."
 }

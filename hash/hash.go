@@ -68,9 +68,6 @@ func (c threads) apply(opt *argon2Option) {
 }
 
 // Make Use argon2id hash to generate user password
-//	@param `password` string user password
-//	@param `options` ...Option the algorithm using the memory, time, and threads options
-//	@return `hashedPassword` string hash password
 func Make(password string, options ...Option) (hashedPassword string, err error) {
 	salt := make([]byte, 16)
 	if _, err = rand.Read(salt); err != nil {
@@ -91,8 +88,6 @@ func Make(password string, options ...Option) (hashedPassword string, err error)
 }
 
 // Verify Verifying that a password matches a hash
-//	@param `password` string user password
-//	@param `hashedPassword` string hash password
 func Verify(password string, hashedPassword string) (result bool, err error) {
 	args := regexp.
 		MustCompile(`^\$(\w+)\$v=(\d+)\$m=(\d+),t=(\d+),p=(\d+)\$(\S+)\$(\S+)`).

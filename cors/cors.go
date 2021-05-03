@@ -27,9 +27,7 @@ type Option struct {
 	Credentials bool `yaml:"credentials"`
 }
 
-// Adds CORS (Cross-Origin Resource Sharing) headers support in your Gin application
-//	@param `option` Option
-//	@return gin.HandlerFunc
+// Cors adds Cross-Origin Resource Sharing headers support in your Gin application
 func Cors(option Option) gin.HandlerFunc {
 	origin := strings.Join(option.Origin, ",")
 	method := strings.Join(option.Method, ",")

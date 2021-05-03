@@ -21,11 +21,7 @@ type AclAPI interface {
 	Get(ctx context.Context, key string, policy string) *hashset.Set
 }
 
-// Middleware Rbac verification middleware
-//	@param `prefix` path prefix
-//	@param `userAPI` UserAPI
-//	@param `roleAPI` RoleAPI
-//	@param `aclAPI` AclAPI
+// Middleware rbac verification
 func Middleware(prefix string, userAPI UserAPI, roleAPI RoleAPI, aclAPI AclAPI) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		var err error

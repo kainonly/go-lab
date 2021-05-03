@@ -14,23 +14,19 @@ var (
 	}
 )
 
-// Register Custom Validate
+// RegisterCustomValidate Register Custom Validate
 func RegisterCustomValidate() {
 	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
 		v.RegisterValidation("switch", SwitchFunc)
 	}
 }
 
-// determines if the given string is a valid json
-//	@param `val` interface{}
-//	@return bool
+// IsJson determines if the given string is a valid json
 func IsJson(val interface{}) bool {
 	return validator.New().Var(val, "json") == nil
 }
 
-// determines if the given string is a valid UUID
-//	@param `val` interface{}
-//	@return bool
+// IsUuid determines if the given string is a valid UUID
 func IsUuid(val interface{}) bool {
 	return validator.New().Var(val, "uuid") == nil
 }

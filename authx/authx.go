@@ -23,10 +23,6 @@ type RefreshTokenAPI interface {
 }
 
 // Create authorization logic
-//	@param `ctx` *gin.Context
-//	@param `cookie` typ.Cookie
-//	@param `claims` jwt.MapClaims
-//	@param `refresh` RefreshTokenAPI refreshToken factory
 func Create(ctx *gin.Context, cookie typ.Cookie, claims jwt.MapClaims, refresh RefreshTokenAPI) (err error) {
 	claims["jit"] = str.Uuid().String()
 	claims["ack"] = str.Random(8)
@@ -40,9 +36,6 @@ func Create(ctx *gin.Context, cookie typ.Cookie, claims jwt.MapClaims, refresh R
 }
 
 // Verify authorization logic
-//	@param `ctx` *gin.Context
-//	@param `cookie` typ.Cookie
-//	@param `refresh` RefreshTokenAPI refreshToken verification
 func Verify(ctx *gin.Context, cookie typ.Cookie, refresh RefreshTokenAPI) (err error) {
 	var value string
 	if value, err = ctx.Cookie(cookie.Name); err != nil {
@@ -70,9 +63,7 @@ func Verify(ctx *gin.Context, cookie typ.Cookie, refresh RefreshTokenAPI) (err e
 	return
 }
 
-// Authorization verification middleware
-//	@param `cookie` typ.Cookie
-//	@param `refresh` RefreshTokenAPI refreshToken verification
+// Middleware authorization verification
 func Middleware(cookie typ.Cookie, refresh RefreshTokenAPI) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		if err := Verify(ctx, cookie, refresh); err != nil {
@@ -86,10 +77,7 @@ func Middleware(cookie typ.Cookie, refresh RefreshTokenAPI) gin.HandlerFunc {
 	}
 }
 
-// Destroy authorization logic
-//	@param `ctx` *gin.Context
-//	@param `cookie` typ.Cookie
-//	@param `refresh` RefreshTokenAPI refreshToken destory verification
+// Destory authorization logic
 func Destory(ctx *gin.Context, cookie string, refresh RefreshTokenAPI) (err error) {
 	var value string
 	if value, err = ctx.Cookie(cookie); err != nil {
@@ -105,7 +93,6 @@ func Destory(ctx *gin.Context, cookie string, refresh RefreshTokenAPI) (err erro
 }
 
 // Get authorization claims
-//	@param `ctx` *gin.Context
 func Get(ctx *gin.Context) (jwt.MapClaims, error) {
 	val, exists := ctx.Get("auth")
 	if !exists {

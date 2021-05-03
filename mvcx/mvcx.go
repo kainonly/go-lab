@@ -12,9 +12,6 @@ type mvcx struct {
 }
 
 // Initialize the mvc factory function
-//	@param `routes` *gin.RouterGroup
-//	@param `dependency` interface{}
-//	@return *mvcx
 func Initialize(routes *gin.RouterGroup, dependency interface{}) *mvcx {
 	return &mvcx{
 		routes:     routes,
@@ -29,9 +26,7 @@ type Response struct {
 
 type Raw map[string]interface{}
 
-// Unified response results
-//	@param `handlerFn` interface{} method
-//	@return gin.HandlerFunc
+// Handle Unified response results
 func Handle(handlerFn interface{}) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		if fn, ok := handlerFn.(func(ctx *gin.Context) interface{}); ok {
@@ -83,10 +78,7 @@ type Middleware struct {
 	Only []string
 }
 
-// Automatically register controller routing
-//	@param `path` string
-//	@param `controller` interface{}
-//	@param `middlewares` ...Middleware
+// AutoController Automatically register controller routing
 func (c *mvcx) AutoController(path string, controller interface{}, middlewares ...Middleware) {
 	if control, ok := controller.(interface {
 		Inject(dependency interface{})
