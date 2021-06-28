@@ -4,6 +4,7 @@ go 1.13
 
 require (
 	github.com/alexedwards/argon2id v0.0.0-20210511081203-7d35d68092b8 // indirect
+	github.com/dgrijalva/jwt-go v3.2.0+incompatible // indirect
 	github.com/emirpasic/gods v1.12.0 // indirect
 	github.com/gin-gonic/gin v1.6.3
 	github.com/go-playground/validator/v10 v10.6.1 // indirect
