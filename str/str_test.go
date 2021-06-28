@@ -6,8 +6,6 @@ import (
 	"testing"
 )
 
-var err error
-
 func Test(t *testing.T) { TestingT(t) }
 
 type MySuite struct{}
@@ -16,7 +14,7 @@ var _ = Suite(&MySuite{})
 
 func (s *MySuite) TestRandom(c *C) {
 	result := Random(8)
-	if err = validator.New().Var(result, "alpha,len=8"); err != nil {
+	if err := validator.New().Var(result, "alpha,len=8"); err != nil {
 		c.Error(err)
 	}
 	c.Log(result)
@@ -24,7 +22,7 @@ func (s *MySuite) TestRandom(c *C) {
 
 func (s *MySuite) TestUuid(c *C) {
 	result := Uuid().String()
-	if err = validator.New().Var(result, "uuid"); err != nil {
+	if err := validator.New().Var(result, "uuid"); err != nil {
 		c.Error(err)
 	}
 	c.Log(result)

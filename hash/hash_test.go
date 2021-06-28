@@ -1,6 +1,7 @@
 package hash
 
 import (
+	"github.com/alexedwards/argon2id"
 	"testing"
 )
 
@@ -26,8 +27,12 @@ func TestCheck(t *testing.T) {
 	t.Log(result)
 }
 
-func TestMake2(t *testing.T) {
-	hash, err := Make(`pass`, Time(6), Memory(128*1024), Threads(2))
+func TestMakeExtend(t *testing.T) {
+	option := argon2id.DefaultParams
+	option.Memory = 128 * 1024
+	option.Iterations = 6
+	option.Parallelism = 2
+	hash, err := Make(`pass`, option)
 	if err != nil {
 		t.Error(err)
 	}
@@ -35,7 +40,7 @@ func TestMake2(t *testing.T) {
 	checkHash = hash
 }
 
-func TestCheck2(t *testing.T) {
+func TestCheckExtend(t *testing.T) {
 	result, err := Verify(
 		`pass`,
 		checkHash,

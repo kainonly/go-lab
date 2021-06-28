@@ -1,3 +1,3 @@
-# Gin Extra
+# Gin Helper
 
 Provide more functional extension libraries for gin
