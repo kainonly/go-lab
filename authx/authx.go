@@ -158,9 +158,8 @@ func (x *authx) Destory(c *gin.Context, args ...interface{}) (err error) {
 func Middleware(auth authx, args ...interface{}) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		if err := auth.Verify(c, args); err != nil {
-			c.AbortWithStatusJSON(200, gin.H{
-				"error": 1,
-				"msg":   err.Error(),
+			c.AbortWithStatusJSON(400, gin.H{
+				"msg": err.Error(),
 			})
 			return
 		}
