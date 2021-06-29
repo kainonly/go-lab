@@ -5,46 +5,67 @@ import (
 	"github.com/dgrijalva/jwt-go"
 	"github.com/emirpasic/gods/sets/hashset"
 	"github.com/gin-gonic/gin"
-	"github.com/kainonly/gin-extra/authx"
 	"strings"
+	"time"
 )
 
-type UserAPI interface {
-	Get(ctx context.Context, username string) (result map[string]interface{})
+type Fn struct {
+	users UserFn
+	roles RoleFn
+	acls  AclFn
 }
 
-type RoleAPI interface {
-	Get(ctx context.Context, keys []string, mode string) *hashset.Set
+type UserFn interface {
+	Get(ctx context.Context, uid interface{}) map[string]interface{}
 }
 
-type AclAPI interface {
+type RoleMode int
+
+const (
+	RoleAcl      RoleMode = 0
+	RoleResource RoleMode = 1
+)
+
+type RoleFn interface {
+	Get(ctx context.Context, keys []string, mode RoleMode) *hashset.Set
+}
+
+type AclFn interface {
 	Get(ctx context.Context, key string, policy string) *hashset.Set
 }
 
+type Scope struct {
+	UID  interface{}
+	Data map[string]interface{}
+}
+
 // Middleware rbac verification
-func Middleware(prefix string, userAPI UserAPI, roleAPI RoleAPI, aclAPI AclAPI) gin.HandlerFunc {
-	return func(ctx *gin.Context) {
-		var err error
-		path := strings.Replace(ctx.Request.URL.Path, prefix, "", 1)
+func Middleware(prefix string, fn Fn) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		path := strings.Replace(c.Request.URL.Path, prefix, "", 1)
 		acts := strings.Split(path, "/")
-		var auth jwt.MapClaims
-		if auth, err = authx.Get(ctx); err != nil {
-			ctx.AbortWithStatusJSON(200, gin.H{
-				"error": 1,
-				"msg":   err.Error(),
+		claims, exists := c.Get("claims")
+		if !exists {
+			c.AbortWithStatusJSON(400, gin.H{
+				"msg": "environment verification is abnormal",
 			})
 		}
-		redisCtx := context.Background()
-		user := auth["user"].(string)
-		data := userAPI.Get(redisCtx, user)
-		roles := data["role"].([]interface{})
+		mClaims := claims.(jwt.MapClaims)
+		scope := Scope{
+			UID:  mClaims["uid"],
+			Data: mClaims["data"].(map[string]interface{}),
+		}
+		ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
+		defer cancel()
+		user := fn.users.Get(ctx, scope.UID)
+		roles := user["role"].([]interface{})
 		roleKeys := make([]string, len(roles))
 		for index, value := range roles {
 			roleKeys[index] = value.(string)
 		}
-		roleAcl := roleAPI.Get(redisCtx, roleKeys, "acl")
-		if data["acl"] != nil {
-			roleAcl.Add(data["acl"].([]interface{})...)
+		roleAcl := fn.roles.Get(ctx, roleKeys, RoleAcl)
+		if user["acl"] != nil {
+			roleAcl.Add(user["acl"].([]interface{})...)
 		}
 		policyCursor := ""
 		policyValues := []string{"0", "1"}
@@ -54,24 +75,21 @@ func Middleware(prefix string, userAPI UserAPI, roleAPI RoleAPI, aclAPI AclAPI) 
 			}
 		}
 		if policyCursor == "" {
-			ctx.AbortWithStatusJSON(200, gin.H{
-				"error": 1,
-				"msg":   "rbac invalid, policy is empty",
+			c.AbortWithStatusJSON(400, gin.H{
+				"msg": "rbac invalid, policy is empty",
 			})
 		}
-		scope := aclAPI.Get(redisCtx, acts[0], policyCursor)
-		if scope.Empty() {
-			ctx.AbortWithStatusJSON(200, gin.H{
-				"error": 1,
-				"msg":   "rbac invalid, scope is empty",
+		acl := fn.acls.Get(ctx, acts[0], policyCursor)
+		if acl.Empty() {
+			c.AbortWithStatusJSON(400, gin.H{
+				"msg": "rbac invalid, scope is empty",
 			})
 		}
-		if !scope.Contains(acts[1]) {
-			ctx.AbortWithStatusJSON(200, gin.H{
-				"error": 1,
-				"msg":   "rbac invalid, access denied",
+		if !acl.Contains(acts[1]) {
+			c.AbortWithStatusJSON(400, gin.H{
+				"msg": "rbac invalid, access denied",
 			})
 		}
-		ctx.Next()
+		c.Next()
 	}
 }

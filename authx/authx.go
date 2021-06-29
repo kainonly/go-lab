@@ -1,4 +1,4 @@
-package auth
+package authx
 
 import (
 	"errors"
@@ -23,7 +23,7 @@ type Option struct {
 	Expires   int64    `yaml:"expires"`
 }
 
-type auth struct {
+type authx struct {
 	signKey    []byte
 	signMethod jwt.SigningMethod
 	iss        string
@@ -47,8 +47,8 @@ type RefreshFn interface {
 	Destory(claims jwt.MapClaims, args ...interface{}) (err error)
 }
 
-func Make(option Option, args Args) *auth {
-	return &auth{
+func Make(option Option, args Args) *authx {
+	return &authx{
 		signKey:    []byte(option.Key),
 		signMethod: args.Method,
 		iss:        option.Issuer,
@@ -61,7 +61,7 @@ func Make(option Option, args Args) *auth {
 }
 
 // Create authorization logic
-func (x *auth) Create(c *gin.Context, sub interface{}, uid interface{}, data interface{}) (raw string, err error) {
+func (x *authx) Create(c *gin.Context, sub interface{}, uid interface{}, data interface{}) (raw string, err error) {
 	claims := jwt.MapClaims{
 		"iat":  time.Now().Unix(),
 		"nbf":  time.Now().Add(time.Second * time.Duration(x.nbf)).Unix(),
@@ -85,24 +85,8 @@ func (x *auth) Create(c *gin.Context, sub interface{}, uid interface{}, data int
 	return
 }
 
-func (x *auth) getTokenRaw(c *gin.Context, args ...interface{}) (raw string, err error) {
-	if x.cookie != nil {
-		if raw, err = c.Cookie(x.cookie.Name); err != nil {
-			return "", UserLoginError
-		}
-	} else {
-		if len(args) != 0 {
-			raw = args[0].(string)
-		}
-	}
-	if raw == "" {
-		return "", UserLoginError
-	}
-	return
-}
-
 // Verify authorization logic
-func (x *auth) Verify(c *gin.Context, args ...interface{}) (err error) {
+func (x *authx) Verify(c *gin.Context, args ...interface{}) (err error) {
 	var raw string
 	if x.cookie != nil {
 		if raw, err = c.Cookie(x.cookie.Name); err != nil {
@@ -159,7 +143,7 @@ func (x *auth) Verify(c *gin.Context, args ...interface{}) (err error) {
 }
 
 // Destory authorization logic
-func (x *auth) Destory(c *gin.Context, args ...interface{}) (err error) {
+func (x *authx) Destory(c *gin.Context, args ...interface{}) (err error) {
 	if err = x.Verify(c, args); err != nil {
 		return
 	}
@@ -171,7 +155,7 @@ func (x *auth) Destory(c *gin.Context, args ...interface{}) (err error) {
 }
 
 // Middleware authorization verification
-func Middleware(auth auth, args ...interface{}) gin.HandlerFunc {
+func Middleware(auth authx, args ...interface{}) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		if err := auth.Verify(c, args); err != nil {
 			c.AbortWithStatusJSON(200, gin.H{
