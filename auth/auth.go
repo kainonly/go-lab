@@ -7,7 +7,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/kainonly/gin-helper/cookie"
 	"github.com/kainonly/gin-helper/str"
-	"github.com/kainonly/gin-helper/tokenx"
 	"time"
 )
 
@@ -35,88 +34,90 @@ type auth struct {
 	refreshFn  RefreshFn
 }
 
-type Ext struct {
+type Args struct {
 	Method    jwt.SigningMethod
-	Cookie    *cookie.Cookie
+	UseCookie *cookie.Cookie
 	RefreshFn RefreshFn
 }
 
 type RefreshFn interface {
-	Factory(values ...interface{})
-	Verify(values ...interface{}) bool
-	Renewal(values ...interface{})
-	Destory(values ...interface{}) (err error)
+	Factory(claims jwt.MapClaims, args ...interface{})
+	Verify(claims jwt.MapClaims, args ...interface{}) bool
+	Renewal(claims jwt.MapClaims, args ...interface{})
+	Destory(claims jwt.MapClaims, args ...interface{}) (err error)
 }
 
-func Factory(option Option, ext Ext) *auth {
+func Make(option Option, args Args) *auth {
 	return &auth{
 		signKey:    []byte(option.Key),
-		signMethod: ext.Method,
+		signMethod: args.Method,
 		iss:        option.Issuer,
 		aud:        option.Audience,
 		nbf:        option.NotBefore,
 		exp:        time.Duration(option.Expires) * time.Second,
-		cookie:     ext.Cookie,
-		refreshFn:  ext.RefreshFn,
-	}
-}
-
-type CreateOptions func(*createOption)
-
-type createOption struct {
-	sub    string
-	uid    interface{}
-	data   interface{}
-	c      *gin.Context
-	cookie string
-}
-
-func SetPayload(sub string, uid interface{}, data map[string]interface{}) CreateOptions {
-	return func(option *createOption) {
-		option.sub = sub
-		option.uid = uid
-		option.data = data
-	}
-}
-
-func UseCookie(c *gin.Context, cookie string) CreateOptions {
-	return func(option *createOption) {
-		option.c = c
-		option.cookie = cookie
+		cookie:     args.UseCookie,
+		refreshFn:  args.RefreshFn,
 	}
 }
 
 // Create authorization logic
-func (x *auth) Create(options ...CreateOptions) (tokenString string, err error) {
-	option := createOption{}
-	for _, apply := range options {
-		apply(&option)
-	}
+func (x *auth) Create(c *gin.Context, sub interface{}, uid interface{}, data interface{}) (raw string, err error) {
 	claims := jwt.MapClaims{
 		"iat":  time.Now().Unix(),
 		"nbf":  time.Now().Add(time.Second * time.Duration(x.nbf)).Unix(),
 		"exp":  time.Now().Add(x.exp).Unix(),
 		"jti":  str.Uuid().String(),
-		"uid":  option.uid,
-		"data": option.data,
+		"sub":  sub,
+		"uid":  uid,
+		"data": data,
 	}
 	token := jwt.NewWithClaims(x.signMethod, claims)
-	if tokenString, err = token.SignedString(x.signKey); err != nil {
+	if raw, err = token.SignedString(x.signKey); err != nil {
 		return
 	}
-	if option.c != nil && option.cookie != "" {
-		x.cookie.Set(option.c, option.cookie, tokenString)
+	if x.cookie != nil {
+		x.cookie.Set(c, raw)
 	}
 	if x.refreshFn != nil {
 		x.refreshFn.Factory(claims)
+	}
+	c.Set("claims", claims)
+	return
+}
+
+func (x *auth) getTokenRaw(c *gin.Context, args ...interface{}) (raw string, err error) {
+	if x.cookie != nil {
+		if raw, err = c.Cookie(x.cookie.Name); err != nil {
+			return "", UserLoginError
+		}
+	} else {
+		if len(args) != 0 {
+			raw = args[0].(string)
+		}
+	}
+	if raw == "" {
+		return "", UserLoginError
 	}
 	return
 }
 
 // Verify authorization logic
-func (x *auth) Verify(tokenString string) (err error) {
+func (x *auth) Verify(c *gin.Context, args ...interface{}) (err error) {
+	var raw string
+	if x.cookie != nil {
+		if raw, err = c.Cookie(x.cookie.Name); err != nil {
+			return UserLoginError
+		}
+	} else {
+		if len(args) != 0 {
+			raw = args[0].(string)
+		}
+	}
+	if raw == "" {
+		return UserLoginError
+	}
 	var token *jwt.Token
-	if token, err = jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+	if token, err = jwt.Parse(raw, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 		}
@@ -128,69 +129,57 @@ func (x *auth) Verify(tokenString string) (err error) {
 				if result := x.refreshFn.Verify(claims); !result {
 					return RefreshTokenExpired
 				}
+				updateClaims := jwt.MapClaims{
+					"iat":  time.Now().Unix(),
+					"nbf":  time.Now().Add(time.Second * time.Duration(x.nbf)).Unix(),
+					"exp":  time.Now().Add(x.exp).Unix(),
+					"jti":  str.Uuid().String(),
+					"sub":  claims["sub"],
+					"uid":  claims["uid"],
+					"data": claims["data"],
+				}
+				token = jwt.NewWithClaims(x.signMethod, updateClaims)
+				if raw, err = token.SignedString(x.signKey); err != nil {
+					return
+				}
+				if x.cookie != nil {
+					x.cookie.Set(c, raw)
+				}
+				c.Set("token", token)
 			}
 		}
 		return
 	}
+	claims := token.Claims.(jwt.MapClaims)
 	if x.refreshFn != nil {
-		x.refreshFn.Renewal(token.Claims)
+		x.refreshFn.Renewal(claims)
 	}
-
-	var parseClaims jwt.MapClaims
-	if parseClaims, err = tokenx.Verify(value, func(claims jwt.MapClaims) (jwt.MapClaims, error) {
-		if result := refresh.Verify(claims["jti"].(string), claims["ack"].(string)); !result {
-			return nil, RefreshTokenExpired
-		}
-		for _, defaultClaim := range []string{"aud", "exp", "jti", "iat", "iss", "nbf", "sub"} {
-			delete(claims, defaultClaim)
-		}
-		var token *tokenx.Token
-		if token, err = tokenx.Make(claims, time.Minute*15); err != nil {
-			return nil, err
-		}
-		cookie.Set(ctx, token.Value)
-		return token.Claims, nil
-	}); err != nil {
-		return
-	}
-	ctx.Set("auth", parseClaims)
+	c.Set("claims", claims)
 	return
 }
 
+// Destory authorization logic
+func (x *auth) Destory(c *gin.Context, args ...interface{}) (err error) {
+	if err = x.Verify(c, args); err != nil {
+		return
+	}
+	claims, exists := c.Get("claims")
+	if !exists {
+		return fmt.Errorf("environment verification is abnormal")
+	}
+	return x.refreshFn.Destory(claims.(jwt.MapClaims))
+}
+
 // Middleware authorization verification
-func Middleware(cookie typ.Cookie, refresh RefreshTokenAPI) gin.HandlerFunc {
-	return func(ctx *gin.Context) {
-		if err := Verify(ctx, cookie, refresh); err != nil {
-			ctx.AbortWithStatusJSON(200, gin.H{
+func Middleware(auth auth, args ...interface{}) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		if err := auth.Verify(c, args); err != nil {
+			c.AbortWithStatusJSON(200, gin.H{
 				"error": 1,
 				"msg":   err.Error(),
 			})
 			return
 		}
-		ctx.Next()
+		c.Next()
 	}
-}
-
-// Destory authorization logic
-func Destory(ctx *gin.Context, cookie string, refresh RefreshTokenAPI) (err error) {
-	var value string
-	if value, err = ctx.Cookie(cookie); err != nil {
-		return nil
-	}
-	var claims jwt.MapClaims
-	if claims, err = tokenx.Verify(value, func(c jwt.MapClaims) (jwt.MapClaims, error) {
-		return c, nil
-	}); err != nil {
-		return
-	}
-	return refresh.Destory(claims["jti"].(string), claims["ack"].(string))
-}
-
-// Get authorization claims
-func Get(ctx *gin.Context) (jwt.MapClaims, error) {
-	val, exists := ctx.Get("auth")
-	if !exists {
-		return nil, UserLoginError
-	}
-	return val.(jwt.MapClaims), nil
 }
