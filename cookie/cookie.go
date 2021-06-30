@@ -5,12 +5,7 @@ import (
 	"net/http"
 )
 
-type Cookie struct {
-	Option
-}
-
 type Option struct {
-	Name     string
 	MaxAge   int    `yaml:"max_age"`
 	Path     string `yaml:"path"`
 	Domain   string `yaml:"domain"`
@@ -19,10 +14,15 @@ type Option struct {
 	SameSite http.SameSite
 }
 
+type Cookie struct {
+	Name string
+	*Option
+}
+
 func Make(option Option, samesite http.SameSite) *Cookie {
 	option.SameSite = samesite
 	return &Cookie{
-		Option: option,
+		Option: &option,
 	}
 }
 
