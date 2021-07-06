@@ -23,7 +23,7 @@ type Option struct {
 	Expires   int64    `yaml:"expires"`
 }
 
-type authx struct {
+type Auth struct {
 	signKey    []byte
 	signMethod jwt.SigningMethod
 	iss        string
@@ -47,8 +47,8 @@ type RefreshFn interface {
 	Destory(claims jwt.MapClaims, args ...interface{}) (err error)
 }
 
-func Make(option Option, args Args) *authx {
-	return &authx{
+func Make(option Option, args Args) *Auth {
+	return &Auth{
 		signKey:    []byte(option.Key),
 		signMethod: args.Method,
 		iss:        option.Issuer,
@@ -61,7 +61,7 @@ func Make(option Option, args Args) *authx {
 }
 
 // Create authorization logic
-func (x *authx) Create(c *gin.Context, sub interface{}, uid interface{}, data interface{}) (raw string, err error) {
+func (x *Auth) Create(c *gin.Context, sub interface{}, uid interface{}, data interface{}) (raw string, err error) {
 	claims := jwt.MapClaims{
 		"iat":  time.Now().Unix(),
 		"nbf":  time.Now().Add(time.Second * time.Duration(x.nbf)).Unix(),
@@ -86,7 +86,7 @@ func (x *authx) Create(c *gin.Context, sub interface{}, uid interface{}, data in
 }
 
 // Verify authorization logic
-func (x *authx) Verify(c *gin.Context, args ...interface{}) (err error) {
+func (x *Auth) Verify(c *gin.Context, args ...interface{}) (err error) {
 	var raw string
 	if x.cookie != nil {
 		if raw, err = c.Cookie(x.cookie.Name); err != nil {
@@ -143,7 +143,7 @@ func (x *authx) Verify(c *gin.Context, args ...interface{}) (err error) {
 }
 
 // Destory authorization logic
-func (x *authx) Destory(c *gin.Context, args ...interface{}) (err error) {
+func (x *Auth) Destory(c *gin.Context, args ...interface{}) (err error) {
 	if err = x.Verify(c, args); err != nil {
 		return
 	}
@@ -155,7 +155,7 @@ func (x *authx) Destory(c *gin.Context, args ...interface{}) (err error) {
 }
 
 // Middleware authorization verification
-func Middleware(auth authx, args ...interface{}) gin.HandlerFunc {
+func Middleware(auth Auth, args ...interface{}) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		if err := auth.Verify(c, args); err != nil {
 			c.AbortWithStatusJSON(400, gin.H{
