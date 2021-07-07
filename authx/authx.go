@@ -151,6 +151,9 @@ func (x *Auth) Destory(c *gin.Context, args ...interface{}) (err error) {
 	if !exists {
 		return fmt.Errorf("environment verification is abnormal")
 	}
+	if x.cookie != nil {
+		x.cookie.Set(c, "")
+	}
 	if x.refreshFn != nil {
 		if err = x.refreshFn.Destory(claims.(jwt.MapClaims)); err != nil {
 			return
