@@ -10,28 +10,29 @@ import (
 )
 
 type Fn struct {
-	users UserFn
-	roles RoleFn
 	acls  AclFn
-}
-
-type UserFn interface {
-	Get(ctx context.Context, uid interface{}) map[string]interface{}
-}
-
-type RoleMode int
-
-const (
-	RoleAcl      RoleMode = 0
-	RoleResource RoleMode = 1
-)
-
-type RoleFn interface {
-	Get(ctx context.Context, keys []string, mode RoleMode) *hashset.Set
+	roles RoleFn
+	users UserFn
 }
 
 type AclFn interface {
-	Get(ctx context.Context, key string, policy string) *hashset.Set
+	Fetch(ctx context.Context, key string, mode string) (*hashset.Set, error)
+}
+
+type RoleMode string
+
+const (
+	RoleAcl        RoleMode = "acl"
+	RoleResource   RoleMode = "resource"
+	RolePermission RoleMode = "permission"
+)
+
+type RoleFn interface {
+	Fetch(ctx context.Context, keys []string, mode RoleMode) (*hashset.Set, error)
+}
+
+type UserFn interface {
+	Fetch(ctx context.Context, uid interface{}) (map[string]interface{}, error)
 }
 
 type Scope struct {
@@ -49,6 +50,7 @@ func Middleware(prefix string, fn Fn) gin.HandlerFunc {
 			c.AbortWithStatusJSON(400, gin.H{
 				"msg": "environment verification is abnormal",
 			})
+			return
 		}
 		mClaims := claims.(jwt.MapClaims)
 		scope := Scope{
@@ -57,13 +59,28 @@ func Middleware(prefix string, fn Fn) gin.HandlerFunc {
 		}
 		ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
 		defer cancel()
-		user := fn.users.Get(ctx, scope.UID)
+		var err error
+		var user map[string]interface{}
+		if user, err = fn.users.Fetch(ctx, scope.UID); err != nil {
+			c.AbortWithStatusJSON(200, gin.H{
+				"error": 1,
+				"msg":   err.Error(),
+			})
+			return
+		}
 		roles := user["role"].([]interface{})
 		roleKeys := make([]string, len(roles))
 		for index, value := range roles {
 			roleKeys[index] = value.(string)
 		}
-		roleAcl := fn.roles.Get(ctx, roleKeys, RoleAcl)
+		var roleAcl *hashset.Set
+		if roleAcl, err = fn.roles.Fetch(ctx, roleKeys, RoleAcl); err != nil {
+			c.AbortWithStatusJSON(200, gin.H{
+				"error": 1,
+				"msg":   err.Error(),
+			})
+			return
+		}
 		if user["acl"] != nil {
 			roleAcl.Add(user["acl"].([]interface{})...)
 		}
@@ -75,20 +92,33 @@ func Middleware(prefix string, fn Fn) gin.HandlerFunc {
 			}
 		}
 		if policyCursor == "" {
-			c.AbortWithStatusJSON(400, gin.H{
-				"msg": "rbac invalid, policy is empty",
+			c.AbortWithStatusJSON(200, gin.H{
+				"error": 1,
+				"msg":   "rbac invalid, policy is empty",
 			})
+			return
 		}
-		acl := fn.acls.Get(ctx, acts[0], policyCursor)
-		if acl.Empty() {
-			c.AbortWithStatusJSON(400, gin.H{
-				"msg": "rbac invalid, scope is empty",
+		var acl *hashset.Set
+		if acl, err = fn.acls.Fetch(ctx, acts[0], policyCursor); err != nil {
+			c.AbortWithStatusJSON(200, gin.H{
+				"error": 1,
+				"msg":   err.Error(),
 			})
+			return
+		}
+		if acl.Empty() {
+			c.AbortWithStatusJSON(200, gin.H{
+				"error": 1,
+				"msg":   "rbac invalid, scope is empty",
+			})
+			return
 		}
 		if !acl.Contains(acts[1]) {
-			c.AbortWithStatusJSON(400, gin.H{
-				"msg": "rbac invalid, access denied",
+			c.AbortWithStatusJSON(200, gin.H{
+				"error": 1,
+				"msg":   "rbac invalid, access denied",
 			})
+			return
 		}
 		c.Next()
 	}
