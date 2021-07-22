@@ -11,8 +11,8 @@ import (
 )
 
 var (
-	UserLoginError      = errors.New("please first authorize user login")
-	RefreshTokenExpired = errors.New("refresh token verification expired")
+	UserLoginError      = errors.New("当前鉴权已失效")
+	RefreshTokenExpired = errors.New("刷新令牌已过期")
 )
 
 type Option struct {
@@ -60,7 +60,7 @@ func Make(option Option, args Args) *Auth {
 	}
 }
 
-// Create authorization logic
+// Create 创建认证
 func (x *Auth) Create(c *gin.Context, sub interface{}, uid interface{}, data interface{}) (raw string, err error) {
 	claims := jwt.MapClaims{
 		"iat":  time.Now().Unix(),
@@ -85,7 +85,7 @@ func (x *Auth) Create(c *gin.Context, sub interface{}, uid interface{}, data int
 	return
 }
 
-// Verify authorization logic
+// Verify 鉴权认证
 func (x *Auth) Verify(c *gin.Context, args ...interface{}) (err error) {
 	var raw string
 	if x.cookie != nil {
@@ -142,7 +142,7 @@ func (x *Auth) Verify(c *gin.Context, args ...interface{}) (err error) {
 	return
 }
 
-// Destory authorization logic
+// Destory 销毁认证
 func (x *Auth) Destory(c *gin.Context, args ...interface{}) (err error) {
 	if err = x.Verify(c, args); err != nil {
 		return
@@ -162,7 +162,7 @@ func (x *Auth) Destory(c *gin.Context, args ...interface{}) (err error) {
 	return
 }
 
-// Middleware authorization verification
+// Middleware 鉴权认证中间件
 func Middleware(auth Auth, args ...interface{}) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		if err := auth.Verify(c, args); err != nil {
