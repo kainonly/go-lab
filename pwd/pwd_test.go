@@ -1,4 +1,4 @@
-package hash
+package pwd
 
 import (
 	"github.com/alexedwards/argon2id"
