@@ -3,6 +3,7 @@ module development
 go 1.18
 
 require (
+	github.com/bwmarrin/snowflake v0.3.0
 	github.com/bxcodec/faker/v3 v3.8.0
 	github.com/go-resty/resty/v2 v2.7.0
 	github.com/google/uuid v1.3.0
