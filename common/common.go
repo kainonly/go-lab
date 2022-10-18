@@ -23,8 +23,9 @@ func LoadValues() (values *Values, err error) {
 }
 
 type Values struct {
-	CLS  `yaml:"cls"`
-	STMP `yaml:"stmp"`
+	CLS    `yaml:"cls"`
+	STMP   `yaml:"stmp"`
+	INFLUX `yaml:"influx"`
 }
 
 type CLS struct {
@@ -40,4 +41,9 @@ type STMP struct {
 	Identity string `yaml:"identity"`
 	Username string `yaml:"username"`
 	Password string `yaml:"password"`
+}
+
+type INFLUX struct {
+	Url   string `yaml:"url"`
+	Token string `yaml:"token"`
 }
