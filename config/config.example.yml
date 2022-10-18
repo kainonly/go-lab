@@ -8,4 +8,7 @@ stmp:
   host:
   identity:
   username:
-  password: 
+  password:
+influx:
+  url:
+  token:
