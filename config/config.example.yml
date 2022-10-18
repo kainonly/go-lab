@@ -1,0 +1,11 @@
+cls:
+  endpoint: ap-guangzhou.cls.tencentcs.com
+  access_key_id:
+  access_key_secret:
+  topic_id:
+stmp:
+  addr:
+  host:
+  identity:
+  username:
+  password: 
