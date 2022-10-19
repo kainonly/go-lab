@@ -27,6 +27,7 @@ type Values struct {
 	STMP   `yaml:"stmp"`
 	INFLUX `yaml:"influx"`
 	PULSAR `yaml:"pulsar"`
+	NATS   `yaml:"nats"`
 
 	REDIS string `yaml:"redis"`
 }
@@ -55,4 +56,9 @@ type PULSAR struct {
 	Url   string `yaml:"url"`
 	Token string `yaml:"token"`
 	Topic string `yaml:"topic"`
+}
+
+type NATS struct {
+	Url  string `yaml:"url"`
+	NKey string `yaml:"nkey"`
 }

@@ -17,3 +17,6 @@ pulsar:
   url:
   token:
   topic:
+nats:
+  url:
+  nkey:
