@@ -29,8 +29,10 @@ type Values struct {
 	PULSAR `yaml:"pulsar"`
 	NATS   `yaml:"nats"`
 
-	REDIS string `yaml:"redis"`
-	MONGO string `yaml:"mongo"`
+	REDIS    string `yaml:"redis"`
+	MONGO    string `yaml:"mongo"`
+	MYSQL    string `yaml:"mysql"`
+	POSTGRES string `yaml:"postgres"`
 }
 
 type CLS struct {
