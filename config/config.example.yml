@@ -12,3 +12,4 @@ stmp:
 influx:
   url:
   token:
+redis:

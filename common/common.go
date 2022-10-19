@@ -26,6 +26,7 @@ type Values struct {
 	CLS    `yaml:"cls"`
 	STMP   `yaml:"stmp"`
 	INFLUX `yaml:"influx"`
+	REDIS  string `yaml:"redis"`
 }
 
 type CLS struct {
