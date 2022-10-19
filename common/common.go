@@ -26,7 +26,9 @@ type Values struct {
 	CLS    `yaml:"cls"`
 	STMP   `yaml:"stmp"`
 	INFLUX `yaml:"influx"`
-	REDIS  string `yaml:"redis"`
+	PULSAR `yaml:"pulsar"`
+
+	REDIS string `yaml:"redis"`
 }
 
 type CLS struct {
@@ -47,4 +49,10 @@ type STMP struct {
 type INFLUX struct {
 	Url   string `yaml:"url"`
 	Token string `yaml:"token"`
+}
+
+type PULSAR struct {
+	Url   string `yaml:"url"`
+	Token string `yaml:"token"`
+	Topic string `yaml:"topic"`
 }
