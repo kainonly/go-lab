@@ -9,3 +9,17 @@ type Ipv4 struct {
 	City     string `gorm:"type:varchar"`
 	ISP      string `gorm:"type:varchar"`
 }
+
+type IpValue struct {
+	Start    uint64 `json:"start"`
+	End      uint64 `json:"end"`
+	Country  string `json:"country"`
+	Province string `json:"province"`
+	City     string `json:"city"`
+	ISP      string `json:"isp"`
+}
+
+type KVIpv4 struct {
+	ID    uint64  `gorm:"primaryKey,autoIncrement"`
+	Value IpValue `gorm:"type:jsonb;serializer:json"`
+}

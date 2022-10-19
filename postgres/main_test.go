@@ -1,13 +1,18 @@
 package postgres
 
 import (
+	"bufio"
 	"development/common"
-	"development/mongodb/model"
+	"development/postgres/model"
+	"encoding/csv"
 	"github.com/alexedwards/argon2id"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"io"
 	"log"
 	"os"
+	"strconv"
+	"strings"
 	"testing"
 )
 
@@ -44,6 +49,236 @@ func TestCreateUser(t *testing.T) {
 		Password: hash,
 		Email:    "zhangtqx@vip.qq.com",
 	}).Error; err != nil {
+		t.Error(err)
+	}
+}
+
+func TestMockCity(t *testing.T) {
+	var err error
+	var f *os.File
+	if f, err = os.Open("../assets/cities.csv"); err != nil {
+		t.Error(err)
+	}
+
+	if err = db.AutoMigrate(&model.City{}); err != nil {
+		t.Error(err)
+	}
+
+	r := csv.NewReader(f)
+	first := true
+	var cities []model.City
+	for {
+		var record []string
+		if record, err = r.Read(); err != nil {
+			if err == io.EOF {
+				break
+			} else {
+				t.Error(err)
+			}
+		}
+		if first {
+			first = false
+			continue
+		}
+		latitude := float64(0)
+		if record[8] != "" {
+			if latitude, err = strconv.ParseFloat(record[8], 64); err != nil {
+				t.Error(err)
+			}
+		}
+		longitude := float64(0)
+		if record[9] != "" {
+			if longitude, err = strconv.ParseFloat(record[9], 64); err != nil {
+				t.Error(err)
+			}
+		}
+		cities = append(cities, model.City{
+			Name:        record[1],
+			CountryCode: record[6],
+			StateCode:   record[3],
+			Latitude:    latitude,
+			Longitude:   longitude,
+		})
+	}
+	if err = db.CreateInBatches(cities, 5000).Error; err != nil {
+		t.Error(err)
+	}
+}
+
+func TestMockKVCity(t *testing.T) {
+	var err error
+	var f *os.File
+	if f, err = os.Open("../assets/cities.csv"); err != nil {
+		t.Error(err)
+	}
+
+	if err = db.AutoMigrate(&model.KVCity{}); err != nil {
+		t.Error(err)
+	}
+
+	r := csv.NewReader(f)
+	first := true
+	var cities []model.KVCity
+	for {
+		var record []string
+		if record, err = r.Read(); err != nil {
+			if err == io.EOF {
+				break
+			} else {
+				t.Error(err)
+			}
+		}
+		if first {
+			first = false
+			continue
+		}
+		latitude := float64(0)
+		if record[8] != "" {
+			if latitude, err = strconv.ParseFloat(record[8], 64); err != nil {
+				t.Error(err)
+			}
+		}
+		longitude := float64(0)
+		if record[9] != "" {
+			if longitude, err = strconv.ParseFloat(record[9], 64); err != nil {
+				t.Error(err)
+			}
+		}
+		cities = append(cities, model.KVCity{
+			Value: model.CityValue{
+				Name:        record[1],
+				CountryCode: record[6],
+				StateCode:   record[3],
+				Latitude:    latitude,
+				Longitude:   longitude,
+			},
+		})
+	}
+	if err = db.CreateInBatches(cities, 5000).Error; err != nil {
+		t.Error(err)
+	}
+}
+
+func TestQueryCity(t *testing.T) {
+	var data model.City
+	if err := db.Debug().
+		Where("name = ?", "Pogradec").
+		Take(&data).Error; err != nil {
+		t.Error(err)
+	}
+	t.Log(data)
+}
+
+func TestQueryKVCity(t *testing.T) {
+	var data model.KVCity
+	if err := db.Debug().
+		Where("value ->> 'name' = ?", "Pogradec").
+		Take(&data).Error; err != nil {
+		t.Error(err)
+	}
+	t.Log(data)
+}
+
+func isZero(value string) string {
+	if value == "0" {
+		return ""
+	}
+	return value
+}
+
+func ip2Dec(value string) uint64 {
+	ip := uint64(0)
+	for k, v := range strings.Split(value, ".") {
+		n, _ := strconv.ParseUint(v, 10, 64)
+		ip |= n << ((3 - uint64(k)) << 3)
+	}
+	return ip
+}
+
+func TestMockIp(t *testing.T) {
+	var err error
+	var f *os.File
+	if f, err = os.Open("../assets/ip.merge.txt"); err != nil {
+		t.Error(err)
+	}
+
+	if err = db.AutoMigrate(&model.Ipv4{}); err != nil {
+		t.Error(err)
+	}
+
+	var bulk []model.Ipv4
+	r := bufio.NewReader(f)
+	for {
+		var s string
+		if s, err = r.ReadString('\n'); err != nil {
+			if err == io.EOF {
+				err = nil
+				break
+			} else {
+				t.Error(err)
+			}
+		}
+		row := strings.TrimSpace(s)
+		if row == "" {
+			continue
+		}
+		v := strings.Split(row, "|")
+		bulk = append(bulk, model.Ipv4{
+			Start:    ip2Dec(v[0]),
+			End:      ip2Dec(v[1]),
+			Country:  isZero(v[2]),
+			Province: isZero(v[4]),
+			City:     isZero(v[5]),
+			ISP:      isZero(v[6]),
+		})
+	}
+
+	if err = db.CreateInBatches(bulk, 5000).Error; err != nil {
+		t.Error(err)
+	}
+}
+
+func TestMockKVIp(t *testing.T) {
+	var err error
+	var f *os.File
+	if f, err = os.Open("../assets/ip.merge.txt"); err != nil {
+		t.Error(err)
+	}
+
+	if err = db.AutoMigrate(&model.KVIpv4{}); err != nil {
+		t.Error(err)
+	}
+
+	var bulk []model.KVIpv4
+	r := bufio.NewReader(f)
+	for {
+		var s string
+		if s, err = r.ReadString('\n'); err != nil {
+			if err == io.EOF {
+				err = nil
+				break
+			} else {
+				t.Error(err)
+			}
+		}
+		row := strings.TrimSpace(s)
+		if row == "" {
+			continue
+		}
+		v := strings.Split(row, "|")
+		bulk = append(bulk, model.KVIpv4{
+			Value: model.IpValue{
+				Start:    ip2Dec(v[0]),
+				End:      ip2Dec(v[1]),
+				Country:  isZero(v[2]),
+				Province: isZero(v[4]),
+				City:     isZero(v[5]),
+				ISP:      isZero(v[6]),
+			},
+		})
+	}
+
+	if err = db.CreateInBatches(bulk, 5000).Error; err != nil {
 		t.Error(err)
 	}
 }
