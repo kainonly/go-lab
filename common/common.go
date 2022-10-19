@@ -30,6 +30,7 @@ type Values struct {
 	NATS   `yaml:"nats"`
 
 	REDIS string `yaml:"redis"`
+	MONGO string `yaml:"mongo"`
 }
 
 type CLS struct {

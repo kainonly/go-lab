@@ -20,3 +20,4 @@ pulsar:
 nats:
   url:
   nkey:
+mongo:
