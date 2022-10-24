@@ -6,7 +6,6 @@ import (
 	"development/mongodb/model"
 	"errors"
 	"github.com/alexedwards/argon2id"
-	"github.com/bxcodec/faker/v3"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -133,16 +132,16 @@ func TestTimeSeries(t *testing.T) {
 		t.Error(err)
 	}
 
-	docs := make([]interface{}, 100)
-	for i := 0; i < 100; i++ {
-		var doc model.Record
-		if err := faker.FakeData(&doc); err != nil {
-			t.Error(err)
-		}
-		docs[i] = doc
-	}
-
-	if _, err := db.Collection("history").InsertMany(ctx, docs); err != nil {
-		t.Error(err)
-	}
+	//docs := make([]interface{}, 100)
+	//for i := 0; i < 100; i++ {
+	//	var doc model.Record
+	//	if err := faker.FakeData(&doc); err != nil {
+	//		t.Error(err)
+	//	}
+	//	docs[i] = doc
+	//}
+	//
+	//if _, err := db.Collection("history").InsertMany(ctx, docs); err != nil {
+	//	t.Error(err)
+	//}
 }
