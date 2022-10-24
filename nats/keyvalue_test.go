@@ -75,3 +75,19 @@ func TestKeyValueGet(t *testing.T) {
 	}
 	t.Log(string(entry.Value()))
 }
+
+func TestKeyValueDel(t *testing.T) {
+	kv, err := js.KeyValue("development")
+	if err != nil {
+		t.Error(err)
+	}
+	if err = kv.Delete("values"); err != nil {
+		t.Error(err)
+	}
+}
+
+func TestDeleteKeyValue(t *testing.T) {
+	if err := js.DeleteKeyValue("development"); err != nil {
+		t.Error(err)
+	}
+}

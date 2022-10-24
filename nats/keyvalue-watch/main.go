@@ -26,6 +26,7 @@ func main() {
 		if entry == nil || entry.Created().Unix() < cur.Unix() {
 			continue
 		}
+		log.Println(entry.Operation().String())
 		log.Println(entry.Key())
 		log.Println(string(entry.Value()))
 		log.Println(entry.Revision())
