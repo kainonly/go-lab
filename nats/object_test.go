@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-func TestCreateBucket(t *testing.T) {
+func TestCreateObjectStore(t *testing.T) {
 	_, err := js.CreateObjectStore(&nats.ObjectStoreConfig{
 		Bucket: "development",
 	})

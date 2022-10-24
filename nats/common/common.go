@@ -7,9 +7,9 @@ import (
 	"time"
 )
 
-func Create() (nc *nats.Conn, err error) {
+func Create(path string) (nc *nats.Conn, err error) {
 	var values *common.Values
-	if values, err = common.LoadValues(); err != nil {
+	if values, err = common.LoadValues(path); err != nil {
 		return
 	}
 

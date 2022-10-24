@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	nc, _ := common.Create()
+	nc, _ := common.Create("./config/config.yml")
 	js, _ := nc.JetStream(nats.PublishAsyncMaxPending(256))
 	o, err := js.ObjectStore("development")
 	if err != nil {

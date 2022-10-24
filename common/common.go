@@ -7,8 +7,7 @@ import (
 	"os"
 )
 
-func LoadValues() (values *Values, err error) {
-	path := "../config/config.yml"
+func LoadValues(path string) (values *Values, err error) {
 	if _, err = os.Stat(path); os.IsNotExist(err) {
 		return nil, fmt.Errorf("静态配置不存在，请检查路径 [%s]", path)
 	}

@@ -13,7 +13,7 @@ var js nats.JetStreamContext
 
 func TestMain(m *testing.M) {
 	var err error
-	if nc, err = common.Create(); err != nil {
+	if nc, err = common.Create("../config/config.yml"); err != nil {
 		log.Fatalln(err)
 	}
 	if js, err = nc.JetStream(
@@ -22,4 +22,7 @@ func TestMain(m *testing.M) {
 		log.Fatalln(err)
 	}
 	os.Exit(m.Run())
+}
+
+func TestVersion(t *testing.T) {
 }

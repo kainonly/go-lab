@@ -1,10 +1,8 @@
 package loki
 
 import (
-	"context"
 	"github.com/bxcodec/faker/v3"
 	"github.com/go-resty/resty/v2"
-	"github.com/grafana/loki/pkg/logproto"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 	"strconv"
@@ -20,24 +18,24 @@ func TestGrpc(t *testing.T) {
 		t.Error(err)
 	}
 	defer conn.Close()
-	client := logproto.NewPusherClient(conn)
-	res, err := client.Push(context.TODO(), &logproto.PushRequest{
-		Streams: []logproto.Stream{
-			{
-				Labels: `{topic="test"}`,
-				Entries: []logproto.Entry{
-					{
-						Timestamp: time.Now(),
-						Line:      `level=info ts=2019-12-12T15:00:08.325Z caller=compact.go:441 component=tsdb msg="compact blocks" count=3 mint=1576130400000 maxt=1576152000000 ulid=01DVX9ZHNM71GRCJS7M34Q0EV7 sources="[01DVWNC6NWY1A60AZV3Z6DGS65 01DVWW7XXX75GHA6ZDTD170CSZ 01DVX33N5W86CWJJVRPAVXJRWJ]" duration=2.897213221s`,
-					},
-				},
-			},
-		},
-	})
-	if err != nil {
-		panic(err)
-	}
-	t.Log(res)
+	//client := logproto.NewPusherClient(conn)
+	//res, err := client.Push(context.TODO(), &logproto.PushRequest{
+	//	Streams: []logproto.Stream{
+	//		{
+	//			Labels: `{topic="test"}`,
+	//			Entries: []logproto.Entry{
+	//				{
+	//					Timestamp: time.Now(),
+	//					Line:      `level=info ts=2019-12-12T15:00:08.325Z caller=compact.go:441 component=tsdb msg="compact blocks" count=3 mint=1576130400000 maxt=1576152000000 ulid=01DVX9ZHNM71GRCJS7M34Q0EV7 sources="[01DVWNC6NWY1A60AZV3Z6DGS65 01DVWW7XXX75GHA6ZDTD170CSZ 01DVX33N5W86CWJJVRPAVXJRWJ]" duration=2.897213221s`,
+	//				},
+	//			},
+	//		},
+	//	},
+	//})
+	//if err != nil {
+	//	panic(err)
+	//}
+	//t.Log(res)
 }
 
 type Stream struct {

@@ -26,7 +26,7 @@ var db *mongo.Database
 
 func TestMain(m *testing.M) {
 	var err error
-	if values, err = common.LoadValues(); err != nil {
+	if values, err = common.LoadValues("../config/config.yml"); err != nil {
 		log.Fatalln(err)
 	}
 	if client, err = mongo.Connect(context.TODO(),
@@ -37,7 +37,7 @@ func TestMain(m *testing.M) {
 
 	option := options.Database().
 		SetWriteConcern(writeconcern.New(writeconcern.WMajority()))
-	db = client.Database("development", option)
+	db = client.Database("xapi", option)
 	os.Exit(m.Run())
 }
 

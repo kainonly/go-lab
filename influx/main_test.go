@@ -18,7 +18,7 @@ var msgId string
 
 func TestMain(m *testing.M) {
 	var err error
-	if values, err = common.LoadValues(); err != nil {
+	if values, err = common.LoadValues("../config/config.yml"); err != nil {
 		log.Fatalln(err)
 	}
 	client = influxdb2.NewClient(

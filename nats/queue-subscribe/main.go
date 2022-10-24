@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	nc, _ := common.Create()
+	nc, _ := common.Create("./config/config.yml")
 	js, _ := nc.JetStream(nats.PublishAsyncMaxPending(256))
 
 	if _, err := js.QueueSubscribe("development.message", "development:message", func(msg *nats.Msg) {
