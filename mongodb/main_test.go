@@ -145,3 +145,20 @@ func TestTimeSeries(t *testing.T) {
 	//	t.Error(err)
 	//}
 }
+
+func TestExistsTimeSeriesDb(t *testing.T) {
+	ctx := context.TODO()
+
+	colls, err := db.ListCollectionSpecifications(ctx,
+		bson.M{
+			"name": "history",
+		},
+	)
+	if err != nil {
+		t.Error(err)
+	}
+
+	if len(colls) != 0 {
+		t.Log(colls[0].Type)
+	}
+}

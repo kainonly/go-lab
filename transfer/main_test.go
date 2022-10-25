@@ -4,6 +4,7 @@ import (
 	"context"
 	"development/common"
 	natscommon "development/nats/common"
+	"github.com/google/uuid"
 	"github.com/nats-io/nats.go"
 	"github.com/weplanx/transfer"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -80,6 +81,22 @@ func TestPublish(t *testing.T) {
 		Timestamp: time.Now(),
 	}); err != nil {
 		t.Error(err)
+	}
+}
+
+func BenchmarkPublish(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		if err := x.Publish(context.TODO(), "test", transfer.Payload{
+			Metadata: map[string]interface{}{
+				"uuid": uuid.New().String(),
+			},
+			Data: map[string]interface{}{
+				"no": i,
+			},
+			Timestamp: time.Now(),
+		}); err != nil {
+			b.Error(err)
+		}
 	}
 }
 
