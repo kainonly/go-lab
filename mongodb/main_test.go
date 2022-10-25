@@ -40,46 +40,6 @@ func TestMain(m *testing.M) {
 	os.Exit(m.Run())
 }
 
-func TestCreateUser(t *testing.T) {
-	hash, err := argon2id.CreateHash("pass@VAN1234", &argon2id.Params{
-		Memory:      65536,
-		Iterations:  4,
-		Parallelism: 1,
-		SaltLength:  16,
-		KeyLength:   32,
-	})
-	if err != nil {
-		t.Error(err)
-	}
-
-	ctx := context.TODO()
-
-	if _, err := db.Collection("users").InsertOne(ctx, model.User{
-		Username:   "weplanx",
-		Password:   hash,
-		Roles:      []primitive.ObjectID{},
-		Email:      "zhangtqx@vip.qq.com",
-		Status:     true,
-		CreateTime: time.Now(),
-		UpdateTime: time.Now(),
-	}); err != nil {
-		t.Error(err)
-	}
-
-	if _, err := db.Collection("users").Indexes().CreateMany(ctx, []mongo.IndexModel{
-		{
-			Keys:    bson.M{"username": 1},
-			Options: options.Index().SetName("idx_username").SetUnique(true),
-		},
-		{
-			Keys:    bson.M{"email": 1},
-			Options: options.Index().SetName("idx_email"),
-		},
-	}); err != nil {
-		t.Error(err)
-	}
-}
-
 func TestSort(t *testing.T) {
 	ctx := context.TODO()
 	option := options.Find().
@@ -160,5 +120,120 @@ func TestExistsTimeSeriesDb(t *testing.T) {
 
 	if len(colls) != 0 {
 		t.Log(colls[0].Type)
+	}
+}
+
+func TestCreateUser(t *testing.T) {
+	hash, err := argon2id.CreateHash("pass@VAN1234", &argon2id.Params{
+		Memory:      65536,
+		Iterations:  4,
+		Parallelism: 1,
+		SaltLength:  16,
+		KeyLength:   32,
+	})
+	if err != nil {
+		t.Error(err)
+	}
+
+	ctx := context.TODO()
+
+	if _, err := db.Collection("users").InsertOne(ctx, model.User{
+		Username:   "weplanx",
+		Password:   hash,
+		Roles:      []primitive.ObjectID{},
+		Email:      "zhangtqx@vip.qq.com",
+		Status:     true,
+		CreateTime: time.Now(),
+		UpdateTime: time.Now(),
+	}); err != nil {
+		t.Error(err)
+	}
+
+	if _, err := db.Collection("users").Indexes().CreateMany(ctx, []mongo.IndexModel{
+		{
+			Keys:    bson.M{"username": 1},
+			Options: options.Index().SetName("idx_username").SetUnique(true),
+		},
+		{
+			Keys:    bson.M{"email": 1},
+			Options: options.Index().SetName("idx_email"),
+		},
+	}); err != nil {
+		t.Error(err)
+	}
+}
+
+func TestCreateProjectsCollection(t *testing.T) {
+	ctx := context.TODO()
+	option := options.CreateCollection().
+		SetValidator(bson.M{
+			"$jsonSchema": bson.M{
+				"title":    "projects",
+				"required": bson.A{"_id", "name", "namespace", "status", "create_time", "update_time"},
+				"properties": bson.M{
+					"_id": bson.M{
+						"bsonType": "objectId",
+					},
+					"name": bson.M{
+						"bsonType": "string",
+					},
+					"namespace": bson.M{
+						"bsonType": "string",
+					},
+					"access_key_id": bson.M{
+						"bsonType": "string",
+					},
+					"secret_access_key": bson.M{
+						"bsonType": "string",
+					},
+					"entry": bson.M{
+						"bsonType": "array",
+					},
+					"expire_time": bson.M{
+						"bsonType": "date",
+					},
+					"status": bson.M{
+						"bsonType": "bool",
+					},
+					"create_time": bson.M{
+						"bsonType": "date",
+					},
+					"update_time": bson.M{
+						"bsonType": "date",
+					},
+				},
+				"additionalProperties": false,
+			},
+		})
+	if err := db.CreateCollection(ctx, "projects", option); err != nil {
+		t.Error(err)
+	}
+	if _, err := db.Collection("projects").Indexes().CreateMany(ctx, []mongo.IndexModel{
+		{
+			Keys:    bson.D{{"namespace", 1}},
+			Options: options.Index().SetName("idx_namespace").SetUnique(true),
+		},
+		{
+			Keys:    bson.D{{"access_key_id", 1}},
+			Options: options.Index().SetName("idx_access_key_id"),
+		},
+	}); err != nil {
+		t.Error(err)
+	}
+}
+
+func TestCreateProject(t *testing.T) {
+	ctx := context.TODO()
+	if _, err := db.Collection("projects").InsertOne(ctx, model.Project{
+		Name:            "默认项目",
+		Namespace:       "default",
+		AccessKeyID:     "",
+		SecretAccessKey: "",
+		Entry:           []string{},
+		Status:          true,
+		CreateTime:      time.Now(),
+		UpdateTime:      time.Now(),
+	}); err != nil {
+		t.Error(err)
 	}
 }
