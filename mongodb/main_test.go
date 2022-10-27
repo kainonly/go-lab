@@ -177,6 +177,7 @@ func TestCreateProjectsCollection(t *testing.T) {
 					{"secret", bson.M{"bsonType": []string{"null", "string"}}},
 					{"entry", bson.M{"bsonType": "array"}},
 					{"expire_time", bson.M{"bsonType": []string{"null", "date"}}},
+					{"labels", bson.M{"bsonType": "object"}},
 					{"status", bson.M{"bsonType": "bool"}},
 					{"create_time", bson.M{"bsonType": "date"}},
 					{"update_time", bson.M{"bsonType": "date"}},
@@ -200,9 +201,12 @@ func TestCreateProjectsCollection(t *testing.T) {
 func TestCreateProject(t *testing.T) {
 	ctx := context.TODO()
 	if _, err := db.Collection("projects").InsertOne(ctx, model.Project{
-		Name:       "默认项目",
-		Namespace:  "default",
-		Entry:      []string{},
+		Name:      "默认项目",
+		Namespace: "default",
+		Entry:     []string{},
+		Labels: map[string]string{
+			"fixed": "true",
+		},
 		Status:     true,
 		CreateTime: time.Now(),
 		UpdateTime: time.Now(),
