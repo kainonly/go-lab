@@ -15,13 +15,13 @@ type Project struct {
 	Namespace string `bson:"namespace" json:"namespace"`
 
 	// Secret
-	Secret string `bson:"secret,omitempty" json:"secret"`
+	Secret string `bson:"secret" json:"secret"`
 
 	// 后端入口
-	Entry []string `bson:"entry,omitempty" json:"entry"`
+	Entry []string `bson:"entry" json:"entry"`
 
 	// 有效时间
-	ExpireTime time.Time `bson:"expire_time,omitempty" json:"expire_time"`
+	ExpireTime *time.Time `bson:"expire_time" json:"expire_time"`
 
 	// 状态
 	Status bool `bson:"status" json:"status"`
