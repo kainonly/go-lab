@@ -14,17 +14,14 @@ type Project struct {
 	// 项目命名空间
 	Namespace string `bson:"namespace" json:"namespace"`
 
-	// Access Key ID
-	AccessKeyID string `bson:"access_key_id" json:"access_key_id"`
-
-	// Secret Access Key
-	SecretAccessKey string `bson:"secret_access_key" json:"secret_access_key"`
+	// Secret
+	Secret string `bson:"secret,omitempty" json:"secret"`
 
 	// 后端入口
-	Entry []string `bson:"entry" json:"entry"`
+	Entry []string `bson:"entry,omitempty" json:"entry"`
 
 	// 有效时间
-	ExpireTime time.Time `bson:"expire_time" json:"expire_time"`
+	ExpireTime time.Time `bson:"expire_time,omitempty" json:"expire_time"`
 
 	// 状态
 	Status bool `bson:"status" json:"status"`

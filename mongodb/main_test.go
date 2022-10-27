@@ -166,44 +166,23 @@ func TestCreateUser(t *testing.T) {
 func TestCreateProjectsCollection(t *testing.T) {
 	ctx := context.TODO()
 	option := options.CreateCollection().
-		SetValidator(bson.M{
-			"$jsonSchema": bson.M{
-				"title":    "projects",
-				"required": bson.A{"_id", "name", "namespace", "status", "create_time", "update_time"},
-				"properties": bson.M{
-					"_id": bson.M{
-						"bsonType": "objectId",
-					},
-					"name": bson.M{
-						"bsonType": "string",
-					},
-					"namespace": bson.M{
-						"bsonType": "string",
-					},
-					"access_key_id": bson.M{
-						"bsonType": "string",
-					},
-					"secret_access_key": bson.M{
-						"bsonType": "string",
-					},
-					"entry": bson.M{
-						"bsonType": "array",
-					},
-					"expire_time": bson.M{
-						"bsonType": "date",
-					},
-					"status": bson.M{
-						"bsonType": "bool",
-					},
-					"create_time": bson.M{
-						"bsonType": "date",
-					},
-					"update_time": bson.M{
-						"bsonType": "date",
-					},
-				},
-				"additionalProperties": false,
-			},
+		SetValidator(bson.D{
+			{"$jsonSchema", bson.D{
+				{"title", "projects"},
+				{"required", bson.A{"_id", "name", "namespace", "status", "create_time", "update_time"}},
+				{"properties", bson.D{
+					{"_id", bson.M{"bsonType": "objectId"}},
+					{"name", bson.M{"bsonType": "string"}},
+					{"namespace", bson.M{"bsonType": "string"}},
+					{"secret", bson.M{"bsonType": "string"}},
+					{"entry", bson.M{"bsonType": "array"}},
+					{"expire_time", bson.M{"bsonType": "date"}},
+					{"status", bson.M{"bsonType": "bool"}},
+					{"create_time", bson.M{"bsonType": "date"}},
+					{"update_time", bson.M{"bsonType": "date"}},
+				}},
+				{"additionalProperties", false},
+			}},
 		})
 	if err := db.CreateCollection(ctx, "projects", option); err != nil {
 		t.Error(err)
@@ -213,10 +192,6 @@ func TestCreateProjectsCollection(t *testing.T) {
 			Keys:    bson.D{{"namespace", 1}},
 			Options: options.Index().SetName("idx_namespace").SetUnique(true),
 		},
-		{
-			Keys:    bson.D{{"access_key_id", 1}},
-			Options: options.Index().SetName("idx_access_key_id"),
-		},
 	}); err != nil {
 		t.Error(err)
 	}
@@ -225,14 +200,12 @@ func TestCreateProjectsCollection(t *testing.T) {
 func TestCreateProject(t *testing.T) {
 	ctx := context.TODO()
 	if _, err := db.Collection("projects").InsertOne(ctx, model.Project{
-		Name:            "默认项目",
-		Namespace:       "default",
-		AccessKeyID:     "",
-		SecretAccessKey: "",
-		Entry:           []string{},
-		Status:          true,
-		CreateTime:      time.Now(),
-		UpdateTime:      time.Now(),
+		Name:       "默认项目",
+		Namespace:  "default",
+		Entry:      []string{},
+		Status:     true,
+		CreateTime: time.Now(),
+		UpdateTime: time.Now(),
 	}); err != nil {
 		t.Error(err)
 	}
