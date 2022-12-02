@@ -27,6 +27,7 @@ type Values struct {
 	INFLUX `yaml:"influx"`
 	PULSAR `yaml:"pulsar"`
 	NATS   `yaml:"nats"`
+	COS    `yaml:"cos"`
 
 	REDIS    string `yaml:"redis"`
 	MONGO    string `yaml:"mongo"`
@@ -63,4 +64,10 @@ type PULSAR struct {
 type NATS struct {
 	Url  string `yaml:"url"`
 	NKey string `yaml:"nkey"`
+}
+
+type COS struct {
+	Url             string `yaml:"url"`
+	AccessKeyID     string `yaml:"access_key_id"`
+	AccessKeySecret string `yaml:"access_key_secret"`
 }

@@ -23,3 +23,7 @@ nats:
 mongo:
 mysql:
 postgres:
+cos:
+  url:
+  access_key_id:
+  access_key_secret:

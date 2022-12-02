@@ -18,7 +18,11 @@ require (
 	github.com/nats-io/nats.go v1.18.0
 	github.com/nats-io/nkeys v0.3.0
 	github.com/spf13/cobra v1.6.0
+	github.com/stretchr/testify v1.8.0
 	github.com/tencentcloud/tencentcloud-cls-sdk-go v1.0.2
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdn v1.0.548
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.548
+	github.com/tencentyun/cos-go-sdk-v5 v0.7.40
 	github.com/thoas/go-funk v0.9.2
 	github.com/weplanx/transfer v1.5.1
 	go.mongodb.org/mongo-driver v1.10.3
@@ -38,12 +42,13 @@ require (
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
 	github.com/chenzhuoyu/base64x v0.0.0-20211019084208-fb5309c8db06 // indirect
+	github.com/clbanning/mxj v1.8.4 // indirect
 	github.com/danieljoos/wincred v1.1.2 // indirect
+	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/deepmap/oapi-codegen v1.8.2 // indirect
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
 	github.com/dvsekhvalnov/jose2go v1.5.0 // indirect
 	github.com/fsnotify/fsnotify v1.5.1 // indirect
-	github.com/go-faker/faker/v4 v4.0.0-beta.3 // indirect
 	github.com/go-sql-driver/mysql v1.6.0 // indirect
 	github.com/godbus/dbus v0.0.0-20190726142602-4481cbc300e2 // indirect
 	github.com/gofrs/uuid v4.2.0+incompatible // indirect
@@ -52,6 +57,7 @@ require (
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/golang/snappy v0.0.4 // indirect
 	github.com/google/go-cmp v0.5.7 // indirect
+	github.com/google/go-querystring v1.1.0 // indirect
 	github.com/gsterjov/go-libsecret v0.0.0-20161001094733-a6f4afe4910c // indirect
 	github.com/inconshreveable/mousetrap v1.0.1 // indirect
 	github.com/influxdata/line-protocol v0.0.0-20200327222509-2487e7298839 // indirect
@@ -69,12 +75,15 @@ require (
 	github.com/klauspost/cpuid/v2 v2.0.9 // indirect
 	github.com/linkedin/goavro/v2 v2.9.8 // indirect
 	github.com/matttproud/golang_protobuf_extensions v1.0.2-0.20181231171920-c182affec369 // indirect
+	github.com/mitchellh/mapstructure v1.5.0 // indirect
 	github.com/montanaflynn/stats v0.0.0-20171201202039-1bf9dbcd8cbe // indirect
+	github.com/mozillazg/go-httpheader v0.3.1 // indirect
 	github.com/mtibben/percent v0.2.1 // indirect
 	github.com/nats-io/nats-server/v2 v2.9.3 // indirect
 	github.com/nats-io/nuid v1.0.1 // indirect
 	github.com/pierrec/lz4 v2.6.1+incompatible // indirect
 	github.com/pkg/errors v0.9.1 // indirect
+	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/prometheus/client_golang v1.12.1 // indirect
 	github.com/prometheus/client_model v0.2.0 // indirect
 	github.com/prometheus/common v0.33.0 // indirect
