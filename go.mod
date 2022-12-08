@@ -9,6 +9,7 @@ require (
 	github.com/bwmarrin/snowflake v0.3.0
 	github.com/bxcodec/faker/v3 v3.8.0
 	github.com/bytedance/sonic v1.5.0
+	github.com/go-faker/faker/v4 v4.0.0-beta.4
 	github.com/go-redis/redis/v8 v8.11.5
 	github.com/go-resty/resty/v2 v2.7.0
 	github.com/go-sql-driver/mysql v1.7.0

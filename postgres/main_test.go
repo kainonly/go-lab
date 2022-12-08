@@ -282,3 +282,10 @@ func TestMockKVIp(t *testing.T) {
 		t.Error(err)
 	}
 }
+
+func TestMockOrder(t *testing.T) {
+	var err error
+	if err = db.AutoMigrate(&model.Order{}); err != nil {
+		t.Error(err)
+	}
+}
