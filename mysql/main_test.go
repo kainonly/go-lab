@@ -5,12 +5,15 @@ import (
 	"development/mysql/model"
 	"encoding/csv"
 	"github.com/alexedwards/argon2id"
+	"github.com/go-faker/faker/v4"
+	"github.com/panjf2000/ants/v2"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"io"
 	"log"
 	"os"
 	"strconv"
+	"sync"
 	"testing"
 )
 
@@ -173,4 +176,33 @@ func TestQueryKVCity(t *testing.T) {
 		t.Error(err)
 	}
 	t.Log(data)
+}
+
+func TestMockOrder(t *testing.T) {
+	if err := db.AutoMigrate(&model.Order{}); err != nil {
+		t.Error(err)
+	}
+
+	var wg sync.WaitGroup
+	p, err := ants.NewPoolWithFunc(100, func(i interface{}) {
+		if err := db.CreateInBatches(i.([]model.Order), 2000).Error; err != nil {
+			t.Error(err)
+		}
+		wg.Done()
+	})
+	if err != nil {
+		t.Error(err)
+	}
+	defer p.Release()
+	for n := 0; n < 100; n++ {
+		wg.Add(1)
+		orders := make([]model.Order, 10000)
+		for i := 0; i < 10000; i++ {
+			if err := faker.FakeData(&orders[i]); err != nil {
+				t.Error(err)
+			}
+		}
+		_ = p.Invoke(orders)
+	}
+	wg.Wait()
 }
