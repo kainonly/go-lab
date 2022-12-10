@@ -343,3 +343,114 @@ func TestMockOrderXL(t *testing.T) {
 	}
 	wg.Wait()
 }
+
+func TestMockOrderABC(t *testing.T) {
+	if err := db.AutoMigrate(&model.OrderA{}, &model.OrderB{}, &model.OrderC{}); err != nil {
+		t.Error(err)
+	}
+
+	var wg sync.WaitGroup
+	p, err := ants.NewPoolWithFunc(100, func(i interface{}) {
+		if err := db.CreateInBatches(i, 2000).Error; err != nil {
+			t.Error(err)
+		}
+		wg.Done()
+	})
+	if err != nil {
+		t.Error(err)
+	}
+	defer p.Release()
+	var mock sync.WaitGroup
+	mock.Add(3)
+	go func() {
+		for n := 0; n < 50; n++ {
+			wg.Add(1)
+			orders := make([]model.OrderA, 10000)
+			for i := 0; i < 10000; i++ {
+				if err := faker.FakeData(&orders[i]); err != nil {
+					t.Error(err)
+				}
+			}
+			_ = p.Invoke(orders)
+		}
+		mock.Done()
+	}()
+	go func() {
+		for n := 0; n < 50; n++ {
+			wg.Add(1)
+			orders := make([]model.OrderB, 10000)
+			for i := 0; i < 10000; i++ {
+				if err := faker.FakeData(&orders[i]); err != nil {
+					t.Error(err)
+				}
+			}
+			_ = p.Invoke(orders)
+		}
+		mock.Done()
+	}()
+	go func() {
+		for n := 0; n < 50; n++ {
+			wg.Add(1)
+			orders := make([]model.OrderC, 10000)
+			for i := 0; i < 10000; i++ {
+				if err := faker.FakeData(&orders[i]); err != nil {
+					t.Error(err)
+				}
+			}
+			_ = p.Invoke(orders)
+		}
+		mock.Done()
+	}()
+	mock.Wait()
+	wg.Wait()
+}
+
+func TestMockRef(t *testing.T) {
+	if err := db.AutoMigrate(&model.Tag{}, &model.TUser{}, &model.TOrder{}); err != nil {
+		t.Error(err)
+	}
+	tags := make([]model.Tag, 100)
+	for i := 0; i < 100; i++ {
+		if err := faker.FakeData(&tags[i]); err != nil {
+			t.Error(err)
+		}
+	}
+	if err := db.Create(tags).Error; err != nil {
+		t.Error(err)
+	}
+	users := make([]model.TUser, 10000)
+	for i := 0; i < 10000; i++ {
+		if err := faker.FakeData(&users[i]); err != nil {
+			t.Error(err)
+		}
+		p, _ := faker.RandomInt(1, 100, 1)
+		users[i].TagId = uint64(p[0])
+	}
+	if err := db.CreateInBatches(users, 2000).Error; err != nil {
+		t.Error(err)
+	}
+	var wg sync.WaitGroup
+	p, err := ants.NewPoolWithFunc(100, func(i interface{}) {
+		if err := db.CreateInBatches(i, 2000).Error; err != nil {
+			t.Error(err)
+		}
+		wg.Done()
+	})
+	if err != nil {
+		t.Error(err)
+	}
+	defer p.Release()
+	for n := 0; n < 100; n++ {
+		wg.Add(1)
+		orders := make([]model.TOrder, 10000)
+		for i := 0; i < 10000; i++ {
+			if err := faker.FakeData(&orders[i]); err != nil {
+				t.Error(err)
+			}
+			p, _ := faker.RandomInt(1, 10000, 1)
+			orders[i].TUserId = uint64(p[0])
+		}
+		_ = p.Invoke(orders)
+	}
+	wg.Wait()
+}
