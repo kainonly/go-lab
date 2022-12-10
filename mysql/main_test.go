@@ -206,3 +206,32 @@ func TestMockOrder(t *testing.T) {
 	}
 	wg.Wait()
 }
+
+func TestMockOrderXL(t *testing.T) {
+	if err := db.AutoMigrate(&model.OrderXL{}); err != nil {
+		t.Error(err)
+	}
+
+	var wg sync.WaitGroup
+	p, err := ants.NewPoolWithFunc(100, func(i interface{}) {
+		if err := db.CreateInBatches(i.([]model.OrderXL), 2000).Error; err != nil {
+			t.Error(err)
+		}
+		wg.Done()
+	})
+	if err != nil {
+		t.Error(err)
+	}
+	defer p.Release()
+	for n := 0; n < 1000; n++ {
+		wg.Add(1)
+		orders := make([]model.OrderXL, 10000)
+		for i := 0; i < 10000; i++ {
+			if err := faker.FakeData(&orders[i]); err != nil {
+				t.Error(err)
+			}
+		}
+		_ = p.Invoke(orders)
+	}
+	wg.Wait()
+}

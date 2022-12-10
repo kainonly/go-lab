@@ -6,6 +6,8 @@ import (
 	"development/mongodb/model"
 	"errors"
 	"github.com/alexedwards/argon2id"
+	"github.com/go-faker/faker/v4"
+	"github.com/panjf2000/ants/v2"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -15,6 +17,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/writeconcern"
 	"log"
 	"os"
+	"sync"
 	"testing"
 	"time"
 )
@@ -213,4 +216,58 @@ func TestCreateProject(t *testing.T) {
 	}); err != nil {
 		t.Error(err)
 	}
+}
+
+func TestMockOrder(t *testing.T) {
+	var wg sync.WaitGroup
+	p, err := ants.NewPoolWithFunc(100, func(i interface{}) {
+		if _, err := db.Collection("orders").InsertMany(context.TODO(), i.([]interface{})); err != nil {
+			t.Error(err)
+		}
+		wg.Done()
+	})
+	if err != nil {
+		t.Error(err)
+	}
+	defer p.Release()
+	for n := 0; n < 100; n++ {
+		wg.Add(1)
+		orders := make([]interface{}, 10000)
+		for i := 0; i < 10000; i++ {
+			var data model.Order
+			if err := faker.FakeData(&data); err != nil {
+				t.Error(err)
+			}
+			orders[i] = data
+		}
+		_ = p.Invoke(orders)
+	}
+	wg.Wait()
+}
+
+func TestMockOrderXL(t *testing.T) {
+	var wg sync.WaitGroup
+	p, err := ants.NewPoolWithFunc(100, func(i interface{}) {
+		if _, err := db.Collection("orders_xl").InsertMany(context.TODO(), i.([]interface{})); err != nil {
+			t.Error(err)
+		}
+		wg.Done()
+	})
+	if err != nil {
+		t.Error(err)
+	}
+	defer p.Release()
+	for n := 0; n < 1000; n++ {
+		wg.Add(1)
+		orders := make([]interface{}, 10000)
+		for i := 0; i < 10000; i++ {
+			var data model.Order
+			if err := faker.FakeData(&data); err != nil {
+				t.Error(err)
+			}
+			orders[i] = data
+		}
+		_ = p.Invoke(orders)
+	}
+	wg.Wait()
 }
