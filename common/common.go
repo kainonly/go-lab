@@ -29,10 +29,11 @@ type Values struct {
 	NATS   `yaml:"nats"`
 	COS    `yaml:"cos"`
 
-	REDIS    string `yaml:"redis"`
-	MONGO    string `yaml:"mongo"`
-	MYSQL    string `yaml:"mysql"`
-	POSTGRES string `yaml:"postgres"`
+	REDIS      string `yaml:"redis"`
+	MONGO      string `yaml:"mongo"`
+	MYSQL      string `yaml:"mysql"`
+	POSTGRES   string `yaml:"postgres"`
+	CLICKHOUSE string `yaml:"clickhouse"`
 }
 
 type CLS struct {
