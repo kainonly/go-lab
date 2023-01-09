@@ -27,6 +27,7 @@ var client *mongo.Client
 var db *mongo.Database
 
 func TestMain(m *testing.M) {
+
 	var err error
 	if values, err = common.LoadValues("../config/config.yml"); err != nil {
 		log.Fatalln(err)
@@ -270,4 +271,33 @@ func TestMockOrderXL(t *testing.T) {
 		_ = p.Invoke(orders)
 	}
 	wg.Wait()
+}
+
+func TestMockDevTable(t *testing.T) {
+	var wg sync.WaitGroup
+	p, err := ants.NewPoolWithFunc(100, func(i interface{}) {
+		if _, err := db.Collection("dev_table").InsertMany(context.TODO(), i.([]interface{})); err != nil {
+			t.Error(err)
+		}
+		wg.Done()
+	})
+	if err != nil {
+		t.Error(err)
+	}
+	defer p.Release()
+	for n := 0; n < 100; n++ {
+		wg.Add(1)
+		orders := make([]interface{}, 10000)
+		for i := 0; i < 10000; i++ {
+			var data model.DevTable
+			if err := faker.FakeData(&data); err != nil {
+				t.Error(err)
+			}
+			data.CreateTime, _ = time.Parse(`2006-01-02 15:04:05`, faker.Timestamp())
+			data.UpdateTime = data.CreateTime.Add(time.Hour * 24)
+			orders[i] = data
+		}
+		_ = p.Invoke(orders)
+	}
+
 }
