@@ -3,7 +3,6 @@ package common
 import (
 	"fmt"
 	"gopkg.in/yaml.v3"
-	"io/ioutil"
 	"os"
 )
 
@@ -12,7 +11,7 @@ func LoadValues(path string) (values *Values, err error) {
 		return nil, fmt.Errorf("静态配置不存在，请检查路径 [%s]", path)
 	}
 	var b []byte
-	if b, err = ioutil.ReadFile(path); err != nil {
+	if b, err = os.ReadFile(path); err != nil {
 		return
 	}
 	if err = yaml.Unmarshal(b, &values); err != nil {
@@ -34,6 +33,8 @@ type Values struct {
 	MYSQL      string `yaml:"mysql"`
 	POSTGRES   string `yaml:"postgres"`
 	CLICKHOUSE string `yaml:"clickhouse"`
+
+	ELASTICSEARCH `yaml:"elasticsearch"`
 }
 
 type CLS struct {
@@ -71,4 +72,10 @@ type COS struct {
 	Url             string `yaml:"url"`
 	AccessKeyID     string `yaml:"access_key_id"`
 	AccessKeySecret string `yaml:"access_key_secret"`
+}
+
+type ELASTICSEARCH struct {
+	Hosts    string `yaml:"hosts"`
+	Username string `yaml:"username"`
+	Password string `yaml:"password"`
 }

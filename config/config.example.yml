@@ -23,7 +23,12 @@ nats:
 mongo:
 mysql:
 postgres:
+clickhouse:
 cos:
   url:
   access_key_id:
   access_key_secret:
+elasticsearch:
+  hosts:
+  username:
+  password:
