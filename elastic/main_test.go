@@ -1,9 +1,13 @@
 package main
 
 import (
+	"bytes"
 	"development/common"
+	"development/elastic/model"
+	"github.com/bytedance/sonic"
 	"github.com/bytedance/sonic/decoder"
 	"github.com/elastic/go-elasticsearch/v8"
+	"github.com/go-faker/faker/v4"
 	"github.com/stretchr/testify/assert"
 	"log"
 	"os"
@@ -37,4 +41,30 @@ func TestGetInfo(t *testing.T) {
 	err = decoder.NewStreamDecoder(r.Body).Decode(&data)
 	assert.NoError(t, err)
 	t.Log(data)
+}
+
+func TestIndex(t *testing.T) {
+	b, err := sonic.Marshal(map[string]interface{}{
+		"msg": "hello",
+	})
+	assert.NoError(t, err)
+	r, err := es.Index("test", bytes.NewReader(b))
+	assert.NoError(t, err)
+	var data map[string]interface{}
+	err = decoder.NewStreamDecoder(r.Body).Decode(&data)
+	assert.NoError(t, err)
+	t.Log(data)
+}
+
+func TestMockOrder(t *testing.T) {
+	for n := 0; n < 1000000; n++ {
+		var data model.Order
+		if err := faker.FakeData(&data); err != nil {
+			t.Error(err)
+		}
+		b, err := sonic.Marshal(data)
+		assert.NoError(t, err)
+		_, err = es.Index("orders", bytes.NewReader(b))
+		assert.NoError(t, err)
+	}
 }
