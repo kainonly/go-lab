@@ -1,4 +1,4 @@
-package atlas
+package mysql
 
 import (
 	"ariga.io/atlas/sql/migrate"
