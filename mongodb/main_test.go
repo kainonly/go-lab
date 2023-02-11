@@ -8,6 +8,7 @@ import (
 	"github.com/alexedwards/argon2id"
 	"github.com/go-faker/faker/v4"
 	"github.com/panjf2000/ants/v2"
+	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -244,6 +245,25 @@ func TestMockOrder(t *testing.T) {
 		_ = p.Invoke(orders)
 	}
 	wg.Wait()
+}
+
+func TestAvg(t *testing.T) {
+	var avg []bson.M
+	ctx := context.TODO()
+	start := time.Now()
+	c, err := db.Collection("orders").Aggregate(ctx, mongo.Pipeline{
+		{
+			{"$group", bson.D{
+				{"_id", nil},
+				{"avg", bson.D{{"$avg", "$price"}}},
+			}},
+		},
+	})
+	assert.NoError(t, err)
+	err = c.All(ctx, &avg)
+	assert.NoError(t, err)
+	t.Log(time.Since(start))
+	t.Log(avg)
 }
 
 func TestMockOrderXL(t *testing.T) {

@@ -207,6 +207,14 @@ func TestMockOrder(t *testing.T) {
 	wg.Wait()
 }
 
+func TestAvg(t *testing.T) {
+	var avg float64
+	if err := db.Debug().Raw(`select avg(price) from orders`).Scan(&avg).Error; err != nil {
+		t.Error(err)
+	}
+	t.Log(avg)
+}
+
 func TestMockOrderXL(t *testing.T) {
 	if err := db.AutoMigrate(&model.OrderXL{}); err != nil {
 		t.Error(err)
