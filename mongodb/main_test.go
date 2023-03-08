@@ -4,7 +4,6 @@ import (
 	"context"
 	"development/common"
 	"development/mongodb/model"
-	"errors"
 	"github.com/alexedwards/argon2id"
 	"github.com/go-faker/faker/v4"
 	"github.com/panjf2000/ants/v2"
@@ -41,7 +40,7 @@ func TestMain(m *testing.M) {
 
 	option := options.Database().
 		SetWriteConcern(writeconcern.New(writeconcern.WMajority()))
-	db = client.Database("xapi", option)
+	db = client.Database("example", option)
 	os.Exit(m.Run())
 }
 
@@ -65,24 +64,62 @@ func TestSort(t *testing.T) {
 
 func TestTransaction(t *testing.T) {
 	ctx := context.TODO()
-
 	opts := options.Session().SetDefaultReadConcern(readconcern.Majority())
-	sess, err := client.StartSession(opts)
-	if err != nil {
-		t.Error(err)
-	}
-	defer sess.EndSession(ctx)
+	session, err := client.StartSession(opts)
+	assert.NoError(t, err)
+	defer session.EndSession(ctx)
 
-	txnOpts := options.Transaction().SetReadPreference(readpref.PrimaryPreferred())
-	_, err = sess.WithTransaction(ctx, func(sessCtx mongo.SessionContext) (result interface{}, err error) {
-		if _, err = db.Collection("schema").DeleteOne(sessCtx, bson.M{"key": "role"}); err != nil {
+	txnOpts := options.Transaction().
+		SetReadPreference(readpref.PrimaryPreferred())
+	_, err = session.WithTransaction(ctx, func(sctx mongo.SessionContext) (_ interface{}, err error) {
+		var r *mongo.InsertOneResult
+		if r, err = db.Collection("roles").
+			InsertOne(sctx, bson.M{"name": "super"}); err != nil {
 			return
 		}
-		return nil, errors.New("test tx")
+		// TODO: 假设唯一索引出错
+		if _, err = db.Collection("users").InsertOne(sctx, bson.M{
+			"name": "kain",
+			"role": []primitive.ObjectID{r.InsertedID.(primitive.ObjectID)},
+		}); err != nil {
+			return
+		}
+		return
 	}, txnOpts)
 	if err != nil {
 		t.Error(err)
 	}
+}
+
+func TestStartTransaction(t *testing.T) {
+	ctx := context.TODO()
+	opts := options.Session().
+		SetDefaultReadConcern(readconcern.Majority())
+	session, err := client.StartSession(opts)
+	assert.NoError(t, err)
+	defer session.EndSession(ctx)
+
+	txnOpts := options.Transaction().
+		SetReadPreference(readpref.PrimaryPreferred())
+	session.StartTransaction(txnOpts)
+
+	err = mongo.WithSession(ctx, session, func(sctx mongo.SessionContext) (err error) {
+		r, err := db.Collection("roles").InsertOne(sctx, bson.M{"name": "super"})
+		if err != nil {
+			return
+		}
+
+		if _, err = db.Collection("users").InsertOne(sctx, bson.M{
+			"name": "kain",
+			"role": []primitive.ObjectID{r.InsertedID.(primitive.ObjectID)},
+		}); err != nil {
+			session.AbortTransaction(sctx)
+			return
+		}
+		session.CommitTransaction(sctx)
+		return
+	})
+	assert.NoError(t, err)
 }
 
 func TestTimeSeries(t *testing.T) {
