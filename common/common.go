@@ -35,6 +35,7 @@ type Values struct {
 	CLICKHOUSE string `yaml:"clickhouse"`
 
 	ELASTICSEARCH `yaml:"elasticsearch"`
+	IPSERVICE     `yaml:"ip_service"`
 }
 
 type CLS struct {
@@ -78,4 +79,9 @@ type ELASTICSEARCH struct {
 	Hosts    string `yaml:"hosts"`
 	Username string `yaml:"username"`
 	Password string `yaml:"password"`
+}
+
+type IPSERVICE struct {
+	SECRETID  string `yaml:"secretid"`
+	SECRETKEY string `yaml:"secretkey"`
 }

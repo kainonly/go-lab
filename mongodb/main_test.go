@@ -72,6 +72,7 @@ func TestTransaction(t *testing.T) {
 	txnOpts := options.Transaction().
 		SetReadPreference(readpref.PrimaryPreferred())
 	_, err = session.WithTransaction(ctx, func(sctx mongo.SessionContext) (_ interface{}, err error) {
+
 		var r *mongo.InsertOneResult
 		if r, err = db.Collection("roles").
 			InsertOne(sctx, bson.M{"name": "super"}); err != nil {
