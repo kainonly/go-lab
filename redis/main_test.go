@@ -66,3 +66,26 @@ func TestScan(t *testing.T) {
 	t.Log(keys)
 	t.Log(len(keys))
 }
+
+func TestList(t *testing.T) {
+	ctx := context.TODO()
+	r, err := client.LPush(ctx, "tx:123456", "asd").Result()
+	if err != nil {
+		t.Error(err)
+	}
+	t.Log(r)
+	r2, err := client.Expire(ctx, "tx:123456", time.Second*30).Result()
+	if err != nil {
+		t.Error(err)
+	}
+	t.Log(r2)
+}
+
+func TestSets(t *testing.T) {
+	ctx := context.TODO()
+	r, err := client.SAdd(ctx, "tx", "123456").Result()
+	if err != nil {
+		t.Error(err)
+	}
+	t.Log(r)
+}
