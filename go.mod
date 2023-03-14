@@ -11,7 +11,6 @@ require (
 	github.com/caarlos0/env/v6 v6.9.1
 	github.com/elastic/go-elasticsearch/v8 v8.6.0
 	github.com/go-faker/faker/v4 v4.0.0-beta.4
-	github.com/go-redis/redis/v8 v8.11.5
 	github.com/go-resty/resty/v2 v2.7.0
 	github.com/go-sql-driver/mysql v1.7.0
 	github.com/google/uuid v1.3.0
@@ -22,6 +21,7 @@ require (
 	github.com/nats-io/nats.go v1.23.0
 	github.com/nats-io/nkeys v0.3.0
 	github.com/panjf2000/ants/v2 v2.6.0
+	github.com/redis/go-redis/v9 v9.0.2
 	github.com/spf13/cobra v1.6.0
 	github.com/stretchr/testify v1.8.1
 	github.com/tencentcloud/tencentcloud-cls-sdk-go v1.0.2
@@ -30,6 +30,8 @@ require (
 	github.com/tencentyun/cos-go-sdk-v5 v0.7.41
 	github.com/tencentyun/scf-go-lib v0.0.0-20211123032342-f972dcd16ff6
 	github.com/thoas/go-funk v0.9.2
+	github.com/uptrace/bun v1.1.12
+	github.com/uptrace/bun/dialect/mysqldialect v1.1.12
 	github.com/weplanx/openapi v0.3.0
 	github.com/weplanx/transfer v1.5.1
 	go.elastic.co/apm/module/apmhttp v1.15.0
@@ -57,7 +59,7 @@ require (
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/bytedance/go-tagexpr/v2 v2.9.2 // indirect
 	github.com/bytedance/gopkg v0.0.0-20220413063733-65bf48ffb3a7 // indirect
-	github.com/cespare/xxhash/v2 v2.1.2 // indirect
+	github.com/cespare/xxhash/v2 v2.2.0 // indirect
 	github.com/chenzhuoyu/base64x v0.0.0-20211019084208-fb5309c8db06 // indirect
 	github.com/clbanning/mxj v1.8.4 // indirect
 	github.com/cloudwego/hertz v0.5.0 // indirect
@@ -136,8 +138,6 @@ require (
 	github.com/tidwall/pretty v1.2.0 // indirect
 	github.com/tmthrgd/go-hex v0.0.0-20190904060850-447a3041c3bc // indirect
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
-	github.com/uptrace/bun v1.1.12 // indirect
-	github.com/uptrace/bun/dialect/mysqldialect v1.1.12 // indirect
 	github.com/vmihailenco/msgpack/v5 v5.3.5 // indirect
 	github.com/vmihailenco/tagparser/v2 v2.0.0 // indirect
 	github.com/xdg-go/pbkdf2 v1.0.0 // indirect

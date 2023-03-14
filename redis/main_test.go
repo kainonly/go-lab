@@ -4,8 +4,9 @@ import (
 	"context"
 	"development/common"
 	"fmt"
-	"github.com/go-redis/redis/v8"
 	gonanoid "github.com/matoous/go-nanoid/v2"
+	"github.com/redis/go-redis/v9"
+	"github.com/stretchr/testify/assert"
 	"github.com/thoas/go-funk"
 	"log"
 	"os"
@@ -67,18 +68,33 @@ func TestScan(t *testing.T) {
 	t.Log(len(keys))
 }
 
-func TestList(t *testing.T) {
+var lkey = "l:123456"
+
+func TestLPush(t *testing.T) {
 	ctx := context.TODO()
-	r, err := client.LPush(ctx, "tx:123456", "asd").Result()
-	if err != nil {
-		t.Error(err)
+	err := client.Del(ctx, lkey).Err()
+	assert.NoError(t, err)
+	err = client.LPush(ctx, lkey, time.Now().String()).Err()
+	assert.NoError(t, err)
+	err = client.LPush(ctx, lkey, "asd").Err()
+	assert.NoError(t, err)
+	err = client.LPush(ctx, lkey, "acxc").Err()
+	assert.NoError(t, err)
+}
+
+func TestBRPop(t *testing.T) {
+	ctx := context.TODO()
+	x, err := client.RPop(ctx, lkey).Result()
+	assert.NoError(t, err)
+	t.Log(x)
+
+	for {
+		v, err := client.RPop(ctx, lkey).Result()
+		if err != nil {
+			break
+		}
+		t.Log(v)
 	}
-	t.Log(r)
-	r2, err := client.Expire(ctx, "tx:123456", time.Second*30).Result()
-	if err != nil {
-		t.Error(err)
-	}
-	t.Log(r2)
 }
 
 func TestSets(t *testing.T) {
