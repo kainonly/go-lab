@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"development/common"
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/stretchr/testify/assert"
 	"github.com/uptrace/bun"
 	"github.com/uptrace/bun/dialect/mysqldialect"
 	"log"
@@ -110,4 +111,22 @@ func TestDelete(t *testing.T) {
 
 	t.Log(r.LastInsertId())
 	t.Log(r.RowsAffected())
+}
+
+func TestTransaction(t *testing.T) {
+	ctx := context.TODO()
+
+	tx, err := db.BeginTx(ctx, &sql.TxOptions{})
+
+	assert.NoError(t, err)
+	r, err := tx.NewDelete().
+		Table("departments").
+		Where(`id = 7`).
+		Exec(ctx)
+	if err != nil {
+		t.Error(err)
+	}
+
+	tx.Rollback()
+	t.Log(r)
 }

@@ -74,7 +74,7 @@ func TestLPush(t *testing.T) {
 	ctx := context.TODO()
 	err := client.Del(ctx, lkey).Err()
 	assert.NoError(t, err)
-	err = client.LPush(ctx, lkey, time.Now().String()).Err()
+	err = client.LPush(ctx, lkey, time.Now().Format(time.RFC3339)).Err()
 	assert.NoError(t, err)
 	err = client.LPush(ctx, lkey, "asd").Err()
 	assert.NoError(t, err)
@@ -82,18 +82,21 @@ func TestLPush(t *testing.T) {
 	assert.NoError(t, err)
 }
 
-func TestBRPop(t *testing.T) {
+func TestRPop(t *testing.T) {
 	ctx := context.TODO()
-	x, err := client.RPop(ctx, lkey).Result()
+	begin, err := client.RPop(ctx, lkey).Time()
 	assert.NoError(t, err)
-	t.Log(x)
+	t.Log(begin)
+	t.Log(time.Since(begin))
+	t.Log(time.Since(begin) > time.Second*3)
 
-	for {
+	n, err := client.LLen(ctx, lkey).Result()
+	assert.NoError(t, err)
+	for n != 0 {
 		v, err := client.RPop(ctx, lkey).Result()
-		if err != nil {
-			break
-		}
+		assert.NoError(t, err)
 		t.Log(v)
+		n--
 	}
 }
 
