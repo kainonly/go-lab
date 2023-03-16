@@ -32,6 +32,7 @@ type Values struct {
 	MONGO      string `yaml:"mongo"`
 	MYSQL      string `yaml:"mysql"`
 	POSTGRES   string `yaml:"postgres"`
+	POSTGREX   string `yaml:"postgrex"`
 	CLICKHOUSE string `yaml:"clickhouse"`
 
 	ELASTICSEARCH `yaml:"elasticsearch"`
