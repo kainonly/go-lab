@@ -32,6 +32,8 @@ require (
 	github.com/thoas/go-funk v0.9.2
 	github.com/uptrace/bun v1.1.12
 	github.com/uptrace/bun/dialect/mysqldialect v1.1.12
+	github.com/uptrace/bun/dialect/pgdialect v1.1.12
+	github.com/uptrace/bun/driver/pgdriver v1.1.12
 	github.com/weplanx/openapi v0.3.0
 	github.com/weplanx/transfer v1.5.1
 	go.elastic.co/apm/module/apmhttp v1.15.0
@@ -138,8 +140,6 @@ require (
 	github.com/tidwall/pretty v1.2.0 // indirect
 	github.com/tmthrgd/go-hex v0.0.0-20190904060850-447a3041c3bc // indirect
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
-	github.com/uptrace/bun/dialect/pgdialect v1.1.12 // indirect
-	github.com/uptrace/bun/driver/pgdriver v1.1.12 // indirect
 	github.com/vmihailenco/msgpack/v5 v5.3.5 // indirect
 	github.com/vmihailenco/tagparser/v2 v2.0.0 // indirect
 	github.com/xdg-go/pbkdf2 v1.0.0 // indirect
@@ -156,7 +156,7 @@ require (
 	golang.org/x/crypto v0.6.0 // indirect
 	golang.org/x/lint v0.0.0-20210508222113-6edffad5e616 // indirect
 	golang.org/x/mod v0.8.0 // indirect
-	golang.org/x/net v0.6.0 // indirect
+	golang.org/x/net v0.7.0 // indirect
 	golang.org/x/oauth2 v0.0.0-20220309155454-6242fa91716a // indirect
 	golang.org/x/sync v0.0.0-20220722155255-886fb9371eb4 // indirect
 	golang.org/x/sys v0.5.0 // indirect
