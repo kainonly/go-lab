@@ -28,6 +28,25 @@ func TestMain(m *testing.M) {
 	os.Exit(m.Run())
 }
 
+func TestConsumption(t *testing.T) {
+	ctx := context.TODO()
+	var data []struct {
+		Customer string
+		Total    float64
+	}
+	err := db.NewSelect().
+		Table("orders").
+		ColumnExpr("customer,sum(price) as total").
+		Group("customer").
+		Order("total desc").
+		Limit(10).
+		Model(&data).
+		Scan(ctx)
+
+	assert.NoError(t, err)
+	t.Log(data)
+}
+
 func TestCreate(t *testing.T) {
 	ctx := context.TODO()
 	data := map[string]interface{}{
