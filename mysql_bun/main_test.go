@@ -35,6 +35,9 @@ func TestCreate(t *testing.T) {
 	data := map[string]interface{}{
 		"name":        "测试",
 		"description": "部门",
+		"schema": []map[string]interface{}{
+			{"key": "asd"},
+		},
 		"create_time": time.Now(),
 		"update_time": time.Now(),
 	}
