@@ -108,3 +108,12 @@ func TestSets(t *testing.T) {
 	}
 	t.Log(r)
 }
+
+func TestSave(t *testing.T) {
+	ctx := context.TODO()
+	r, err := client.Save(ctx).Result()
+	if err != nil {
+		t.Error(err)
+	}
+	t.Log(r)
+}
