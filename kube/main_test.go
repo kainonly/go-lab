@@ -35,9 +35,14 @@ func TestMain(m *testing.M) {
 	os.Exit(m.Run())
 }
 
-func TestApp(t *testing.T) {
+func TestNodes(t *testing.T) {
 	data, err := clientset.CoreV1().Nodes().List(context.TODO(), metav1.ListOptions{})
 	assert.NoError(t, err)
 	t.Log(data)
+}
 
+func TestDeployments(t *testing.T) {
+	data, err := clientset.AppsV1().Deployments("kube-system").List(context.TODO(), metav1.ListOptions{})
+	assert.NoError(t, err)
+	t.Log(data)
 }
