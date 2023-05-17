@@ -5,6 +5,7 @@ import (
 	"flag"
 	"github.com/stretchr/testify/assert"
 	core "k8s.io/api/core/v1"
+	networking "k8s.io/api/networking/v1"
 	meta "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/tools/clientcmd"
@@ -78,7 +79,8 @@ func TestConfigMapUpdate(t *testing.T) {
 		},
 	}
 	data, err := clientset.CoreV1().
-		ConfigMaps("kube-system").Update(context.TODO(), configMap, meta.UpdateOptions{})
+		ConfigMaps("kube-system").
+		Update(context.TODO(), configMap, meta.UpdateOptions{})
 	assert.NoError(t, err)
 	t.Log(data)
 }
@@ -86,6 +88,59 @@ func TestConfigMapUpdate(t *testing.T) {
 func TestConfigMapDelete(t *testing.T) {
 	err := clientset.CoreV1().
 		ConfigMaps("kube-system").
+		Delete(context.TODO(), "test", meta.DeleteOptions{})
+	assert.NoError(t, err)
+}
+
+func TestIngressCreate(t *testing.T) {
+	prefix := networking.PathTypePrefix
+	ingress := &networking.Ingress{
+		ObjectMeta: meta.ObjectMeta{
+			Namespace: "kube-system",
+			Name:      "test",
+			Annotations: map[string]string{
+				"traefik.ingress.kubernetes.io/router.entrypoints":        "web,websecure",
+				"traefik.ingress.kubernetes.io/router.tls.certresolver":   "hnvane",
+				"traefik.ingress.kubernetes.io/router.tls.domains.0.main": "hnvane.com",
+				"traefik.ingress.kubernetes.io/router.tls.domains.0.sans": "*.hnvane.com",
+			},
+		},
+		Spec: networking.IngressSpec{
+			Rules: []networking.IngressRule{
+				{
+					Host: "test.hnvane.com",
+					IngressRuleValue: networking.IngressRuleValue{
+						HTTP: &networking.HTTPIngressRuleValue{
+							Paths: []networking.HTTPIngressPath{
+								{
+									Path:     "/",
+									PathType: &prefix,
+									Backend: networking.IngressBackend{
+										Service: &networking.IngressServiceBackend{
+											Name: "nginx",
+											Port: networking.ServiceBackendPort{
+												Number: 8080,
+											},
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+	}
+	data, err := clientset.NetworkingV1().
+		Ingresses("kube-system").
+		Create(context.TODO(), ingress, meta.CreateOptions{})
+	assert.NoError(t, err)
+	t.Log(data)
+}
+
+func TestIngressDelete(t *testing.T) {
+	err := clientset.NetworkingV1().
+		Ingresses("kube-system").
 		Delete(context.TODO(), "test", meta.DeleteOptions{})
 	assert.NoError(t, err)
 }
