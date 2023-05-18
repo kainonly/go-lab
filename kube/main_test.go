@@ -110,9 +110,9 @@ func TestIngressCreate(t *testing.T) {
 			Name:      "test",
 			Annotations: map[string]string{
 				"traefik.ingress.kubernetes.io/router.entrypoints":        "web,websecure",
-				"traefik.ingress.kubernetes.io/router.tls.certresolver":   "hnvane",
-				"traefik.ingress.kubernetes.io/router.tls.domains.0.main": "hnvane.com",
-				"traefik.ingress.kubernetes.io/router.tls.domains.0.sans": "*.hnvane.com",
+				"traefik.ingress.kubernetes.io/router.tls.certresolver":   "kainonly",
+				"traefik.ingress.kubernetes.io/router.tls.domains.0.main": "kainonly.com",
+				"traefik.ingress.kubernetes.io/router.tls.domains.0.sans": "*.kainonly.com",
 			},
 		},
 		Spec: networking.IngressSpec{
