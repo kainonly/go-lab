@@ -92,6 +92,16 @@ func TestConfigMapDelete(t *testing.T) {
 	assert.NoError(t, err)
 }
 
+func TestIngressList(t *testing.T) {
+	data, err := clientset.NetworkingV1().
+		Ingresses("kube-system").
+		List(context.TODO(), meta.ListOptions{})
+	assert.NoError(t, err)
+	for _, x := range data.Items {
+		t.Log(x.Name)
+	}
+}
+
 func TestIngressCreate(t *testing.T) {
 	prefix := networking.PathTypePrefix
 	ingress := &networking.Ingress{
