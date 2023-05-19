@@ -7,7 +7,20 @@ import (
 )
 
 func main() {
-	bar := progressbar.Default(1)
+	bar := progressbar.NewOptions(1,
+		progressbar.OptionEnableColorCodes(true),
+		progressbar.OptionFullWidth(),
+		progressbar.OptionShowCount(),
+		progressbar.OptionShowIts(),
+		progressbar.OptionSetPredictTime(true),
+		progressbar.OptionSetTheme(progressbar.Theme{
+			Saucer:        "[green]=[reset]",
+			SaucerHead:    "[green]>[reset]",
+			SaucerPadding: " ",
+			BarStart:      "[",
+			BarEnd:        "]",
+		}),
+	)
 	for i := 0; i < 200; i++ {
 		if i == 0 {
 			bar.ChangeMax(100)
