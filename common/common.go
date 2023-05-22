@@ -86,3 +86,19 @@ type IPSERVICE struct {
 	SECRETID  string `yaml:"secretid"`
 	SECRETKEY string `yaml:"secretkey"`
 }
+
+type Storage struct {
+	Minio       StorageDrive `yaml:"minio"`
+	Aliyun      StorageDrive `yaml:"aliyun"`
+	Tencent     StorageDrive `yaml:"tencent"`
+	Huaweicloud StorageDrive `yaml:"huaweicloud"`
+	S3          StorageDrive `yaml:"s3"`
+}
+
+type StorageDrive struct {
+	AccessKeyId     string `yaml:"accessKeyId"`
+	SecretAccessKey string `yaml:"secretAccessKey"`
+	Endpoint        string `yaml:"endpoint"`
+	Bucket          string `yaml:"bucket"`
+	Cdn             string `yaml:"cdn,omitempty"`
+}
