@@ -34,6 +34,7 @@ type Values struct {
 	POSTGRES   string `yaml:"postgres"`
 	POSTGREX   string `yaml:"postgrex"`
 	CLICKHOUSE string `yaml:"clickhouse"`
+	TencentBee string `yaml:"tencent_bee"`
 
 	ELASTICSEARCH `yaml:"elasticsearch"`
 	IPSERVICE     `yaml:"ip_service"`
