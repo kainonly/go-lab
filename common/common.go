@@ -21,17 +21,14 @@ func LoadValues(path string) (values *Values, err error) {
 }
 
 type Values struct {
-	CLS    `yaml:"cls"`
 	STMP   `yaml:"stmp"`
 	INFLUX `yaml:"influx"`
-	PULSAR `yaml:"pulsar"`
 	NATS   `yaml:"nats"`
 	COS    `yaml:"cos"`
 
 	REDIS      string `yaml:"redis"`
 	MONGO      string `yaml:"mongo"`
 	MYSQL      string `yaml:"mysql"`
-	POSTGRES   string `yaml:"postgres"`
 	POSTGREX   string `yaml:"postgrex"`
 	CLICKHOUSE string `yaml:"clickhouse"`
 	TencentBee string `yaml:"tencent_bee"`

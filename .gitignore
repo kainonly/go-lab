@@ -24,4 +24,5 @@
 config.yml
 atlas.hcl
 *.conf
-/bee/*.zip
+
+dist
