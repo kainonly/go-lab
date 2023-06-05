@@ -26,12 +26,13 @@ type Values struct {
 	NATS   `yaml:"nats"`
 	COS    `yaml:"cos"`
 
-	REDIS      string `yaml:"redis"`
-	MONGO      string `yaml:"mongo"`
-	MYSQL      string `yaml:"mysql"`
-	POSTGREX   string `yaml:"postgrex"`
-	CLICKHOUSE string `yaml:"clickhouse"`
-	TencentBee string `yaml:"tencent_bee"`
+	REDIS       string `yaml:"redis"`
+	MONGO       string `yaml:"mongo"`
+	MYSQL       string `yaml:"mysql"`
+	POSTGREX    string `yaml:"postgrex"`
+	CLICKHOUSE  string `yaml:"clickhouse"`
+	TencentBee  string `yaml:"tencent_bee"`
+	CaddyServer string `yaml:"caddy_server"`
 
 	ELASTICSEARCH `yaml:"elasticsearch"`
 	IPSERVICE     `yaml:"ip_service"`
