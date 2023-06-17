@@ -4,13 +4,16 @@ import (
 	"context"
 	"database/sql"
 	"development/common"
+	"github.com/go-faker/faker/v4"
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/panjf2000/ants/v2"
 	"github.com/stretchr/testify/assert"
 	"github.com/uptrace/bun"
 	"github.com/uptrace/bun/dialect/pgdialect"
 	"github.com/uptrace/bun/driver/pgdriver"
 	"log"
 	"os"
+	"sync"
 	"testing"
 	"time"
 )
@@ -20,7 +23,8 @@ var db *bun.DB
 
 func TestMain(m *testing.M) {
 	var err error
-	if values, err = common.LoadValues("../config/config.yml"); err != nil {
+	os.Chdir("../../")
+	if values, err = common.LoadValues("./config/config.yml"); err != nil {
 		log.Fatalln(err)
 	}
 	sqldb := sql.OpenDB(pgdriver.NewConnector(pgdriver.WithDSN(values.POSTGREX)))
@@ -146,4 +150,82 @@ func TestTransaction(t *testing.T) {
 
 	tx.Rollback()
 	t.Log(r)
+}
+
+type Order struct {
+	ID          uint64  `bun:"id,pk,autoincrement" faker:"-"`
+	No          string  `bun:"type:varchar" faker:"cc_number"`
+	Name        string  `bun:"type:varchar" faker:"name"`
+	Description string  `bun:"type:text" faker:"paragraph"`
+	Account     string  `bun:"type:varchar" faker:"username"`
+	Customer    string  `bun:"type:varchar" faker:"name"`
+	Email       string  `bun:"type:varchar" faker:"email"`
+	Phone       string  `bun:"type:varchar" faker:"phone_number"`
+	Address     string  `bun:"type:varchar" faker:"sentence"`
+	Price       float64 `bun:"type:decimal" faker:"amount"`
+}
+
+func TestMockOrder(t *testing.T) {
+	ctx := context.TODO()
+	err := db.ResetModel(ctx, (*Order)(nil))
+	var wg sync.WaitGroup
+	var p *ants.PoolWithFunc
+	p, err = ants.NewPoolWithFunc(1000, func(i interface{}) {
+		_, err = db.NewInsert().Model(i.(*[]Order)).Exec(ctx)
+		assert.NoError(t, err)
+		wg.Done()
+	})
+	assert.NoError(t, err)
+	defer p.Release()
+
+	for w := 0; w < 150*12; w++ {
+		wg.Add(1)
+		orders := make([]Order, 10000)
+		for i := 0; i < 10000; i++ {
+			err = faker.FakeData(&orders[i])
+			assert.NoError(t, err)
+		}
+		_ = p.Invoke(&orders)
+	}
+
+	wg.Wait()
+}
+
+type Large struct {
+	ID          uint64  `bun:"id,pk,autoincrement" faker:"-"`
+	No          string  `bun:"type:varchar" faker:"cc_number"`
+	Name        string  `bun:"type:varchar" faker:"name"`
+	Description string  `bun:"type:text" faker:"paragraph"`
+	Account     string  `bun:"type:varchar" faker:"username"`
+	Customer    string  `bun:"type:varchar" faker:"name"`
+	Email       string  `bun:"type:varchar" faker:"email"`
+	Phone       string  `bun:"type:varchar" faker:"phone_number"`
+	Address     string  `bun:"type:varchar" faker:"sentence"`
+	Price       float64 `bun:"type:decimal" faker:"amount"`
+}
+
+func TestMockLarge(t *testing.T) {
+	ctx := context.TODO()
+	err := db.ResetModel(ctx, (*Large)(nil))
+	var wg sync.WaitGroup
+	var p *ants.PoolWithFunc
+	p, err = ants.NewPoolWithFunc(1000, func(i interface{}) {
+		_, err = db.NewInsert().Model(i.(*[]Large)).Exec(ctx)
+		assert.NoError(t, err)
+		wg.Done()
+	})
+	assert.NoError(t, err)
+	defer p.Release()
+
+	for w := 0; w < 10000; w++ {
+		wg.Add(1)
+		orders := make([]Large, 10000)
+		for i := 0; i < 10000; i++ {
+			err = faker.FakeData(&orders[i])
+			assert.NoError(t, err)
+		}
+		_ = p.Invoke(&orders)
+	}
+
+	wg.Wait()
 }
