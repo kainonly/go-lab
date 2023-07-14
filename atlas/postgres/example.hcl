@@ -3,6 +3,7 @@ schema "public" {
 
 table "orders" {
   schema = schema.public
+
   column "id" {
     type = bigserial
   }

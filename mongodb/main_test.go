@@ -40,7 +40,7 @@ func TestMain(m *testing.M) {
 
 	option := options.Database().
 		SetWriteConcern(writeconcern.New(writeconcern.WMajority()))
-	db = client.Database("example", option)
+	db = client.Database("weplanx", option)
 	os.Exit(m.Run())
 }
 
@@ -331,10 +331,10 @@ func TestMockOrderXL(t *testing.T) {
 	wg.Wait()
 }
 
-func TestMockDevTable(t *testing.T) {
+func TestMocks(t *testing.T) {
 	var wg sync.WaitGroup
 	p, err := ants.NewPoolWithFunc(100, func(i interface{}) {
-		if _, err := db.Collection("dev_table").InsertMany(context.TODO(), i.([]interface{})); err != nil {
+		if _, err := db.Collection("x_orders").InsertMany(context.TODO(), i.([]interface{})); err != nil {
 			t.Error(err)
 		}
 		wg.Done()
@@ -358,4 +358,5 @@ func TestMockDevTable(t *testing.T) {
 		_ = p.Invoke(orders)
 	}
 
+	wg.Wait()
 }
