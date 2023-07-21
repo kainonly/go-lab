@@ -1,34 +1,13 @@
-cls:
-  endpoint: ap-guangzhou.cls.tencentcs.com
-  access_key_id:
-  access_key_secret:
-  topic_id:
 stmp:
   addr:
   host:
   identity:
   username:
   password:
-influx:
-  url:
-  token:
 redis:
-pulsar:
-  url:
-  token:
-  topic:
 nats:
   url:
   nkey:
 mongo:
 mysql:
 postgres:
-clickhouse:
-cos:
-  url:
-  access_key_id:
-  access_key_secret:
-elasticsearch:
-  hosts:
-  username:
-  password:

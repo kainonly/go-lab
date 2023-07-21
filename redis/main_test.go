@@ -117,3 +117,9 @@ func TestSave(t *testing.T) {
 	}
 	t.Log(r)
 }
+
+func TestLPush2(t *testing.T) {
+	ctx := context.TODO()
+	v := client.LPush(ctx, "test", time.Now().Format(time.RFC3339)).Val()
+	t.Log(v)
+}

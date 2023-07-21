@@ -29,7 +29,7 @@ type Values struct {
 	REDIS       string `yaml:"redis"`
 	MONGO       string `yaml:"mongo"`
 	MYSQL       string `yaml:"mysql"`
-	POSTGREX    string `yaml:"postgrex"`
+	POSTGRES    string `yaml:"postgres"`
 	CLICKHOUSE  string `yaml:"clickhouse"`
 	TencentBee  string `yaml:"tencent_bee"`
 	CaddyServer string `yaml:"caddy_server"`

@@ -27,7 +27,7 @@ func TestMain(m *testing.M) {
 	if values, err = common.LoadValues("./config/config.yml"); err != nil {
 		log.Fatalln(err)
 	}
-	sqldb := sql.OpenDB(pgdriver.NewConnector(pgdriver.WithDSN(values.POSTGREX)))
+	sqldb := sql.OpenDB(pgdriver.NewConnector(pgdriver.WithDSN(values.POSTGRES)))
 	db = bun.NewDB(sqldb, pgdialect.New())
 	os.Exit(m.Run())
 }
@@ -202,6 +202,8 @@ type Large struct {
 	Phone       string  `bun:"type:varchar" faker:"phone_number"`
 	Address     string  `bun:"type:varchar" faker:"sentence"`
 	Price       float64 `bun:"type:decimal" faker:"amount"`
+	CreateTime  time.Time
+	UpdateTime  time.Time
 }
 
 func TestMockLarge(t *testing.T) {
@@ -217,12 +219,16 @@ func TestMockLarge(t *testing.T) {
 	assert.NoError(t, err)
 	defer p.Release()
 
-	for w := 0; w < 10000; w++ {
+	for w := 0; w < 100; w++ {
 		wg.Add(1)
 		orders := make([]Large, 10000)
 		for i := 0; i < 10000; i++ {
-			err = faker.FakeData(&orders[i])
+			var data Large
+			err = faker.FakeData(&data)
 			assert.NoError(t, err)
+			data.CreateTime, _ = time.Parse(`2006-01-02 15:04:05`, faker.Timestamp())
+			data.UpdateTime = data.CreateTime.Add(time.Hour * 24)
+			orders[i] = data
 		}
 		_ = p.Invoke(&orders)
 	}
