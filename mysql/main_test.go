@@ -22,7 +22,7 @@ var db *bun.DB
 
 func TestMain(m *testing.M) {
 	var err error
-	os.Chdir("../../")
+	os.Chdir("../")
 	if values, err = common.LoadValues("./config/config.yml"); err != nil {
 		log.Fatalln(err)
 	}
@@ -31,6 +31,7 @@ func TestMain(m *testing.M) {
 		panic(err)
 	}
 	db = bun.NewDB(sqldb, mysqldialect.New())
+
 	os.Exit(m.Run())
 }
 
@@ -149,6 +150,8 @@ type Order struct {
 	Phone       string  `bun:"type:varchar(255)" faker:"phone_number"`
 	Address     string  `bun:"type:varchar(255)" faker:"sentence"`
 	Price       float64 `bun:"type:decimal" faker:"amount"`
+	CreateTime  time.Time
+	UpdateTime  time.Time
 }
 
 func TestMockOrder(t *testing.T) {
@@ -164,12 +167,16 @@ func TestMockOrder(t *testing.T) {
 	assert.NoError(t, err)
 	defer p.Release()
 
-	for w := 0; w < 150; w++ {
+	for w := 0; w < 100; w++ {
 		wg.Add(1)
 		orders := make([]Order, 10000)
 		for i := 0; i < 10000; i++ {
-			err = faker.FakeData(&orders[i])
+			var data Order
+			err = faker.FakeData(&data)
 			assert.NoError(t, err)
+			data.CreateTime, _ = time.Parse(`2006-01-02 15:04:05`, faker.Timestamp())
+			data.UpdateTime = data.CreateTime.Add(time.Hour * 24)
+			orders[i] = data
 		}
 		_ = p.Invoke(&orders)
 	}
@@ -177,30 +184,21 @@ func TestMockOrder(t *testing.T) {
 	wg.Wait()
 }
 
-type OrderY Order
-
-func TestMockOrderY(t *testing.T) {
+func TestConsumption(t *testing.T) {
 	ctx := context.TODO()
-	err := db.ResetModel(ctx, (*OrderY)(nil))
-	var wg sync.WaitGroup
-	var p *ants.PoolWithFunc
-	p, err = ants.NewPoolWithFunc(1000, func(i interface{}) {
-		_, err = db.NewInsert().Model(i.(*[]OrderY)).Exec(ctx)
-		assert.NoError(t, err)
-		wg.Done()
-	})
-	assert.NoError(t, err)
-	defer p.Release()
-
-	for w := 0; w < 150*12; w++ {
-		wg.Add(1)
-		orders := make([]OrderY, 10000)
-		for i := 0; i < 10000; i++ {
-			err = faker.FakeData(&orders[i])
-			assert.NoError(t, err)
-		}
-		_ = p.Invoke(&orders)
+	var data []struct {
+		Customer string
+		Total    float64
 	}
+	err := db.NewSelect().
+		Table("orders").
+		ColumnExpr("customer,sum(price) as total").
+		Group("customer").
+		Order("total desc").
+		Limit(10).
+		Model(&data).
+		Scan(ctx)
 
-	wg.Wait()
+	assert.NoError(t, err)
+	t.Log(data)
 }

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"gopkg.in/yaml.v3"
 	"os"
+	"time"
 )
 
 func LoadValues(path string) (values *Values, err error) {
@@ -21,21 +22,13 @@ func LoadValues(path string) (values *Values, err error) {
 }
 
 type Values struct {
-	STMP   `yaml:"stmp"`
-	INFLUX `yaml:"influx"`
-	NATS   `yaml:"nats"`
-	COS    `yaml:"cos"`
+	STMP `yaml:"stmp"`
+	NATS `yaml:"nats"`
 
-	REDIS       string `yaml:"redis"`
-	MONGO       string `yaml:"mongo"`
-	MYSQL       string `yaml:"mysql"`
-	POSTGRES    string `yaml:"postgres"`
-	CLICKHOUSE  string `yaml:"clickhouse"`
-	TencentBee  string `yaml:"tencent_bee"`
-	CaddyServer string `yaml:"caddy_server"`
-
-	ELASTICSEARCH `yaml:"elasticsearch"`
-	IPSERVICE     `yaml:"ip_service"`
+	REDIS    string `yaml:"redis"`
+	MONGO    string `yaml:"mongo"`
+	MYSQL    string `yaml:"mysql"`
+	POSTGRES string `yaml:"postgres"`
 }
 
 type CLS struct {
@@ -53,51 +46,22 @@ type STMP struct {
 	Password string `yaml:"password"`
 }
 
-type INFLUX struct {
-	Url   string `yaml:"url"`
-	Token string `yaml:"token"`
-}
-
-type PULSAR struct {
-	Url   string `yaml:"url"`
-	Token string `yaml:"token"`
-	Topic string `yaml:"topic"`
-}
-
 type NATS struct {
 	Url  string `yaml:"url"`
 	NKey string `yaml:"nkey"`
 }
 
-type COS struct {
-	Url             string `yaml:"url"`
-	AccessKeyID     string `yaml:"access_key_id"`
-	AccessKeySecret string `yaml:"access_key_secret"`
-}
-
-type ELASTICSEARCH struct {
-	Hosts    string `yaml:"hosts"`
-	Username string `yaml:"username"`
-	Password string `yaml:"password"`
-}
-
-type IPSERVICE struct {
-	SECRETID  string `yaml:"secretid"`
-	SECRETKEY string `yaml:"secretkey"`
-}
-
-type Storage struct {
-	Minio       StorageDrive `yaml:"minio"`
-	Aliyun      StorageDrive `yaml:"aliyun"`
-	Tencent     StorageDrive `yaml:"tencent"`
-	Huaweicloud StorageDrive `yaml:"huaweicloud"`
-	S3          StorageDrive `yaml:"s3"`
-}
-
-type StorageDrive struct {
-	AccessKeyId     string `yaml:"accessKeyId"`
-	SecretAccessKey string `yaml:"secretAccessKey"`
-	Endpoint        string `yaml:"endpoint"`
-	Bucket          string `yaml:"bucket"`
-	Cdn             string `yaml:"cdn,omitempty"`
+type Order struct {
+	ID          uint64  `bun:"id,pk,autoincrement" faker:"-"`
+	No          string  `bun:"type:varchar" faker:"cc_number"`
+	Name        string  `bun:"type:varchar" faker:"name"`
+	Description string  `bun:"type:text" faker:"paragraph"`
+	Account     string  `bun:"type:varchar" faker:"username"`
+	Customer    string  `bun:"type:varchar" faker:"name"`
+	Email       string  `bun:"type:varchar" faker:"email"`
+	Phone       string  `bun:"type:varchar" faker:"phone_number"`
+	Address     string  `bun:"type:varchar" faker:"sentence"`
+	Price       float64 `bun:"type:decimal" faker:"amount"`
+	CreateTime  time.Time
+	UpdateTime  time.Time
 }
