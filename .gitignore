@@ -24,6 +24,6 @@
 config.yml
 atlas.hcl
 *.conf
-
+.env
 vendor
 dist

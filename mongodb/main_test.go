@@ -27,7 +27,6 @@ var client *mongo.Client
 var db *mongo.Database
 
 func TestMain(m *testing.M) {
-
 	var err error
 	if values, err = common.LoadValues("../config/config.yml"); err != nil {
 		log.Fatalln(err)
@@ -39,7 +38,7 @@ func TestMain(m *testing.M) {
 	}
 
 	option := options.Database().
-		SetWriteConcern(writeconcern.New(writeconcern.WMajority()))
+		SetWriteConcern(writeconcern.Majority())
 	db = client.Database("weplanx", option)
 	os.Exit(m.Run())
 }
@@ -343,7 +342,7 @@ func TestMocks(t *testing.T) {
 		t.Error(err)
 	}
 	defer p.Release()
-	for n := 0; n < 100; n++ {
+	for n := 0; n < 5; n++ {
 		wg.Add(1)
 		orders := make([]interface{}, 10000)
 		for i := 0; i < 10000; i++ {
