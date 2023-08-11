@@ -1,14 +1,28 @@
-package factory
+package email
 
 import (
 	"bytes"
 	"crypto/tls"
+	"development/common"
 	"github.com/jordan-wright/email"
+	"github.com/thoas/go-funk"
 	"html/template"
+	"log"
 	"net/smtp"
+	"os"
 	"testing"
 	"time"
 )
+
+var values *common.Values
+
+func TestMain(m *testing.M) {
+	var err error
+	if values, err = common.LoadValues("./config.yml"); err != nil {
+		log.Fatalln(err)
+	}
+	os.Exit(m.Run())
+}
 
 type Content struct {
 	Name string
@@ -26,7 +40,7 @@ func TestSendVerifyCode(t *testing.T) {
 	if err = tpl.Execute(&buf, Content{
 		Name: "WEPLANX",
 		User: "Kain",
-		Code: "123456",
+		Code: funk.RandomString(6, []rune("0123456789")),
 		Year: time.Now().Year(),
 	}); err != nil {
 		t.Error(err)

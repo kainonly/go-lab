@@ -26,6 +26,12 @@ type Values struct {
 	MYSQL    string `yaml:"mysql"`
 	POSTGRES string `yaml:"postgres"`
 
+	ELASTICSEARCH struct {
+		Hosts    string `yaml:"hosts"`
+		Username string `yaml:"username"`
+		Password string `yaml:"password"`
+	} `yaml:"elasticsearch"`
+
 	STMP struct {
 		Addr     string `yaml:"addr"`
 		Host     string `yaml:"host"`
@@ -34,10 +40,28 @@ type Values struct {
 		Password string `yaml:"password"`
 	} `yaml:"stmp"`
 
+	CLS struct {
+		Endpoint        string `yaml:"endpoint"`
+		AccessKeyID     string `yaml:"access_key_id"`
+		AccessKeySecret string `yaml:"access_key_secret"`
+		TopicId         string `yaml:"topic_id"`
+	} `yaml:"cls"`
+
+	INFLUX struct {
+		Url   string `yaml:"url"`
+		Token string `yaml:"token"`
+	} `yaml:"influx"`
+
 	NATS struct {
 		Url  string `yaml:"url"`
 		NKey string `yaml:"nkey"`
 	} `yaml:"nats"`
+
+	PULSAR struct {
+		Url   string `yaml:"url"`
+		Token string `yaml:"token"`
+		Topic string `yaml:"topic"`
+	} `yaml:"pulsar"`
 
 	Apigw struct {
 		Ip struct {

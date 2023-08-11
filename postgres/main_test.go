@@ -28,7 +28,7 @@ type Department struct {
 func TestMain(m *testing.M) {
 	var err error
 	os.Chdir("../")
-	if values, err = common.LoadValues("./config/config.yml"); err != nil {
+	if values, err = common.LoadValues("./config.yml"); err != nil {
 		log.Fatalln(err)
 	}
 	if db, err = gorm.Open(postgres.New(postgres.Config{

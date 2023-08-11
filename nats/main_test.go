@@ -12,8 +12,9 @@ var nc *nats.Conn
 var js nats.JetStreamContext
 
 func TestMain(m *testing.M) {
+	os.Chdir("../")
 	var err error
-	if nc, err = common.Create("../config/config.yml"); err != nil {
+	if nc, err = common.Create("./config.yml"); err != nil {
 		log.Fatalln(err)
 	}
 	if js, err = nc.JetStream(
