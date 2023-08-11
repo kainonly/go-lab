@@ -2,35 +2,38 @@ package main
 
 import (
 	"context"
-	"flag"
+	"development/common"
+	"encoding/base64"
 	"github.com/stretchr/testify/assert"
 	core "k8s.io/api/core/v1"
 	networking "k8s.io/api/networking/v1"
 	meta "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
-	"k8s.io/client-go/tools/clientcmd"
-	"k8s.io/client-go/util/homedir"
+	"k8s.io/client-go/rest"
 	"os"
-	"path/filepath"
 	"testing"
 )
 
-var clientset *kubernetes.Clientset
+var kube *kubernetes.Clientset
+
+var values *common.Values
 
 func TestMain(m *testing.M) {
 	var err error
-	var kubeconfig *string
-	if home := homedir.HomeDir(); home != "" {
-		kubeconfig = flag.String("kubeconfig", filepath.Join(home, ".kube", "config"), "(optional) absolute path to the kubeconfig file")
-	} else {
-		kubeconfig = flag.String("kubeconfig", "", "absolute path to the kubeconfig file")
-	}
-	flag.Parse()
-	config, err := clientcmd.BuildConfigFromFlags("", *kubeconfig)
-	if err != nil {
+	if values, err = common.LoadValues("../config.yml"); err != nil {
 		panic(err.Error())
 	}
-	clientset, err = kubernetes.NewForConfig(config)
+	cadata, _ := base64.StdEncoding.DecodeString(values.KUBERNETES.CAData)
+	certdata, _ := base64.StdEncoding.DecodeString(values.KUBERNETES.CertData)
+	keydata, _ := base64.StdEncoding.DecodeString(values.KUBERNETES.KeyData)
+	kube, err = kubernetes.NewForConfig(&rest.Config{
+		Host: values.KUBERNETES.Host,
+		TLSClientConfig: rest.TLSClientConfig{
+			CAData:   cadata,
+			CertData: certdata,
+			KeyData:  keydata,
+		},
+	})
 	if err != nil {
 		panic(err.Error())
 	}
@@ -38,13 +41,13 @@ func TestMain(m *testing.M) {
 }
 
 func TestNodes(t *testing.T) {
-	data, err := clientset.CoreV1().Nodes().List(context.TODO(), meta.ListOptions{})
+	data, err := kube.CoreV1().Nodes().List(context.TODO(), meta.ListOptions{})
 	assert.NoError(t, err)
 	t.Log(data)
 }
 
 func TestDeployments(t *testing.T) {
-	data, err := clientset.AppsV1().Deployments("kube-system").List(context.TODO(), meta.ListOptions{})
+	data, err := kube.AppsV1().Deployments("kube-system").List(context.TODO(), meta.ListOptions{})
 	assert.NoError(t, err)
 	t.Log(data)
 }
@@ -60,7 +63,7 @@ func TestConfigMapCreate(t *testing.T) {
 		},
 	}
 
-	data, err := clientset.CoreV1().
+	data, err := kube.CoreV1().
 		ConfigMaps("kube-system").
 		Create(context.TODO(), configMap, meta.CreateOptions{})
 	assert.NoError(t, err)
@@ -78,7 +81,7 @@ func TestConfigMapUpdate(t *testing.T) {
 			"zx":  "cccc",
 		},
 	}
-	data, err := clientset.CoreV1().
+	data, err := kube.CoreV1().
 		ConfigMaps("kube-system").
 		Update(context.TODO(), configMap, meta.UpdateOptions{})
 	assert.NoError(t, err)
@@ -86,14 +89,14 @@ func TestConfigMapUpdate(t *testing.T) {
 }
 
 func TestConfigMapDelete(t *testing.T) {
-	err := clientset.CoreV1().
+	err := kube.CoreV1().
 		ConfigMaps("kube-system").
 		Delete(context.TODO(), "test", meta.DeleteOptions{})
 	assert.NoError(t, err)
 }
 
 func TestIngressList(t *testing.T) {
-	data, err := clientset.NetworkingV1().
+	data, err := kube.NetworkingV1().
 		Ingresses("kube-system").
 		List(context.TODO(), meta.ListOptions{})
 	assert.NoError(t, err)
@@ -141,7 +144,7 @@ func TestIngressCreate(t *testing.T) {
 			},
 		},
 	}
-	data, err := clientset.NetworkingV1().
+	data, err := kube.NetworkingV1().
 		Ingresses("kube-system").
 		Create(context.TODO(), ingress, meta.CreateOptions{})
 	assert.NoError(t, err)
@@ -149,7 +152,7 @@ func TestIngressCreate(t *testing.T) {
 }
 
 func TestIngressDelete(t *testing.T) {
-	err := clientset.NetworkingV1().
+	err := kube.NetworkingV1().
 		Ingresses("kube-system").
 		Delete(context.TODO(), "test", meta.DeleteOptions{})
 	assert.NoError(t, err)

@@ -26,6 +26,13 @@ type Values struct {
 	MYSQL    string `yaml:"mysql"`
 	POSTGRES string `yaml:"postgres"`
 
+	KUBERNETES struct {
+		Host     string `yaml:"host"`
+		CAData   string `yaml:"ca_data"`
+		CertData string `yaml:"cert_data"`
+		KeyData  string `yaml:"key_data"`
+	} `yaml:"kubernetes"`
+
 	ELASTICSEARCH struct {
 		Hosts    string `yaml:"hosts"`
 		Username string `yaml:"username"`

@@ -28,7 +28,7 @@ var db *mongo.Database
 
 func TestMain(m *testing.M) {
 	var err error
-	if values, err = common.LoadValues("./config.yml"); err != nil {
+	if values, err = common.LoadValues("../config.yml"); err != nil {
 		log.Fatalln(err)
 	}
 	if client, err = mongo.Connect(context.TODO(),

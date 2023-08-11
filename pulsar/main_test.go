@@ -14,9 +14,8 @@ var values *common.Values
 var client pulsar.Client
 
 func TestMain(m *testing.M) {
-	os.Chdir("../")
 	var err error
-	if values, err = common.LoadValues("./config.yml"); err != nil {
+	if values, err = common.LoadValues("../config.yml"); err != nil {
 		log.Fatalln(err)
 	}
 	if client, err = pulsar.NewClient(pulsar.ClientOptions{

@@ -18,7 +18,7 @@ var values *common.Values
 
 func TestMain(m *testing.M) {
 	var err error
-	if values, err = common.LoadValues("./config.yml"); err != nil {
+	if values, err = common.LoadValues("../config.yml"); err != nil {
 		log.Fatalln(err)
 	}
 	os.Exit(m.Run())

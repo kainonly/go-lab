@@ -22,8 +22,7 @@ var db *bun.DB
 
 func TestMain(m *testing.M) {
 	var err error
-	os.Chdir("../")
-	if values, err = common.LoadValues("./config.yml"); err != nil {
+	if values, err = common.LoadValues("../config.yml"); err != nil {
 		log.Fatalln(err)
 	}
 	sqldb, err := sql.Open("mysql", values.MYSQL)
