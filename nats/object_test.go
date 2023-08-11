@@ -4,6 +4,7 @@ import (
 	"github.com/bytedance/sonic"
 	"github.com/imdario/mergo"
 	"github.com/nats-io/nats.go"
+	"github.com/stretchr/testify/assert"
 	"testing"
 	"time"
 )
@@ -12,9 +13,7 @@ func TestCreateObjectStore(t *testing.T) {
 	_, err := js.CreateObjectStore(&nats.ObjectStoreConfig{
 		Bucket: "development",
 	})
-	if err != nil {
-		t.Error(err)
-	}
+	assert.NoError(t, err)
 }
 
 type Values struct {
@@ -29,9 +28,7 @@ type Values struct {
 
 func TestPutObject(t *testing.T) {
 	o, err := js.ObjectStore("development")
-	if err != nil {
-		t.Error(err)
-	}
+	assert.NoError(t, err)
 	values := Values{
 		UserSessionExpire:    time.Hour,
 		UserLoginFailedTimes: 5,
@@ -42,20 +39,15 @@ func TestPutObject(t *testing.T) {
 		PasswordStrength:     1,
 	}
 	var b []byte
-	if b, err = sonic.Marshal(values); err != nil {
-		t.Error(err)
-	}
+	b, err = sonic.Marshal(values)
+	assert.NoError(t, err)
 	_, err = o.PutBytes("values", b)
-	if err != nil {
-		t.Error(err)
-	}
+	assert.NoError(t, err)
 }
 
 func TestGetObject(t *testing.T) {
 	o, err := js.ObjectStore("development")
-	if err != nil {
-		t.Error(err)
-	}
+	assert.NoError(t, err)
 	b, err := o.GetBytes("values")
 	if err != nil {
 		if err == nats.ErrObjectNotFound {
@@ -85,44 +77,32 @@ func TestMergeValues(t *testing.T) {
 		PasswordStrength:     1,
 	}
 	err := mergo.Merge(&dto, values)
-	if err != nil {
-		t.Error(err)
-	}
+	assert.NoError(t, err)
 	t.Log(dto)
 }
 
 func TestListObject(t *testing.T) {
 	o, err := js.ObjectStore("development")
-	if err != nil {
-		return
-	}
+	assert.NoError(t, err)
 	obs, err := o.List()
-	if err != nil {
-		return
-	}
+	assert.NoError(t, err)
 
 	for _, x := range obs {
 		var b []byte
-		if b, err = o.GetBytes(x.Name); err != nil {
-			return
-		}
+		b, err = o.GetBytes(x.Name)
+		assert.NoError(t, err)
 		t.Log(string(b))
 	}
 }
 
 func TestDeleteObject(t *testing.T) {
 	o, err := js.ObjectStore("development")
-	if err != nil {
-		t.Error(err)
-	}
-	if err = o.Delete("values"); err != nil {
-		t.Error(err)
-	}
+	assert.NoError(t, err)
+	err = o.Delete("values")
+	assert.NoError(t, err)
 }
 
 func TestDeleteBucket(t *testing.T) {
 	err := js.DeleteObjectStore("development")
-	if err != nil {
-		t.Error(err)
-	}
+	assert.NoError(t, err)
 }

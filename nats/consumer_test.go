@@ -3,6 +3,7 @@ package nats
 import (
 	"github.com/bytedance/sonic"
 	"github.com/nats-io/nats.go"
+	"github.com/stretchr/testify/assert"
 	"testing"
 )
 
@@ -27,17 +28,13 @@ func TestAddConsumer(t *testing.T) {
 	info, err := js.AddConsumer("development", &nats.ConsumerConfig{
 		Durable: "DEV",
 	})
-	if err != nil {
-		t.Error(err)
-	}
+	assert.NoError(t, err)
 	t.Log(info)
 }
 
 func TestConsumerInfo(t *testing.T) {
 	info, err := js.ConsumerInfo("development", "DEV")
-	if err != nil {
-		t.Error(err)
-	}
+	assert.NoError(t, err)
 	data, _ := sonic.Marshal(info)
 	t.Log(string(data))
 }

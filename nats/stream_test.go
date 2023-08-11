@@ -3,6 +3,7 @@ package nats
 import (
 	"github.com/bytedance/sonic"
 	"github.com/nats-io/nats.go"
+	"github.com/stretchr/testify/assert"
 	"testing"
 )
 
@@ -23,12 +24,10 @@ func TestStreamsInfo(t *testing.T) {
 	}
 }
 
-// TODO:删除所有 Stream
 func TestDeleteStreams(t *testing.T) {
 	for name := range js.StreamNames() {
-		if err := js.DeleteStream(name); err != nil {
-			t.Error(err)
-		}
+		err := js.DeleteStream(name)
+		assert.NoError(t, err)
 	}
 }
 
@@ -38,23 +37,18 @@ func TestAddStream(t *testing.T) {
 		Subjects:  []string{"development"},
 		Retention: nats.WorkQueuePolicy,
 	})
-	if err != nil {
-		t.Error(err)
-	}
+	assert.NoError(t, err)
 	t.Log(info)
 }
 
 func TestPublish(t *testing.T) {
-	if _, err := js.Publish("development.message", []byte("hello")); err != nil {
-		t.Error(err)
-	}
+	_, err := js.Publish("development.message", []byte("hello"))
+	assert.NoError(t, err)
 }
 
 func TestStreamInfo(t *testing.T) {
 	v, err := js.StreamInfo("development")
-	if err != nil {
-		t.Error(err)
-	}
+	assert.NoError(t, err)
 	data, _ := sonic.Marshal(v)
 	t.Log(string(data))
 }
@@ -66,14 +60,11 @@ func TestUpdateStream(t *testing.T) {
 		Description: "测试",
 		Retention:   nats.WorkQueuePolicy,
 	})
-	if err != nil {
-		t.Error(err)
-	}
+	assert.NoError(t, err)
 	t.Log(info)
 }
 
 func TestDeleteStream(t *testing.T) {
-	if err := js.DeleteStream("development"); err != nil {
-		t.Error(err)
-	}
+	err := js.DeleteStream("development")
+	assert.NoError(t, err)
 }

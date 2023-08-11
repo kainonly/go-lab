@@ -1,18 +1,28 @@
 package main
 
 import (
-	"development/nats/common"
+	"development/common"
 	"github.com/nats-io/nats.go"
 	"log"
 	"time"
 )
 
+var nc *nats.Conn
+var js nats.JetStreamContext
+
 func main() {
-	nc, err := common.Create("./config/config.yml")
+	values, err := common.LoadValues("./config.yml")
 	if err != nil {
+		panic(err)
+	}
+	if nc, err = common.UseNats(values); err != nil {
+		panic(err)
+	}
+	if js, err = nc.JetStream(
+		nats.PublishAsyncMaxPending(256),
+	); err != nil {
 		log.Fatalln(err)
 	}
-	js, _ := nc.JetStream(nats.PublishAsyncMaxPending(256))
 	kv, err := js.KeyValue("development")
 	if err != nil {
 		log.Fatal(err)

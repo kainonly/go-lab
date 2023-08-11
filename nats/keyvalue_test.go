@@ -4,6 +4,7 @@ import (
 	"errors"
 	"github.com/bytedance/sonic"
 	"github.com/nats-io/nats.go"
+	"github.com/stretchr/testify/assert"
 	"testing"
 	"time"
 )
@@ -12,9 +13,7 @@ func TestCreateKeyValue(t *testing.T) {
 	_, err := js.CreateKeyValue(&nats.KeyValueConfig{
 		Bucket: "development",
 	})
-	if err != nil {
-		t.Error(err)
-	}
+	assert.NoError(t, err)
 }
 
 func TestKeyValueStores(t *testing.T) {
@@ -25,9 +24,7 @@ func TestKeyValueStores(t *testing.T) {
 
 func TestKeyValue(t *testing.T) {
 	kv, err := js.KeyValue("development")
-	if err != nil {
-		t.Error(err)
-	}
+	assert.NoError(t, err)
 	var keys []string
 	if keys, err = kv.Keys(); err != nil {
 		if errors.Is(err, nats.ErrNoKeysFound) {
@@ -41,9 +38,7 @@ func TestKeyValue(t *testing.T) {
 
 func TestKeyValuePut(t *testing.T) {
 	kv, err := js.KeyValue("development")
-	if err != nil {
-		t.Error(err)
-	}
+	assert.NoError(t, err)
 	values := Values{
 		UserSessionExpire:    time.Hour,
 		UserLoginFailedTimes: 5,
@@ -58,36 +53,26 @@ func TestKeyValuePut(t *testing.T) {
 		t.Error(err)
 	}
 	r, err := kv.Put("values", b)
-	if err != nil {
-		t.Error(err)
-	}
+	assert.NoError(t, err)
 	t.Log(r)
 }
 
 func TestKeyValueGet(t *testing.T) {
 	kv, err := js.KeyValue("development")
-	if err != nil {
-		t.Error(err)
-	}
+	assert.NoError(t, err)
 	entry, err := kv.Get("values")
-	if err != nil {
-		t.Error(err)
-	}
+	assert.NoError(t, err)
 	t.Log(string(entry.Value()))
 }
 
 func TestKeyValueDel(t *testing.T) {
 	kv, err := js.KeyValue("development")
-	if err != nil {
-		t.Error(err)
-	}
-	if err = kv.Delete("values"); err != nil {
-		t.Error(err)
-	}
+	assert.NoError(t, err)
+	err = kv.Delete("values")
+	assert.NoError(t, err)
 }
 
 func TestDeleteKeyValue(t *testing.T) {
-	if err := js.DeleteKeyValue("development"); err != nil {
-		t.Error(err)
-	}
+	err := js.DeleteKeyValue("development")
+	assert.NoError(t, err)
 }

@@ -2,6 +2,8 @@ package common
 
 import (
 	"fmt"
+	"github.com/nats-io/nats.go"
+	"github.com/nats-io/nkeys"
 	"gopkg.in/yaml.v3"
 	"os"
 )
@@ -20,60 +22,26 @@ func LoadValues(path string) (values *Values, err error) {
 	return
 }
 
-type Values struct {
-	REDIS    string `yaml:"redis"`
-	MONGO    string `yaml:"mongo"`
-	MYSQL    string `yaml:"mysql"`
-	POSTGRES string `yaml:"postgres"`
+func UseNats(values *Values) (nc *nats.Conn, err error) {
+	var kp nkeys.KeyPair
+	if kp, err = nkeys.FromSeed([]byte(values.NATS.NKey)); err != nil {
+		panic(err)
+	}
 
-	KUBERNETES struct {
-		Host     string `yaml:"host"`
-		CAData   string `yaml:"ca_data"`
-		CertData string `yaml:"cert_data"`
-		KeyData  string `yaml:"key_data"`
-	} `yaml:"kubernetes"`
+	defer kp.Wipe()
 
-	ELASTICSEARCH struct {
-		Hosts    string `yaml:"hosts"`
-		Username string `yaml:"username"`
-		Password string `yaml:"password"`
-	} `yaml:"elasticsearch"`
-
-	STMP struct {
-		Addr     string `yaml:"addr"`
-		Host     string `yaml:"host"`
-		Identity string `yaml:"identity"`
-		Username string `yaml:"username"`
-		Password string `yaml:"password"`
-	} `yaml:"stmp"`
-
-	CLS struct {
-		Endpoint        string `yaml:"endpoint"`
-		AccessKeyID     string `yaml:"access_key_id"`
-		AccessKeySecret string `yaml:"access_key_secret"`
-		TopicId         string `yaml:"topic_id"`
-	} `yaml:"cls"`
-
-	INFLUX struct {
-		Url   string `yaml:"url"`
-		Token string `yaml:"token"`
-	} `yaml:"influx"`
-
-	NATS struct {
-		Url  string `yaml:"url"`
-		NKey string `yaml:"nkey"`
-	} `yaml:"nats"`
-
-	PULSAR struct {
-		Url   string `yaml:"url"`
-		Token string `yaml:"token"`
-		Topic string `yaml:"topic"`
-	} `yaml:"pulsar"`
-
-	Apigw struct {
-		Ip struct {
-			SecretID  string `yaml:"secret_id"`
-			SecretKey string `yaml:"secret_key"`
-		} `yaml:"ip"`
-	} `yaml:"apigw"`
+	var pub string
+	if pub, err = kp.PublicKey(); err != nil {
+		return
+	}
+	if nc, err = nats.Connect(
+		values.NATS.Url,
+		nats.Nkey(pub, func(nonce []byte) ([]byte, error) {
+			sig, _ := kp.Sign(nonce)
+			return sig, nil
+		}),
+	); err != nil {
+		return
+	}
+	return
 }
