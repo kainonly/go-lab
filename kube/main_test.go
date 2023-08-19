@@ -40,7 +40,14 @@ func TestMain(m *testing.M) {
 	os.Exit(m.Run())
 }
 
+func TestServerVersion(t *testing.T) {
+	info, err := kube.ServerVersion()
+	assert.NoError(t, err)
+	t.Log(info)
+}
+
 func TestNodes(t *testing.T) {
+
 	data, err := kube.CoreV1().Nodes().List(context.TODO(), meta.ListOptions{})
 	assert.NoError(t, err)
 	t.Log(data)

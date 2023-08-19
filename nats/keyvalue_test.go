@@ -76,3 +76,12 @@ func TestDeleteKeyValue(t *testing.T) {
 	err := js.DeleteKeyValue("development")
 	assert.NoError(t, err)
 }
+
+func TestCreateKeyValueTTL(t *testing.T) {
+	_, err := js.CreateKeyValue(&nats.KeyValueConfig{
+		Bucket:  "tmp",
+		Storage: nats.MemoryStorage,
+		TTL:     time.Millisecond * 1200,
+	})
+	assert.NoError(t, err)
+}

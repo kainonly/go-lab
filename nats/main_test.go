@@ -14,7 +14,7 @@ var nc *nats.Conn
 var js nats.JetStreamContext
 
 func TestMain(m *testing.M) {
-	values, err := common.LoadValues("./config.yml")
+	values, err := common.LoadValues("../config.yml")
 	if err != nil {
 		panic(err)
 	}
