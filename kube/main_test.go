@@ -5,6 +5,7 @@ import (
 	"development/common"
 	"encoding/base64"
 	"github.com/stretchr/testify/assert"
+	apps "k8s.io/api/apps/v1"
 	core "k8s.io/api/core/v1"
 	networking "k8s.io/api/networking/v1"
 	meta "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -44,19 +45,72 @@ func TestServerVersion(t *testing.T) {
 	info, err := kube.ServerVersion()
 	assert.NoError(t, err)
 	t.Log(info)
+	t.Log(info.GoVersion)
+	t.Log(info.Major)
+	t.Log(info.Minor)
+	t.Log(info.Compiler)
+	t.Log(info.Platform)
 }
 
 func TestNodes(t *testing.T) {
+	nodes, err := kube.CoreV1().Nodes().List(context.TODO(), meta.ListOptions{})
+	assert.NoError(t, err)
+	//t.Log(nodes)
+	for _, node := range nodes.Items {
+		t.Log(node.Status)
+	}
+}
 
-	data, err := kube.CoreV1().Nodes().List(context.TODO(), meta.ListOptions{})
+func TestDeploymentsList(t *testing.T) {
+	data, err := kube.AppsV1().Deployments("kube-system").List(context.TODO(), meta.ListOptions{})
 	assert.NoError(t, err)
 	t.Log(data)
 }
 
-func TestDeployments(t *testing.T) {
-	data, err := kube.AppsV1().Deployments("kube-system").List(context.TODO(), meta.ListOptions{})
+func TestDeploymentsCreate(t *testing.T) {
+	ctx := context.TODO()
+	container := core.Container{
+		Name:            "schedule",
+		Image:           "ccr.ccs.tencentyun.com/weplanx/schedule:v1.3.4",
+		ImagePullPolicy: core.PullAlways,
+		Env: []core.EnvVar{
+			{Name: "MODE", Value: "release"},
+			{Name: "NAMESPACE", Value: "example"},
+			{Name: "NODE", Value: "xxx"},
+			{Name: "NATS_HOSTS", Value: values.NATS.Url},
+			{Name: "NATS_NKEY", Value: values.NATS.NKey},
+		},
+	}
+	deployment := &apps.Deployment{
+		ObjectMeta: meta.ObjectMeta{
+			Name: "schedule",
+		},
+		Spec: apps.DeploymentSpec{
+			Selector: &meta.LabelSelector{
+				MatchLabels: map[string]string{"app": "schedule"},
+			},
+			Template: core.PodTemplateSpec{
+				ObjectMeta: meta.ObjectMeta{
+					Labels: map[string]string{"app": "schedule"},
+				},
+				Spec: core.PodSpec{
+					Containers: []core.Container{container},
+				},
+			},
+		},
+	}
+
+	r, err := kube.AppsV1().
+		Deployments("default").
+		Create(ctx, deployment, meta.CreateOptions{})
 	assert.NoError(t, err)
-	t.Log(data)
+	t.Log(r)
+}
+
+func TestDeploymentsDelete(t *testing.T) {
+	ctx := context.TODO()
+	kube.AppsV1().Deployments("default").
+		Delete(ctx, "schedule", meta.DeleteOptions{})
 }
 
 func TestConfigMapCreate(t *testing.T) {
