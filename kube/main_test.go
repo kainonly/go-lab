@@ -53,9 +53,9 @@ func TestServerVersion(t *testing.T) {
 }
 
 func TestNodes(t *testing.T) {
-	nodes, err := kube.CoreV1().Nodes().List(context.TODO(), meta.ListOptions{})
+	nodes, err := kube.CoreV1().Nodes().
+		List(context.TODO(), meta.ListOptions{})
 	assert.NoError(t, err)
-	//t.Log(nodes)
 	for _, node := range nodes.Items {
 		t.Log(node.Status)
 	}
@@ -109,8 +109,9 @@ func TestDeploymentsCreate(t *testing.T) {
 
 func TestDeploymentsDelete(t *testing.T) {
 	ctx := context.TODO()
-	kube.AppsV1().Deployments("default").
+	err := kube.AppsV1().Deployments("default").
 		Delete(ctx, "schedule", meta.DeleteOptions{})
+	assert.NoError(t, err)
 }
 
 func TestConfigMapCreate(t *testing.T) {
