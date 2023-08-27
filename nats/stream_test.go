@@ -14,10 +14,6 @@ func TestStreamNames(t *testing.T) {
 }
 
 func TestStreamsInfo(t *testing.T) {
-	//for v := range js.StreamsInfo() {
-	//	data, _ := jsoniter.Marshal(v)
-	//	t.Log(string(data))
-	//}
 	for v := range js.Streams() {
 		data, _ := sonic.Marshal(v)
 		t.Log(string(data))

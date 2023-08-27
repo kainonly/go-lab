@@ -14,10 +14,6 @@ func TestConsumerNames(t *testing.T) {
 }
 
 func TestConsumersInfo(t *testing.T) {
-	//for v := range js.ConsumersInfo("development") {
-	//	data, _ := json.Marshal(v)
-	//	t.Log(string(data))
-	//}
 	for v := range js.Consumers("development") {
 		data, _ := sonic.Marshal(v)
 		t.Log(string(data))

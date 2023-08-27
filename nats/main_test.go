@@ -29,6 +29,17 @@ func TestMain(m *testing.M) {
 	os.Exit(m.Run())
 }
 
+func TestStats(t *testing.T) {
+	//t.Log(nc.InMsgs)
+	//t.Log(nc.OutMsgs)
+	//t.Log(nc.InBytes)
+	//t.Log(nc.OutBytes)
+	t.Log(nc.Status())
+	t.Log(nc.ConnectedServerId())
+	t.Log(nc.ConnectedServerVersion())
+	t.Log(nc.Stats())
+}
+
 func TestPublishMessage(t *testing.T) {
 	err := nc.Publish("development.message", []byte("abc"))
 	assert.NoError(t, err)
