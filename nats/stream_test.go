@@ -38,7 +38,7 @@ func TestAddStream(t *testing.T) {
 }
 
 func TestPublish(t *testing.T) {
-	_, err := js.Publish("development.message", []byte("hello"))
+	_, err := js.Publish("development", []byte("hello"))
 	assert.NoError(t, err)
 }
 
