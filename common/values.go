@@ -56,4 +56,9 @@ type Values struct {
 			SecretKey string `yaml:"secret_key"`
 		} `yaml:"ip"`
 	} `yaml:"apigw"`
+
+	Emqx struct {
+		Host   string `yaml:"host"`
+		ApiKey string `yaml:"api_key"`
+	} `yaml:"emqx"`
 }

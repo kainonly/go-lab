@@ -43,7 +43,7 @@ func TestPublish(t *testing.T) {
 }
 
 func TestStreamInfo(t *testing.T) {
-	v, err := js.StreamInfo("development")
+	v, err := js.StreamInfo("developments")
 	assert.NoError(t, err)
 	data, _ := sonic.Marshal(v)
 	t.Log(string(data))
@@ -61,6 +61,6 @@ func TestUpdateStream(t *testing.T) {
 }
 
 func TestDeleteStream(t *testing.T) {
-	err := js.DeleteStream("development")
+	err := js.DeleteStream("developments")
 	assert.NoError(t, err)
 }
