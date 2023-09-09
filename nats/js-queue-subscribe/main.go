@@ -2,6 +2,7 @@ package main
 
 import (
 	"development/common"
+	"fmt"
 	"github.com/nats-io/nats.go"
 	"log"
 	"os"
@@ -25,23 +26,29 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	if _, err := js.QueueSubscribe("development.message", "development:message", func(msg *nats.Msg) {
-		log.Println("n1", string(msg.Data))
-		msg.Term()
-	}, nats.ManualAck()); err != nil {
-		log.Fatalln(err)
-	}
-	if _, err := js.QueueSubscribe("development.message", "development:message", func(msg *nats.Msg) {
-		log.Println("n2", string(msg.Data))
-		msg.Ack()
-	}, nats.ManualAck()); err != nil {
-		log.Fatalln(err)
-	}
-	if _, err := js.QueueSubscribe("development.message", "development:message", func(msg *nats.Msg) {
-		log.Println("n3", string(msg.Data))
-		msg.Ack()
-	}, nats.ManualAck()); err != nil {
-		log.Fatalln(err)
+	//if _, err := js.QueueSubscribe("development.message", "development:message", func(msg *nats.Msg) {
+	//	log.Println("n1", string(msg.Data))
+	//	msg.Term()
+	//}, nats.ManualAck()); err != nil {
+	//	log.Fatalln(err)
+	//}
+	//if _, err := js.QueueSubscribe("development.message", "development:message", func(msg *nats.Msg) {
+	//	log.Println("n2", string(msg.Data))
+	//	msg.Ack()
+	//}, nats.ManualAck()); err != nil {
+	//	log.Fatalln(err)
+	//}
+	//if _, err := js.QueueSubscribe("development.message", "development:message", func(msg *nats.Msg) {
+	//	log.Println("n3", string(msg.Data))
+	//	msg.Ack()
+	//}, nats.ManualAck()); err != nil {
+	//	log.Fatalln(err)
+	//}
+
+	if _, err = js.QueueSubscribe("pro.message", "default", func(msg *nats.Msg) {
+		fmt.Println(string(msg.Data))
+	}); err != nil {
+		panic(err)
 	}
 
 	c := make(chan os.Signal, 1)
