@@ -2,7 +2,6 @@ package nats
 
 import (
 	"github.com/bytedance/sonic"
-	"github.com/imdario/mergo"
 	"github.com/nats-io/nats.go"
 	"github.com/stretchr/testify/assert"
 	"testing"
@@ -61,24 +60,6 @@ func TestGetObject(t *testing.T) {
 		t.Error(err)
 	}
 	t.Log(values)
-}
-
-func TestMergeValues(t *testing.T) {
-	dto := Values{
-		UserLoginFailedTimes: 6,
-	}
-	values := Values{
-		UserSessionExpire:    time.Hour,
-		UserLoginFailedTimes: 5,
-		UserLockTime:         time.Minute * 15,
-		IpLoginFailedTimes:   5,
-		IpWhitelist:          []string{},
-		IpBlacklist:          []string{},
-		PasswordStrength:     1,
-	}
-	err := mergo.Merge(&dto, values)
-	assert.NoError(t, err)
-	t.Log(dto)
 }
 
 func TestListObject(t *testing.T) {

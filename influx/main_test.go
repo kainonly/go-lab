@@ -4,7 +4,7 @@ import (
 	"context"
 	"development/common"
 	"fmt"
-	"github.com/google/uuid"
+	"github.com/gookit/goutil/strutil"
 	influxdb2 "github.com/influxdata/influxdb-client-go/v2"
 	"github.com/stretchr/testify/assert"
 	"log"
@@ -28,7 +28,7 @@ func TestMain(m *testing.M) {
 		values.INFLUX.Token,
 	)
 
-	msgId = uuid.New().String()
+	msgId = strutil.MicroTimeHexID()
 	os.Exit(m.Run())
 }
 

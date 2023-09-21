@@ -4,8 +4,8 @@ import (
 	"bytes"
 	"crypto/tls"
 	"development/common"
+	"github.com/gookit/goutil/strutil"
 	"github.com/jordan-wright/email"
-	"github.com/thoas/go-funk"
 	"html/template"
 	"log"
 	"net/smtp"
@@ -40,7 +40,7 @@ func TestSendVerifyCode(t *testing.T) {
 	if err = tpl.Execute(&buf, Content{
 		Name: "WEPLANX",
 		User: "Kain",
-		Code: funk.RandomString(6, []rune("0123456789")),
+		Code: strutil.RandWithTpl(6, strutil.Numbers),
 		Year: time.Now().Year(),
 	}); err != nil {
 		t.Error(err)

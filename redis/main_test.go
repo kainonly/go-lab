@@ -4,10 +4,9 @@ import (
 	"context"
 	"development/common"
 	"fmt"
-	gonanoid "github.com/matoous/go-nanoid/v2"
+	"github.com/gookit/goutil/strutil"
 	"github.com/redis/go-redis/v9"
 	"github.com/stretchr/testify/assert"
-	"github.com/thoas/go-funk"
 	"log"
 	"os"
 	"testing"
@@ -41,8 +40,8 @@ func TestMock(t *testing.T) {
 	ctx := context.TODO()
 	x := client.TxPipeline()
 	for i := 0; i < 10000; i++ {
-		id, _ := gonanoid.New()
-		x.Set(ctx, fmt.Sprintf(`session:%s`, id), funk.RandomString(10), 0)
+		id := strutil.MicroTimeHexID()
+		x.Set(ctx, fmt.Sprintf(`session:%s`, id), strutil.RandomCharsV3(6), 0)
 	}
 	if _, err := x.Exec(ctx); err != nil {
 		t.Error(err)
