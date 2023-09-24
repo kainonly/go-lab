@@ -359,3 +359,59 @@ func TestMocks(t *testing.T) {
 
 	wg.Wait()
 }
+
+type Job struct {
+	Timestamp time.Time              `bson:"timestamp"`
+	Metadata  JobMetadata            `bson:"metadata"`
+	Headers   map[string]interface{} `bson:"headers"`
+	Body      map[string]interface{} `bson:"body"`
+	Response  JobResponse            `bson:"response"`
+}
+
+type JobMetadata struct {
+	Key   string `bson:"key"`
+	Index int    `bson:"index"`
+	Mode  string `bson:"mode"`
+	Url   string `bson:"url"`
+}
+
+type JobResponse struct {
+	Status int    `bson:"status"`
+	Body   string `bson:"body"`
+}
+
+func TestMockJobs(t *testing.T) {
+	now, _ := time.Parse(time.DateTime, "2023-09-16 00:00:00")
+	var wg sync.WaitGroup
+	p, err := ants.NewPoolWithFunc(100, func(i interface{}) {
+		_, err := db.Collection("logset_jobs").InsertMany(context.TODO(), i.([]interface{}))
+		assert.NoError(t, err)
+		wg.Done()
+	})
+	assert.NoError(t, err)
+	defer p.Release()
+	for n := 0; n < 200; n++ {
+		wg.Add(1)
+		jobs := make([]interface{}, 10000)
+		for i := 0; i < 10000; i++ {
+			jobs[i] = Job{
+				Timestamp: now.Add(-time.Second * 5 * time.Duration(i)),
+				Metadata: JobMetadata{
+					Key:   "65047ebfaa2334fff2f2a49c",
+					Index: 0,
+					Mode:  "HTTP",
+					Url:   "https://whoami.kainonly.com/api",
+				},
+				Headers: nil,
+				Body:    nil,
+				Response: JobResponse{
+					Status: 200,
+					Body:   `{"hostname":"whoami-75d55b64f6-b5sgs","ip":["127.0.0.1","::1","10.42.1.108","fe80::b4a9:e6ff:fe78:e1e9"],"headers":{"Accept-Encoding":["gzip"],"Content-Length":["4"],"Content-Type":["application/json; charset=utf-8"],"User-Agent":["req/v3 (https://github.com/imroc/req)"],"X-Forwarded-For":["119.41.38.198"],"X-Forwarded-Host":["whoami.kainonly.com"],"X-Forwarded-Port":["443"],"X-Forwarded-Proto":["https"],"X-Forwarded-Server":["VM-12-17-opencloudos"],"X-Real-Ip":["119.41.38.198"]},"url":"/api","host":"whoami.kainonly.com","method":"POST","remoteAddr":"10.42.1.1:53340"}`,
+				},
+			}
+		}
+		_ = p.Invoke(jobs)
+	}
+
+	wg.Wait()
+}

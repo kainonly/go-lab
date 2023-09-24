@@ -7,6 +7,7 @@ require (
 	github.com/bytedance/sonic v1.10.1
 	github.com/dgryski/dgoogauth v0.0.0-20190221195224-5a805980a5f3
 	github.com/go-faker/faker/v4 v4.2.0
+	github.com/go-sql-driver/mysql v1.7.1
 	github.com/gookit/goutil v0.6.12
 	github.com/influxdata/influxdb-client-go/v2 v2.12.3
 	github.com/jordan-wright/email v4.0.1-0.20210109023952-943e75fe5223+incompatible
@@ -58,7 +59,7 @@ require (
 	github.com/golang/protobuf v1.5.3 // indirect
 	github.com/golang/snappy v0.0.4 // indirect
 	github.com/gomarkdown/markdown v0.0.0-20230916125811-7478c230c7cd // indirect
-	github.com/google/gnostic v0.5.7-v3refs // indirect
+	github.com/google/gnostic-models v0.6.8 // indirect
 	github.com/google/go-cmp v0.5.9 // indirect
 	github.com/google/gofuzz v1.2.0 // indirect
 	github.com/google/uuid v1.3.1 // indirect
@@ -96,7 +97,6 @@ require (
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
 	github.com/schollz/closestmatch v2.1.0+incompatible // indirect
 	github.com/sirupsen/logrus v1.9.3 // indirect
-	github.com/stretchr/objx v0.5.1 // indirect
 	github.com/tdewolff/minify/v2 v2.12.9 // indirect
 	github.com/tdewolff/parse/v2 v2.6.8 // indirect
 	github.com/tmthrgd/go-hex v0.0.0-20190904060850-447a3041c3bc // indirect

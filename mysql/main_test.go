@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"development/common"
 	"github.com/go-faker/faker/v4"
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/panjf2000/ants/v2"
 	"github.com/stretchr/testify/assert"
 	"github.com/uptrace/bun"
