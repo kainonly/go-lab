@@ -7,6 +7,7 @@ import (
 	"github.com/panjf2000/ants/v2"
 	"github.com/stretchr/testify/assert"
 	"github.com/uptrace/bun"
+	"math/rand"
 	"sync"
 	"testing"
 	"time"
@@ -175,4 +176,46 @@ func TestMySQLRestCreate(t *testing.T) {
 	assert.NoError(t, err)
 
 	t.Log(r)
+}
+
+type IPicture struct {
+	bun.BaseModel `bun:"table:picture"`
+	ID            int    `bun:"id,pk,autoincrement" faker:"-"`
+	Tid           []int  `bun:"type:json" faker:"-"`
+	Name          string `bun:"type:varchar(50)" faker:"name"`
+}
+
+func RandomTid() []int {
+	n := rand.Intn(10)
+	return rand.Perm(10)[:n]
+}
+
+func TestMySQLMockJson(t *testing.T) {
+	ctx := context.TODO()
+	err := db.ResetModel(ctx, (*IPicture)(nil))
+	assert.NoError(t, err)
+	var wg sync.WaitGroup
+	var p *ants.PoolWithFunc
+	p, err = ants.NewPoolWithFunc(1000, func(i interface{}) {
+		_, err = db.NewInsert().Model(i.(*[]IPicture)).Exec(ctx)
+		assert.NoError(t, err)
+		wg.Done()
+	})
+	assert.NoError(t, err)
+	defer p.Release()
+
+	for w := 0; w < 1; w++ {
+		wg.Add(1)
+		pictures := make([]IPicture, 10000)
+		for i := 0; i < 10000; i++ {
+			var data IPicture
+			err = faker.FakeData(&data)
+			data.Tid = RandomTid()
+			assert.NoError(t, err)
+			pictures[i] = data
+		}
+		_ = p.Invoke(&pictures)
+	}
+
+	wg.Wait()
 }

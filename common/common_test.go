@@ -1,7 +1,7 @@
 package common
 
 import (
-	"github.com/gookit/goutil/strutil"
+	"math/rand"
 	"net"
 	"testing"
 )
@@ -13,6 +13,10 @@ func TestNetIp(t *testing.T) {
 }
 
 func TestRandom(t *testing.T) {
-	v := strutil.RandomChars(32)
-	t.Log(v)
+	var data [][]int
+	for i := 0; i < 10; i++ {
+		n := rand.Intn(10)
+		data = append(data, rand.Perm(10)[:n])
+	}
+	t.Log(data)
 }
