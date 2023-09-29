@@ -1,12 +1,15 @@
-package dbcomparison
+package db
 
 import (
 	"bytes"
+	"context"
 	"github.com/bytedance/sonic/decoder"
 	"github.com/bytedance/sonic/encoder"
 	"github.com/go-faker/faker/v4"
 	"github.com/panjf2000/ants/v2"
 	"github.com/stretchr/testify/assert"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo/options"
 	"sync"
 	"testing"
 )
@@ -71,6 +74,40 @@ func TestEsBulk(t *testing.T) {
 			err = faker.FakeData(&order)
 			assert.NoError(t, err)
 			err = stream.Encode(M{"index": M{"_index": "orders"}})
+			assert.NoError(t, err)
+			err = stream.Encode(order)
+			assert.NoError(t, err)
+		}
+		_ = p.Invoke(w)
+	}
+	wg.Wait()
+}
+
+func TestEsCopyMgo(t *testing.T) {
+	ctx := context.TODO()
+	var wg sync.WaitGroup
+	p, err := ants.NewPoolWithFunc(100, func(i interface{}) {
+		_, err := es.Bulk(i.(*bytes.Buffer))
+		assert.NoError(t, err)
+		wg.Done()
+	})
+	assert.NoError(t, err)
+	defer p.Release()
+	for n := 0; n < 100; n++ {
+		wg.Add(1)
+		opt := options.Find().
+			SetLimit(10000).
+			SetSkip(int64(n) * 10000)
+		curor, err := mdb.Collection("orders").Find(ctx, bson.M{}, opt)
+		assert.NoError(t, err)
+
+		w := bytes.NewBuffer(nil)
+		stream := encoder.NewStreamEncoder(w)
+		for curor.Next(ctx) {
+			var order Order
+			err = curor.Decode(&order)
+			assert.NoError(t, err)
+			err = stream.Encode(M{"index": M{"_index": "xorders"}})
 			assert.NoError(t, err)
 			err = stream.Encode(order)
 			assert.NoError(t, err)

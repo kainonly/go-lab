@@ -1,4 +1,4 @@
-package dbcomparison
+package db
 
 import (
 	"context"

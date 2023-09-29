@@ -6,6 +6,7 @@ require (
 	github.com/bytedance/sonic v1.10.1
 	github.com/elastic/go-elasticsearch/v8 v8.10.0
 	github.com/go-faker/faker/v4 v4.2.0
+	github.com/go-sql-driver/mysql v1.7.1
 	github.com/google/uuid v1.3.1
 	github.com/gookit/goutil v0.6.12
 	github.com/influxdata/influxdb-client-go/v2 v2.12.3

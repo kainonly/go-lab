@@ -1,4 +1,4 @@
-package dbcomparison
+package db
 
 import (
 	"context"
@@ -11,7 +11,7 @@ import (
 	"time"
 )
 
-func TestCreate(t *testing.T) {
+func TestMySQLCreate(t *testing.T) {
 	ctx := context.TODO()
 	data := map[string]interface{}{
 		"name":        "测试",
@@ -24,23 +24,21 @@ func TestCreate(t *testing.T) {
 	}
 
 	r, err := db.NewInsert().
-		Table("departments").
+		Table("department").
 		Model(&data).
 		Exec(ctx)
-	if err != nil {
-		t.Error(err)
-	}
+	assert.NoError(t, err)
 
 	t.Log(r.LastInsertId())
 	t.Log(r.RowsAffected())
 }
 
-func TestFind(t *testing.T) {
+func TestMySQLFind(t *testing.T) {
 	ctx := context.TODO()
 	var data []map[string]interface{}
 
 	if err := db.NewSelect().
-		Table("departments").
+		Table("department").
 		Scan(ctx, &data); err != nil {
 		t.Error(err)
 	}
@@ -48,7 +46,7 @@ func TestFind(t *testing.T) {
 	t.Log(data)
 }
 
-func TestFindOne(t *testing.T) {
+func TestMySQLFindOne(t *testing.T) {
 	ctx := context.TODO()
 	var data map[string]interface{}
 
@@ -62,7 +60,7 @@ func TestFindOne(t *testing.T) {
 	t.Log(data)
 }
 
-func TestUpdate(t *testing.T) {
+func TestMySQLUpdate(t *testing.T) {
 	ctx := context.TODO()
 	data := map[string]interface{}{
 		"name":        "测试123",
@@ -70,19 +68,17 @@ func TestUpdate(t *testing.T) {
 	}
 
 	r, err := db.NewUpdate().
-		Table("departments").
+		Table("department").
 		Where(`id = 1`).
 		Model(&data).
 		Exec(ctx)
-	if err != nil {
-		t.Error(err)
-	}
+	assert.NoError(t, err)
 
 	t.Log(r.LastInsertId())
 	t.Log(r.RowsAffected())
 }
 
-func TestDelete(t *testing.T) {
+func TestMySQLDelete(t *testing.T) {
 	ctx := context.TODO()
 
 	r, err := db.NewDelete().
@@ -97,31 +93,30 @@ func TestDelete(t *testing.T) {
 	t.Log(r.RowsAffected())
 }
 
-func TestTransaction(t *testing.T) {
+func TestMySQLTransaction(t *testing.T) {
 	ctx := context.TODO()
 
 	tx, err := db.BeginTx(ctx, &sql.TxOptions{})
 
 	assert.NoError(t, err)
 	r, err := tx.NewDelete().
-		Table("departments").
+		Table("department").
 		Where(`id = 7`).
 		Exec(ctx)
-	if err != nil {
-		t.Error(err)
-	}
+	assert.NoError(t, err)
 
 	tx.Rollback()
 	t.Log(r)
 }
 
-func TestMockOrder(t *testing.T) {
+func TestMySQLMock(t *testing.T) {
 	ctx := context.TODO()
-	err := db.ResetModel(ctx, (*Order)(nil))
+	err := db.ResetModel(ctx, (*IOrder)(nil))
+	assert.NoError(t, err)
 	var wg sync.WaitGroup
 	var p *ants.PoolWithFunc
 	p, err = ants.NewPoolWithFunc(1000, func(i interface{}) {
-		_, err = db.NewInsert().Model(i.(*[]Order)).Exec(ctx)
+		_, err = db.NewInsert().Model(i.(*[]IOrder)).Exec(ctx)
 		assert.NoError(t, err)
 		wg.Done()
 	})
@@ -130,9 +125,9 @@ func TestMockOrder(t *testing.T) {
 
 	for w := 0; w < 100; w++ {
 		wg.Add(1)
-		orders := make([]Order, 10000)
+		orders := make([]IOrder, 10000)
 		for i := 0; i < 10000; i++ {
-			var data Order
+			var data IOrder
 			err = faker.FakeData(&data)
 			assert.NoError(t, err)
 			orders[i] = data
@@ -141,23 +136,4 @@ func TestMockOrder(t *testing.T) {
 	}
 
 	wg.Wait()
-}
-
-func TestConsumption(t *testing.T) {
-	ctx := context.TODO()
-	var data []struct {
-		Customer string
-		Total    float64
-	}
-	err := db.NewSelect().
-		Table("orders").
-		ColumnExpr("customer,sum(price) as total").
-		Group("customer").
-		Order("total desc").
-		Limit(10).
-		Model(&data).
-		Scan(ctx)
-
-	assert.NoError(t, err)
-	t.Log(data)
 }

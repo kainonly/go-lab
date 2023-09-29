@@ -1,10 +1,11 @@
-package dbcomparison
+package db
 
 import (
 	"context"
 	"database/sql"
 	"development/common"
 	"github.com/elastic/go-elasticsearch/v8"
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/google/uuid"
 	influxdb2 "github.com/influxdata/influxdb-client-go/v2"
 	"github.com/redis/go-redis/v9"
@@ -45,7 +46,7 @@ func TestMain(m *testing.M) {
 	}
 	option := options.Database().
 		SetWriteConcern(writeconcern.Majority())
-	mdb = mgo.Database("example", option)
+	mdb = mgo.Database("development", option)
 	opts, err := redis.ParseURL(values.REDIS)
 	if err != nil {
 		panic(err)
@@ -67,18 +68,19 @@ func TestMain(m *testing.M) {
 }
 
 type Order struct {
-	No          string  `bun:"type:varchar(255)" json:"no" bson:"no" faker:"cc_number"`
-	Name        string  `bun:"type:varchar(255)" json:"name" bson:"name" faker:"name"`
-	Description string  `bun:"type:text" json:"description" bson:"description" faker:"paragraph"`
-	Account     string  `bun:"type:varchar(255)" json:"account" bson:"account" faker:"username"`
-	Customer    string  `bun:"type:varchar(255)" json:"customer" bson:"customer" faker:"name"`
-	Email       string  `bun:"type:varchar(255)" json:"email" bson:"email" faker:"email"`
-	Phone       string  `bun:"type:varchar(255)" json:"phone" bson:"phone" faker:"phone_number"`
+	No          string  `bun:"type:varchar(20)" json:"no" bson:"no" faker:"cc_number"`
+	Name        string  `bun:"type:varchar(50)" json:"name" bson:"name" faker:"name"`
+	Description string  `bun:"type:varchar(1000)" json:"description" bson:"description" faker:"paragraph"`
+	Account     string  `bun:"type:varchar(50)" json:"account" bson:"account" faker:"username"`
+	Customer    string  `bun:"type:varchar(50)" json:"customer" bson:"customer" faker:"name"`
+	Email       string  `bun:"type:varchar(50)" json:"email" bson:"email" faker:"email"`
+	Phone       string  `bun:"type:varchar(20)" json:"phone" bson:"phone" faker:"phone_number"`
 	Address     string  `bun:"type:varchar(255)" json:"address" bson:"address" faker:"sentence"`
 	Price       float64 `bun:"type:decimal" json:"price" bson:"price" faker:"amount"`
 }
 
 type IOrder struct {
-	ID uint64 `bun:"id,pk,autoincrement" faker:"-"`
+	bun.BaseModel `bun:"table:order"`
+	ID            uint64 `bun:"id,pk,autoincrement" faker:"-"`
 	*Order
 }
