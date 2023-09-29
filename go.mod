@@ -3,11 +3,10 @@ module development
 go 1.20
 
 require (
-	github.com/alexedwards/argon2id v0.0.0-20230305115115-4b3c3280a736
 	github.com/bytedance/sonic v1.10.1
-	github.com/dgryski/dgoogauth v0.0.0-20190221195224-5a805980a5f3
+	github.com/elastic/go-elasticsearch/v8 v8.10.0
 	github.com/go-faker/faker/v4 v4.2.0
-	github.com/go-sql-driver/mysql v1.7.1
+	github.com/google/uuid v1.3.1
 	github.com/gookit/goutil v0.6.12
 	github.com/influxdata/influxdb-client-go/v2 v2.12.3
 	github.com/jordan-wright/email v4.0.1-0.20210109023952-943e75fe5223+incompatible
@@ -23,7 +22,6 @@ require (
 	k8s.io/api v0.28.2
 	k8s.io/apimachinery v0.28.2
 	k8s.io/client-go v0.28.2
-	rsc.io/qr v0.2.0
 )
 
 require (
@@ -41,6 +39,7 @@ require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/deepmap/oapi-codegen v1.15.0 // indirect
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
+	github.com/elastic/elastic-transport-go/v8 v8.0.0-20230329154755-1a3c63de0db6 // indirect
 	github.com/emicklei/go-restful/v3 v3.9.0 // indirect
 	github.com/fatih/structs v1.1.0 // indirect
 	github.com/flosch/pongo2/v4 v4.0.2 // indirect
@@ -62,7 +61,6 @@ require (
 	github.com/google/gnostic-models v0.6.8 // indirect
 	github.com/google/go-cmp v0.5.9 // indirect
 	github.com/google/gofuzz v1.2.0 // indirect
-	github.com/google/uuid v1.3.1 // indirect
 	github.com/gorilla/css v1.0.0 // indirect
 	github.com/influxdata/line-protocol v0.0.0-20210922203350-b1ad95c89adf // indirect
 	github.com/iris-contrib/schema v0.0.6 // indirect

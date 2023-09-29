@@ -1,43 +1,17 @@
-package influx
+package dbcomparison
 
 import (
 	"context"
-	"development/common"
 	"fmt"
-	"github.com/gookit/goutil/strutil"
-	influxdb2 "github.com/influxdata/influxdb-client-go/v2"
 	"github.com/influxdata/influxdb-client-go/v2/api/write"
 	"github.com/stretchr/testify/assert"
-	"log"
-	"os"
 	"testing"
 	"time"
 )
 
-var values *common.Values
-var client influxdb2.Client
-var msgId string
-
-type M = map[string]interface{}
-
-func TestMain(m *testing.M) {
-	var err error
-	if values, err = common.LoadValues("../config.yml"); err != nil {
-		log.Fatalln(err)
-	}
-
-	client = influxdb2.NewClient(
-		values.INFLUX.Url,
-		values.INFLUX.Token,
-	)
-
-	msgId = strutil.MicroTimeHexID()
-	os.Exit(m.Run())
-}
-
 func TestQuery(t *testing.T) {
-	defer client.Close()
-	api := client.QueryAPI("weplanx")
+	defer influx.Close()
+	api := influx.QueryAPI("weplanx")
 	result, err := api.Query(context.TODO(), fmt.Sprintf(`
 		from(bucket: "development")
 		  |> range(start: -1h)
@@ -58,8 +32,8 @@ func TestQuery(t *testing.T) {
 }
 
 func TestMongoOpenConnections(t *testing.T) {
-	defer client.Close()
-	queryAPI := client.QueryAPI("weplanx")
+	defer influx.Close()
+	queryAPI := influx.QueryAPI("weplanx")
 	query := `option v = {timeRangeStart: -12h, timeRangeStop: now(), windowPeriod: 10000ms}
 		from(bucket: "observability")
 		|> range(start: v.timeRangeStart, stop: v.timeRangeStop)
@@ -85,8 +59,8 @@ func TestMongoOpenConnections(t *testing.T) {
 }
 
 func TestCgoCalls(t *testing.T) {
-	defer client.Close()
-	queryAPI := client.QueryAPI("weplanx")
+	defer influx.Close()
+	queryAPI := influx.QueryAPI("weplanx")
 	query := `
 		from(bucket: "development")
 			|> range(start: -15m, stop: now())
@@ -111,8 +85,8 @@ func TestCgoCalls(t *testing.T) {
 }
 
 func TestP99(t *testing.T) {
-	defer client.Close()
-	queryAPI := client.QueryAPI("weplanx")
+	defer influx.Close()
+	queryAPI := influx.QueryAPI("weplanx")
 	query := `
 		import "experimental/aggregate"
 
@@ -136,8 +110,8 @@ func TestP99(t *testing.T) {
 
 func TestWriteJobs(t *testing.T) {
 	now := time.Now()
-	defer client.Close()
-	api := client.WriteAPIBlocking("weplanx", "development")
+	defer influx.Close()
+	api := influx.WriteAPIBlocking("weplanx", "development")
 	ctx := context.Background()
 	for i := 0; i < 10000; i++ {
 		tags := map[string]string{
@@ -161,8 +135,8 @@ func TestWriteJobs(t *testing.T) {
 }
 
 func TestQueryJobsCount(t *testing.T) {
-	defer client.Close()
-	api := client.QueryAPI("weplanx")
+	defer influx.Close()
+	api := influx.QueryAPI("weplanx")
 	result, err := api.Query(context.TODO(), fmt.Sprintf(`
 		from(bucket: "development")
 		  |> range(start: -24h)
@@ -178,8 +152,8 @@ func TestQueryJobsCount(t *testing.T) {
 }
 
 func TestQueryJobs(t *testing.T) {
-	defer client.Close()
-	api := client.QueryAPI("weplanx")
+	defer influx.Close()
+	api := influx.QueryAPI("weplanx")
 	result, err := api.Query(context.TODO(), fmt.Sprintf(`
 		from(bucket: "development")
 		  |> range(start: -1h)

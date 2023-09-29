@@ -1,38 +1,15 @@
-package mysql
+package dbcomparison
 
 import (
 	"context"
 	"database/sql"
-	"development/common"
 	"github.com/go-faker/faker/v4"
-	_ "github.com/go-sql-driver/mysql"
 	"github.com/panjf2000/ants/v2"
 	"github.com/stretchr/testify/assert"
-	"github.com/uptrace/bun"
-	"github.com/uptrace/bun/dialect/mysqldialect"
-	"log"
-	"os"
 	"sync"
 	"testing"
 	"time"
 )
-
-var values *common.Values
-var db *bun.DB
-
-func TestMain(m *testing.M) {
-	var err error
-	if values, err = common.LoadValues("../config.yml"); err != nil {
-		log.Fatalln(err)
-	}
-	sqldb, err := sql.Open("mysql", values.MYSQL)
-	if err != nil {
-		panic(err)
-	}
-	db = bun.NewDB(sqldb, mysqldialect.New())
-
-	os.Exit(m.Run())
-}
 
 func TestCreate(t *testing.T) {
 	ctx := context.TODO()
@@ -138,21 +115,6 @@ func TestTransaction(t *testing.T) {
 	t.Log(r)
 }
 
-type Order struct {
-	ID          uint64  `bun:"id,pk,autoincrement" faker:"-"`
-	No          string  `bun:"type:varchar(255)" faker:"cc_number"`
-	Name        string  `bun:"type:varchar(255)" faker:"name"`
-	Description string  `bun:"type:text" faker:"paragraph"`
-	Account     string  `bun:"type:varchar(255)" faker:"username"`
-	Customer    string  `bun:"type:varchar(255)" faker:"name"`
-	Email       string  `bun:"type:varchar(255)" faker:"email"`
-	Phone       string  `bun:"type:varchar(255)" faker:"phone_number"`
-	Address     string  `bun:"type:varchar(255)" faker:"sentence"`
-	Price       float64 `bun:"type:decimal" faker:"amount"`
-	CreateTime  time.Time
-	UpdateTime  time.Time
-}
-
 func TestMockOrder(t *testing.T) {
 	ctx := context.TODO()
 	err := db.ResetModel(ctx, (*Order)(nil))
@@ -173,8 +135,6 @@ func TestMockOrder(t *testing.T) {
 			var data Order
 			err = faker.FakeData(&data)
 			assert.NoError(t, err)
-			data.CreateTime, _ = time.Parse(`2006-01-02 15:04:05`, faker.Timestamp())
-			data.UpdateTime = data.CreateTime.Add(time.Hour * 24)
 			orders[i] = data
 		}
 		_ = p.Invoke(&orders)

@@ -1,10 +1,9 @@
 package common
 
 type Values struct {
-	REDIS    string `yaml:"redis"`
-	MONGO    string `yaml:"mongo"`
-	MYSQL    string `yaml:"mysql"`
-	POSTGRES string `yaml:"postgres"`
+	REDIS string `yaml:"redis"`
+	MONGO string `yaml:"mongo"`
+	MYSQL string `yaml:"mysql"`
 
 	KUBERNETES struct {
 		Host     string `yaml:"host"`
@@ -13,11 +12,11 @@ type Values struct {
 		KeyData  string `yaml:"key_data"`
 	} `yaml:"kubernetes"`
 
-	ELASTICSEARCH struct {
-		Hosts    string `yaml:"hosts"`
-		Username string `yaml:"username"`
-		Password string `yaml:"password"`
-	} `yaml:"elasticsearch"`
+	ELASTIC struct {
+		Hosts    []string `yaml:"hosts"`
+		Username string   `yaml:"username"`
+		Password string   `yaml:"password"`
+	} `yaml:"elastic"`
 
 	STMP struct {
 		Addr     string `yaml:"addr"`
@@ -26,13 +25,6 @@ type Values struct {
 		Username string `yaml:"username"`
 		Password string `yaml:"password"`
 	} `yaml:"stmp"`
-
-	CLS struct {
-		Endpoint        string `yaml:"endpoint"`
-		AccessKeyID     string `yaml:"access_key_id"`
-		AccessKeySecret string `yaml:"access_key_secret"`
-		TopicId         string `yaml:"topic_id"`
-	} `yaml:"cls"`
 
 	INFLUX struct {
 		Url   string `yaml:"url"`
@@ -43,12 +35,6 @@ type Values struct {
 		Url  string `yaml:"url"`
 		NKey string `yaml:"nkey"`
 	} `yaml:"nats"`
-
-	PULSAR struct {
-		Url   string `yaml:"url"`
-		Token string `yaml:"token"`
-		Topic string `yaml:"topic"`
-	} `yaml:"pulsar"`
 
 	Apigw struct {
 		Ip struct {

@@ -1,28 +1,15 @@
-package email
+package factory
 
 import (
 	"bytes"
 	"crypto/tls"
-	"development/common"
 	"github.com/gookit/goutil/strutil"
 	"github.com/jordan-wright/email"
 	"html/template"
-	"log"
 	"net/smtp"
-	"os"
 	"testing"
 	"time"
 )
-
-var values *common.Values
-
-func TestMain(m *testing.M) {
-	var err error
-	if values, err = common.LoadValues("../config.yml"); err != nil {
-		log.Fatalln(err)
-	}
-	os.Exit(m.Run())
-}
 
 type Content struct {
 	Name string
