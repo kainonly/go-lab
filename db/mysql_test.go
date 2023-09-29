@@ -6,6 +6,7 @@ import (
 	"github.com/go-faker/faker/v4"
 	"github.com/panjf2000/ants/v2"
 	"github.com/stretchr/testify/assert"
+	"github.com/uptrace/bun"
 	"sync"
 	"testing"
 	"time"
@@ -16,7 +17,7 @@ func TestMySQLCreate(t *testing.T) {
 	data := map[string]interface{}{
 		"name":        "测试",
 		"description": "部门",
-		"schema": []map[string]interface{}{
+		"schema": []M{
 			{"key": "asd"},
 		},
 		"create_time": time.Now(),
@@ -35,13 +36,12 @@ func TestMySQLCreate(t *testing.T) {
 
 func TestMySQLFind(t *testing.T) {
 	ctx := context.TODO()
-	var data []map[string]interface{}
+	var data []M
 
-	if err := db.NewSelect().
+	err := db.NewSelect().
 		Table("department").
-		Scan(ctx, &data); err != nil {
-		t.Error(err)
-	}
+		Scan(ctx, &data)
+	assert.NoError(t, err)
 
 	t.Log(data)
 }
@@ -50,12 +50,11 @@ func TestMySQLFindOne(t *testing.T) {
 	ctx := context.TODO()
 	var data map[string]interface{}
 
-	if err := db.NewSelect().
+	err := db.NewSelect().
 		Table("departments").
 		Where(`id = 1`).
-		Scan(ctx, &data); err != nil {
-		t.Error(err)
-	}
+		Scan(ctx, &data)
+	assert.NoError(t, err)
 
 	t.Log(data)
 }
@@ -136,4 +135,44 @@ func TestMySQLMock(t *testing.T) {
 	}
 
 	wg.Wait()
+}
+
+type IProject struct {
+	bun.BaseModel `bun:"table:project"`
+	ID            uint64    `bun:"id,pk,autoincrement" faker:"-"`
+	Name          string    `bun:"type:varchar(50),notnull"`
+	Namespace     string    `bun:"type:varchar(20),notnull,unique"`
+	Meta          M         `bun:"type:json,notnull"`
+	CreateTime    time.Time `bun:",nullzero,notnull,default:current_timestamp"`
+	UpdateTime    time.Time `bun:",nullzero,notnull,default:current_timestamp"`
+}
+
+func TestMySQLRestInit(t *testing.T) {
+	ctx := context.TODO()
+	err := db.ResetModel(ctx, (*IProject)(nil))
+	assert.NoError(t, err)
+}
+
+func TestMySQLRestCreate(t *testing.T) {
+	ctx := context.TODO()
+
+	data := M{
+		"name":      "测试",
+		"namespace": "beta",
+		"meta": M{
+			"n": 123,
+			"p": "xxx",
+		},
+		"create_time": time.Now(),
+		"update_time": time.Now(),
+	}
+
+	r, err := db.NewInsert().
+		Table("project").
+		Model(&data).
+		Exec(ctx)
+
+	assert.NoError(t, err)
+
+	t.Log(r)
 }
