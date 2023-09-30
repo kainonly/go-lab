@@ -13,7 +13,6 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/readpref"
 	"sync"
 	"testing"
-	"time"
 )
 
 func TestMgoSort(t *testing.T) {
@@ -178,7 +177,6 @@ func TestMgoMockOrders(t *testing.T) {
 func TestMgoAvg(t *testing.T) {
 	var avg []bson.M
 	ctx := context.TODO()
-	start := time.Now()
 	c, err := mdb.Collection("orders").Aggregate(ctx, mongo.Pipeline{
 		{
 			{"$group", bson.D{
@@ -190,18 +188,13 @@ func TestMgoAvg(t *testing.T) {
 	assert.NoError(t, err)
 	err = c.All(ctx, &avg)
 	assert.NoError(t, err)
-	t.Log(time.Since(start))
 	t.Log(avg)
 }
 
 func TestMgoAvg2(t *testing.T) {
 	var avg []bson.M
 	ctx := context.TODO()
-	start := time.Now()
 	c, err := mdb.Collection("orders").Aggregate(ctx, mongo.Pipeline{
-		{
-			{"$limit", 10000},
-		},
 		{
 			{"$group", bson.D{
 				{"_id", nil},
@@ -212,6 +205,5 @@ func TestMgoAvg2(t *testing.T) {
 	assert.NoError(t, err)
 	err = c.All(ctx, &avg)
 	assert.NoError(t, err)
-	t.Log(time.Since(start))
 	t.Log(avg)
 }
