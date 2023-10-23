@@ -219,3 +219,24 @@ func TestIngressDelete(t *testing.T) {
 		Delete(context.TODO(), "test", meta.DeleteOptions{})
 	assert.NoError(t, err)
 }
+
+func TestSecret(t *testing.T) {
+	ctx := context.TODO()
+	b, err := os.ReadFile("../nats-accounts/accounts.conf")
+	assert.NoError(t, err)
+	secret := &core.Secret{
+		ObjectMeta: meta.ObjectMeta{
+			Namespace: "default",
+			Name:      "includx",
+		},
+		Data: map[string][]byte{
+			"data": b,
+		},
+		Type: "Opaque",
+	}
+
+	_, err = kube.CoreV1().
+		Secrets("default").
+		Update(ctx, secret, meta.UpdateOptions{})
+	assert.NoError(t, err)
+}
