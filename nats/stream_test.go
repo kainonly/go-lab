@@ -29,8 +29,8 @@ func TestDeleteStreams(t *testing.T) {
 
 func TestAddStream(t *testing.T) {
 	info, err := js.AddStream(&nats.StreamConfig{
-		Name:      "development",
-		Subjects:  []string{"development"},
+		Name:      "example",
+		Subjects:  []string{"example"},
 		Retention: nats.WorkQueuePolicy,
 	})
 	assert.NoError(t, err)
@@ -38,12 +38,12 @@ func TestAddStream(t *testing.T) {
 }
 
 func TestPublish(t *testing.T) {
-	_, err := js.Publish("development", []byte("hello"))
+	_, err := js.Publish("example", []byte("hello"))
 	assert.NoError(t, err)
 }
 
 func TestStreamInfo(t *testing.T) {
-	v, err := js.StreamInfo("developments")
+	v, err := js.StreamInfo("example")
 	assert.NoError(t, err)
 	data, _ := sonic.Marshal(v)
 	t.Log(string(data))
@@ -51,8 +51,8 @@ func TestStreamInfo(t *testing.T) {
 
 func TestUpdateStream(t *testing.T) {
 	info, err := js.UpdateStream(&nats.StreamConfig{
-		Name:        "development",
-		Subjects:    []string{"development.>"},
+		Name:        "example",
+		Subjects:    []string{"example.>"},
 		Description: "测试",
 		Retention:   nats.WorkQueuePolicy,
 	})
@@ -61,6 +61,6 @@ func TestUpdateStream(t *testing.T) {
 }
 
 func TestDeleteStream(t *testing.T) {
-	err := js.DeleteStream("developments")
+	err := js.DeleteStream("example")
 	assert.NoError(t, err)
 }

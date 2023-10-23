@@ -45,9 +45,10 @@ func main() {
 	//	log.Fatalln(err)
 	//}
 
-	if _, err = js.QueueSubscribe("pro.message", "default", func(msg *nats.Msg) {
+	if _, err = js.QueueSubscribe("example", "default", func(msg *nats.Msg) {
 		fmt.Println(string(msg.Data))
-	}); err != nil {
+		msg.Term()
+	}, nats.ManualAck()); err != nil {
 		panic(err)
 	}
 

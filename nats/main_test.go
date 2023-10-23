@@ -45,6 +45,11 @@ func TestPublishMessage(t *testing.T) {
 	assert.NoError(t, err)
 }
 
+func TestPublishMessage1(t *testing.T) {
+	_, err := js.Publish("test", []byte("a2"))
+	assert.NoError(t, err)
+}
+
 func TestPublishJs(t *testing.T) {
 	var wg sync.WaitGroup
 	wg.Add(3)
