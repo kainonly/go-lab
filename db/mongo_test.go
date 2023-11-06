@@ -83,6 +83,18 @@ func TestMgoStartTransaction(t *testing.T) {
 	assert.NoError(t, err)
 }
 
+func TestMgoSaveTransaction(t *testing.T) {
+	ctx := context.TODO()
+	opts := options.Session().
+		SetDefaultReadConcern(readconcern.Majority())
+	session, err := mgo.StartSession(opts)
+	assert.NoError(t, err)
+	t.Log(session.ID())
+
+	defer session.EndSession(ctx)
+
+}
+
 func TestMgoTimeSeries(t *testing.T) {
 	ctx := context.TODO()
 	option := options.CreateCollection().
@@ -206,4 +218,18 @@ func TestMgoAvg2(t *testing.T) {
 	err = c.All(ctx, &avg)
 	assert.NoError(t, err)
 	t.Log(avg)
+}
+
+func TestArrayFilters(t *testing.T) {
+	ctx := context.TODO()
+	id, _ := primitive.ObjectIDFromHex("65488b01c40b207f5e6827a6")
+	opt := options.Update().SetArrayFilters(options.ArrayFilters{Filters: []interface{}{
+		bson.M{"i.name": "aps"},
+	}})
+	_, err := mdb.Collection("coupons").UpdateByID(ctx, id, bson.M{
+		"$set": bson.M{
+			"metadata.$[i].vvv": "xxx",
+		},
+	}, opt)
+	assert.NoError(t, err)
 }

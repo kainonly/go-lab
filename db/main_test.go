@@ -46,7 +46,7 @@ func TestMain(m *testing.M) {
 	}
 	option := options.Database().
 		SetWriteConcern(writeconcern.Majority())
-	mdb = mgo.Database("development", option)
+	mdb = mgo.Database("example", option)
 	opts, err := redis.ParseURL(values.REDIS)
 	if err != nil {
 		panic(err)
