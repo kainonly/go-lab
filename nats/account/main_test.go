@@ -1,9 +1,9 @@
 package main
 
 import (
-	"development/common"
 	"github.com/nats-io/nats.go"
 	"github.com/stretchr/testify/assert"
+	"golab/common"
 	"os"
 	"testing"
 )
@@ -27,4 +27,5 @@ func TestMain(m *testing.M) {
 func TestPublic(t *testing.T) {
 	_, err := js.Publish("test", []byte("x2"))
 	assert.NoError(t, err)
+
 }

@@ -1,9 +1,9 @@
 package nats
 
 import (
-	"development/common"
 	"github.com/nats-io/nats.go"
 	"github.com/stretchr/testify/assert"
+	"golab/common"
 	"log"
 	"os"
 	"sync"

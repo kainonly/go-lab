@@ -1,8 +1,8 @@
 package main
 
 import (
-	"development/common"
 	"github.com/nats-io/nats.go"
+	"golab/common"
 	"log"
 )
 

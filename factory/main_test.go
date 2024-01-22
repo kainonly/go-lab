@@ -1,7 +1,7 @@
 package factory
 
 import (
-	"development/common"
+	"golab/common"
 	"log"
 	"os"
 	"testing"

@@ -2,9 +2,9 @@ package main
 
 import (
 	"context"
-	"development/common"
 	"encoding/base64"
 	"github.com/stretchr/testify/assert"
+	"golab/common"
 	apps "k8s.io/api/apps/v1"
 	core "k8s.io/api/core/v1"
 	networking "k8s.io/api/networking/v1"

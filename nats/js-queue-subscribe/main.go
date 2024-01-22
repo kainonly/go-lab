@@ -1,9 +1,9 @@
 package main
 
 import (
-	"development/common"
 	"fmt"
 	"github.com/nats-io/nats.go"
+	"golab/common"
 	"log"
 	"os"
 	"os/signal"

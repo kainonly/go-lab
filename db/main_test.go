@@ -3,7 +3,6 @@ package db
 import (
 	"context"
 	"database/sql"
-	"development/common"
 	"github.com/elastic/go-elasticsearch/v8"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/google/uuid"
@@ -14,6 +13,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/writeconcern"
+	"golab/common"
 	"os"
 	"testing"
 )

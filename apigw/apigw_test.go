@@ -1,8 +1,8 @@
 package apigw
 
 import (
-	"development/common"
 	"github.com/stretchr/testify/assert"
+	"golab/common"
 	"log"
 	"os"
 	"testing"
