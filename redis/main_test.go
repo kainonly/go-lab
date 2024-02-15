@@ -1,24 +1,44 @@
-package db
+package redis
 
 import (
 	"context"
 	"fmt"
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/gookit/goutil/strutil"
+	"github.com/redis/go-redis/v9"
 	"github.com/stretchr/testify/assert"
+	"golab/common"
+	"os"
 	"testing"
 	"time"
 )
 
+var values *common.Values
+var db *redis.Client
+
+func TestMain(m *testing.M) {
+	var err error
+	if values, err = common.LoadValues("../config.yml"); err != nil {
+		panic(err)
+	}
+	opts, err := redis.ParseURL(values.REDIS)
+	if err != nil {
+		panic(err)
+	}
+	db = redis.NewClient(opts)
+	os.Exit(m.Run())
+}
+
 func TestSet(t *testing.T) {
 	d, _ := time.ParseDuration("600s")
-	if err := rdb.Set(context.TODO(), "dev:example", 1234, d).Err(); err != nil {
+	if err := db.Set(context.TODO(), "dev:example", 1234, d).Err(); err != nil {
 		t.Error(err)
 	}
 }
 
 func TestMock(t *testing.T) {
 	ctx := context.TODO()
-	x := rdb.TxPipeline()
+	x := db.TxPipeline()
 	for i := 0; i < 10000; i++ {
 		id := strutil.MicroTimeHexID()
 		x.Set(ctx, fmt.Sprintf(`session:%s`, id), strutil.RandomCharsV3(6), 0)
@@ -33,7 +53,7 @@ func TestScan(t *testing.T) {
 	var keys []string
 	var cursor uint64
 	for {
-		_keys, _cursor, err := rdb.Scan(ctx, cursor, "session:*", 100).Result()
+		_keys, _cursor, err := db.Scan(ctx, cursor, "session:*", 100).Result()
 		if err != nil {
 			return
 		}
@@ -51,28 +71,28 @@ var lkey = "l:123456"
 
 func TestLPush(t *testing.T) {
 	ctx := context.TODO()
-	err := rdb.Del(ctx, lkey).Err()
+	err := db.Del(ctx, lkey).Err()
 	assert.NoError(t, err)
-	err = rdb.LPush(ctx, lkey, time.Now().Format(time.RFC3339)).Err()
+	err = db.LPush(ctx, lkey, time.Now().Format(time.RFC3339)).Err()
 	assert.NoError(t, err)
-	err = rdb.LPush(ctx, lkey, "asd").Err()
+	err = db.LPush(ctx, lkey, "asd").Err()
 	assert.NoError(t, err)
-	err = rdb.LPush(ctx, lkey, "acxc").Err()
+	err = db.LPush(ctx, lkey, "acxc").Err()
 	assert.NoError(t, err)
 }
 
 func TestRPop(t *testing.T) {
 	ctx := context.TODO()
-	begin, err := rdb.RPop(ctx, lkey).Time()
+	begin, err := db.RPop(ctx, lkey).Time()
 	assert.NoError(t, err)
 	t.Log(begin)
 	t.Log(time.Since(begin))
 	t.Log(time.Since(begin) > time.Second*3)
 
-	n, err := rdb.LLen(ctx, lkey).Result()
+	n, err := db.LLen(ctx, lkey).Result()
 	assert.NoError(t, err)
 	for n != 0 {
-		v, err := rdb.RPop(ctx, lkey).Result()
+		v, err := db.RPop(ctx, lkey).Result()
 		assert.NoError(t, err)
 		t.Log(v)
 		n--
@@ -81,7 +101,7 @@ func TestRPop(t *testing.T) {
 
 func TestSets(t *testing.T) {
 	ctx := context.TODO()
-	r, err := rdb.SAdd(ctx, "tx", "123456").Result()
+	r, err := db.SAdd(ctx, "tx", "123456").Result()
 	if err != nil {
 		t.Error(err)
 	}
@@ -90,7 +110,7 @@ func TestSets(t *testing.T) {
 
 func TestSave(t *testing.T) {
 	ctx := context.TODO()
-	r, err := rdb.Save(ctx).Result()
+	r, err := db.Save(ctx).Result()
 	if err != nil {
 		t.Error(err)
 	}
@@ -99,6 +119,6 @@ func TestSave(t *testing.T) {
 
 func TestLPush2(t *testing.T) {
 	ctx := context.TODO()
-	v := rdb.LPush(ctx, "test", time.Now().Format(time.RFC3339)).Val()
+	v := db.LPush(ctx, "test", time.Now().Format(time.RFC3339)).Val()
 	t.Log(v)
 }

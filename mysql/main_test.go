@@ -1,17 +1,57 @@
-package db
+package mysql
 
 import (
 	"context"
 	"database/sql"
 	"github.com/go-faker/faker/v4"
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/panjf2000/ants/v2"
 	"github.com/stretchr/testify/assert"
 	"github.com/uptrace/bun"
+	"github.com/uptrace/bun/dialect/mysqldialect"
+	"golab/common"
 	"math/rand"
+	"os"
 	"sync"
 	"testing"
 	"time"
 )
+
+var values *common.Values
+var db *bun.DB
+
+type M = map[string]interface{}
+
+func TestMain(m *testing.M) {
+	var err error
+	if values, err = common.LoadValues("../config.yml"); err != nil {
+		panic(err)
+	}
+	sqldb, err := sql.Open("mysql", values.MYSQL)
+	if err != nil {
+		panic(err)
+	}
+	db = bun.NewDB(sqldb, mysqldialect.New())
+	os.Exit(m.Run())
+}
+
+type Order struct {
+	No          string  `bun:"type:varchar(20)" json:"no" bson:"no" faker:"cc_number"`
+	Name        string  `bun:"type:varchar(50)" json:"name" bson:"name" faker:"name"`
+	Description string  `bun:"type:varchar(1000)" json:"description" bson:"description" faker:"paragraph"`
+	Account     string  `bun:"type:varchar(50)" json:"account" bson:"account" faker:"username"`
+	Customer    string  `bun:"type:varchar(50)" json:"customer" bson:"customer" faker:"name"`
+	Email       string  `bun:"type:varchar(50)" json:"email" bson:"email" faker:"email"`
+	Phone       string  `bun:"type:varchar(20)" json:"phone" bson:"phone" faker:"phone_number"`
+	Address     string  `bun:"type:varchar(255)" json:"address" bson:"address" faker:"sentence"`
+	Price       float64 `bun:"type:decimal" json:"price" bson:"price" faker:"amount"`
+}
+
+type IOrder struct {
+	bun.BaseModel `bun:"table:order"`
+	ID            uint64 `bun:"id,pk,autoincrement" faker:"-"`
+	*Order
+}
 
 func TestMySQLCreate(t *testing.T) {
 	ctx := context.TODO()
