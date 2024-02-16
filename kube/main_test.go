@@ -4,7 +4,7 @@ import (
 	"context"
 	"encoding/base64"
 	"github.com/stretchr/testify/assert"
-	"golab/common"
+	"go-lab/common"
 	apps "k8s.io/api/apps/v1"
 	core "k8s.io/api/core/v1"
 	networking "k8s.io/api/networking/v1"

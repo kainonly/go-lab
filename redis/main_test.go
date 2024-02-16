@@ -7,7 +7,7 @@ import (
 	"github.com/gookit/goutil/strutil"
 	"github.com/redis/go-redis/v9"
 	"github.com/stretchr/testify/assert"
-	"golab/common"
+	"go-lab/common"
 	"os"
 	"testing"
 	"time"

@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/nats-io/nats.go"
-	"golab/common"
+	"go-lab/common"
 	"log"
 	"os"
 	"os/signal"

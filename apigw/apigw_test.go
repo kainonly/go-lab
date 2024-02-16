@@ -2,7 +2,7 @@ package apigw
 
 import (
 	"github.com/stretchr/testify/assert"
-	"golab/common"
+	"go-lab/common"
 	"log"
 	"os"
 	"testing"

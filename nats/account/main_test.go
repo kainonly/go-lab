@@ -3,7 +3,7 @@ package main
 import (
 	"github.com/nats-io/nats.go"
 	"github.com/stretchr/testify/assert"
-	"golab/common"
+	"go-lab/common"
 	"os"
 	"testing"
 )

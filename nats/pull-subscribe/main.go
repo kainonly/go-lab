@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/nats-io/nats.go"
-	"golab/common"
+	"go-lab/common"
 	"log"
 )
 
