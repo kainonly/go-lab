@@ -34,6 +34,7 @@ func UseNats(values *Values) (nc *nats.Conn, err error) {
 	if pub, err = kp.PublicKey(); err != nil {
 		return
 	}
+
 	if nc, err = nats.Connect(
 		values.NATS.Url,
 		nats.Nkey(pub, func(nonce []byte) ([]byte, error) {
