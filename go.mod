@@ -10,7 +10,7 @@ require (
 	github.com/nats-io/nats.go v1.36.0
 	github.com/nats-io/nkeys v0.4.7
 	github.com/panjf2000/ants/v2 v2.10.0
-	github.com/redis/go-redis/v9 v9.5.3
+	github.com/redis/go-redis/v9 v9.5.4
 	github.com/stretchr/testify v1.9.0
 	github.com/uptrace/bun v1.2.1
 	github.com/uptrace/bun/dialect/mysqldialect v1.2.1
