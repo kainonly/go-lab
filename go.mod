@@ -4,16 +4,13 @@ go 1.22.4
 
 require (
 	github.com/bytedance/sonic v1.11.9
-	github.com/go-faker/faker/v4 v4.4.2
 	github.com/go-sql-driver/mysql v1.8.1
 	github.com/gookit/goutil v0.6.15
 	github.com/nats-io/nats.go v1.36.0
 	github.com/nats-io/nkeys v0.4.7
-	github.com/panjf2000/ants/v2 v2.10.0
 	github.com/redis/go-redis/v9 v9.5.4
+	github.com/sony/sonyflake v1.2.0
 	github.com/stretchr/testify v1.9.0
-	github.com/uptrace/bun v1.2.1
-	github.com/uptrace/bun/dialect/mysqldialect v1.2.1
 	gopkg.in/yaml.v3 v3.0.1
 	k8s.io/api v0.30.2
 	k8s.io/apimachinery v0.30.2
@@ -38,7 +35,6 @@ require (
 	github.com/google/gnostic-models v0.6.8 // indirect
 	github.com/google/gofuzz v1.2.0 // indirect
 	github.com/google/uuid v1.6.0 // indirect
-	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/klauspost/compress v1.17.9 // indirect
@@ -49,17 +45,11 @@ require (
 	github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822 // indirect
 	github.com/nats-io/nuid v1.0.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
-	github.com/sony/sonyflake v1.2.0 // indirect
-	github.com/tmthrgd/go-hex v0.0.0-20190904060850-447a3041c3bc // indirect
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
-	github.com/vmihailenco/msgpack/v5 v5.4.1 // indirect
-	github.com/vmihailenco/tagparser/v2 v2.0.0 // indirect
 	golang.org/x/arch v0.8.0 // indirect
 	golang.org/x/crypto v0.24.0 // indirect
-	golang.org/x/mod v0.18.0 // indirect
 	golang.org/x/net v0.23.0 // indirect
 	golang.org/x/oauth2 v0.18.0 // indirect
-	golang.org/x/sync v0.7.0 // indirect
 	golang.org/x/sys v0.21.0 // indirect
 	golang.org/x/term v0.21.0 // indirect
 	golang.org/x/text v0.16.0 // indirect
